@@ -1,44 +1,147 @@
 package io.github.samolego.kelnar
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import kelnar.composeapp.generated.resources.Res
-import kelnar.composeapp.generated.resources.compose_multiplatform
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import io.github.samolego.kelnar.repository.DataRepository
+import io.github.samolego.kelnar.ui.navigation.Routes
+import io.github.samolego.kelnar.ui.screens.NewOrderScreen
+import io.github.samolego.kelnar.ui.screens.OrdersScreen
+import io.github.samolego.kelnar.ui.screens.ProductsScreen
+import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
+import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+        val localStorage = remember { getLocalStorage() }
+        val repository = remember { DataRepository(localStorage) }
+
+        LaunchedEffect(Unit) {
+            repository.loadData()
+        }
+
+        val navController = rememberNavController()
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    NavigationDrawerItem(
+                        label = { Text("Orders") },
+                        selected = currentRoute == Routes.Orders.route,
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                                navController.navigate(Routes.Orders.route) {
+                                    popUpTo(Routes.Orders.route) { inclusive = true }
+                                }
+                            }
+                        }
+                    )
+                    NavigationDrawerItem(
+                        label = { Text("Products") },
+                        selected = currentRoute == Routes.Products.route,
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                                navController.navigate(Routes.Products.route)
+                            }
+                        }
+                    )
                 }
+            }
+        ) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize()
+            ) { paddingValues ->
+                AppNavigation(
+                    navController = navController,
+                    repository = repository,
+                    modifier = Modifier.padding(paddingValues),
+                    onOpenDrawer = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
+                )
             }
         }
     }
 }
+
+@Composable
+fun AppNavigation(
+    navController: NavHostController,
+    repository: DataRepository,
+    modifier: Modifier = Modifier,
+    onOpenDrawer: () -> Unit
+) {
+    NavHost(
+        navController = navController,
+        startDestination = Routes.Orders.route,
+        modifier = modifier
+    ) {
+        composable(Routes.Orders.route) {
+            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
+            OrdersScreen(
+                viewModel = viewModel,
+                onNavigateToNewOrder = {
+                    navController.navigate(Routes.NewOrder.route)
+                },
+                onOpenDrawer = onOpenDrawer
+            )
+        }
+
+        composable(Routes.NewOrder.route) {
+            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
+            NewOrderScreen(
+                viewModel = viewModel,
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onOrderSaved = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Routes.Products.route) {
+            val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
+            ProductsScreen(
+                viewModel = viewModel,
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onOpenDrawer = onOpenDrawer
+            )
+        }
+    }
+}
+
+expect fun getLocalStorage(): io.github.samolego.kelnar.repository.LocalStorage
