@@ -42,9 +42,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         }
 
         viewModelScope.launch {
-            searchQuery.collect { query ->
-                updateFilteredProducts(products.value, query)
-            }
+            searchQuery.collect { query -> updateFilteredProducts(products.value, query) }
         }
     }
 
@@ -57,37 +55,40 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
     }
 
     private fun updateFilteredProducts(productsList: List<Product>, query: String) {
-        _filteredProducts.value = if (query.isBlank()) {
-            productsList
-        } else {
-            productsList.filter {
-                it.name.contains(query, ignoreCase = true) ||
-                it.description.contains(query, ignoreCase = true)
-            }
-        }
+        _filteredProducts.value =
+                if (query.isBlank()) {
+                    productsList
+                } else {
+                    productsList.filter {
+                        it.name.contains(query, ignoreCase = true) ||
+                                it.description.contains(query, ignoreCase = true)
+                    }
+                }
     }
 
-    fun addProductToOrder(product: Product, quantity: Int = 1, customizations: List<String> = emptyList()) {
+    fun addProductToOrder(
+            product: Product,
+            quantity: Int = 1,
+            customizations: List<String> = emptyList()
+    ) {
         val currentItems = _newOrderItems.value.toMutableList()
-        val existingItemIndex = currentItems.indexOfFirst {
-            it.product.id == product.id && it.customizations == customizations
-        }
+        val existingItemIndex =
+                currentItems.indexOfFirst {
+                    it.product.id == product.id && it.customizations == customizations
+                }
 
         if (existingItemIndex >= 0) {
             val existingItem = currentItems[existingItemIndex]
-            currentItems[existingItemIndex] = existingItem.copy(
-                quantity = existingItem.quantity + quantity,
-                subtotal = (existingItem.quantity + quantity) * product.price
-            )
+            currentItems[existingItemIndex] =
+                    existingItem.copy(quantity = existingItem.quantity + quantity)
         } else {
             currentItems.add(
-                OrderItem(
-                    id = generateId(),
-                    product = product,
-                    quantity = quantity,
-                    customizations = customizations,
-                    subtotal = product.price * quantity
-                )
+                    OrderItem(
+                            id = generateId(),
+                            product = product,
+                            quantity = quantity,
+                            customizations = customizations
+                    )
             )
         }
 
@@ -111,10 +112,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
 
         if (itemIndex >= 0) {
             val item = currentItems[itemIndex]
-            currentItems[itemIndex] = item.copy(
-                quantity = newQuantity,
-                subtotal = item.product.price * newQuantity
-            )
+            currentItems[itemIndex] = item.copy(quantity = newQuantity)
             _newOrderItems.value = currentItems
         }
     }
@@ -140,15 +138,17 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         }
 
         viewModelScope.launch {
-            val order = Order(
-                id = generateId(),
-                tableNumber = _tableNumber.value,
-                items = _newOrderItems.value,
-                createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                total = calculateTotal()
-            )
+            val order =
+                    Order(
+                            id = generateId(),
+                            tableNumber = _tableNumber.value,
+                            items = _newOrderItems.value,
+                            createdAt =
+                                    Clock.System.now()
+                                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                    )
 
-            repository.addOrder(order)
+            repository.saveOrder(order)
             clearNewOrder()
         }
     }
@@ -160,9 +160,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
     }
 
     fun deleteOrder(orderId: String) {
-        viewModelScope.launch {
-            repository.removeOrder(orderId)
-        }
+        viewModelScope.launch { repository.removeOrder(orderId) }
     }
 
     fun markOrderCompleted(orderId: String) {
@@ -170,7 +168,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
             val order = repository.getOrderById(orderId)
             if (order != null) {
                 val updatedOrder = order.copy(isCompleted = true)
-                repository.updateOrder(updatedOrder)
+                repository.saveOrder(updatedOrder)
             }
         }
     }

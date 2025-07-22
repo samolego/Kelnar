@@ -24,79 +24,74 @@ import io.github.samolego.kelnar.utils.formatAsPrice
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductsScreen(
-    viewModel: ProductsViewModel,
-    onNavigateBack: () -> Unit,
-    onOpenDrawer: () -> Unit
+        viewModel: ProductsViewModel,
+        onNavigateBack: () -> Unit,
+        onOpenDrawer: () -> Unit
 ) {
     val products by viewModel.products.collectAsState()
     val showAddProductDialog by viewModel.showAddProductDialog.collectAsState()
     val showEditProductDialog by viewModel.showEditProductDialog.collectAsState()
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Products") },
-                navigationIcon = {
-                    IconButton(onClick = onOpenDrawer) {
-                        Icon(
-                            Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
+            topBar = {
+                TopAppBar(
+                        title = { Text("Products") },
+                        navigationIcon = {
+                            IconButton(onClick = onOpenDrawer) {
+                                Icon(
+                                        Icons.Default.Menu,
+                                        contentDescription = "Menu",
+                                        tint = Color.White
+                                )
+                            }
+                        },
+                        colors =
+                                TopAppBarDefaults.topAppBarColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        titleContentColor = Color.White,
+                                        navigationIconContentColor = Color.White
+                                )
                 )
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.showAddProductDialog() },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Product", tint = Color.White)
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                        onClick = { viewModel.showAddProductDialog() },
+                        containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Product", tint = Color.White)
+                }
             }
-        }
     ) { paddingValues ->
         if (products.isEmpty()) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    contentAlignment = Alignment.Center
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "No products yet",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = "No products yet",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Tap + to add your first product",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = "Tap + to add your first product",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(products) { product ->
                     ProductCard(
-                        product = product,
-                        onEditProduct = { viewModel.showEditProductDialog(product) },
-                        onDeleteProduct = { viewModel.deleteProduct(product.id) }
+                            product = product,
+                            onEditProduct = { viewModel.showEditProductDialog(product) },
+                            onDeleteProduct = { viewModel.deleteProduct(product.id) }
                     )
                 }
             }
@@ -106,59 +101,51 @@ fun ProductsScreen(
     // Add Product Dialog
     if (showAddProductDialog) {
         ProductDialog(
-            title = "Add Product",
-            viewModel = viewModel,
-            onDismiss = { viewModel.hideAddProductDialog() },
-            onSave = { viewModel.saveProduct() }
+                title = "Add Product",
+                viewModel = viewModel,
+                onDismiss = { viewModel.hideAddProductDialog() },
+                onSave = { viewModel.saveProduct() }
         )
     }
 
     // Edit Product Dialog
     if (showEditProductDialog) {
         ProductDialog(
-            title = "Edit Product",
-            viewModel = viewModel,
-            onDismiss = { viewModel.hideEditProductDialog() },
-            onSave = { viewModel.saveProduct() }
+                title = "Edit Product",
+                viewModel = viewModel,
+                onDismiss = { viewModel.hideEditProductDialog() },
+                onSave = { viewModel.saveProduct() }
         )
     }
 }
 
 @Composable
-fun ProductCard(
-    product: Product,
-    onEditProduct: () -> Unit,
-    onDeleteProduct: () -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+fun ProductCard(product: Product, onEditProduct: () -> Unit, onDeleteProduct: () -> Unit) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = product.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                            text = product.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = product.price.formatAsPrice(),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
+                            text = product.price.formatAsPrice(),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Medium
                     )
                     if (product.description.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = product.description,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                text = product.description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -166,16 +153,16 @@ fun ProductCard(
                 Row {
                     IconButton(onClick = onEditProduct) {
                         Icon(
-                            Icons.Default.Edit,
-                            contentDescription = "Edit product",
-                            tint = MaterialTheme.colorScheme.primary
+                                Icons.Default.Edit,
+                                contentDescription = "Edit product",
+                                tint = MaterialTheme.colorScheme.primary
                         )
                     }
                     IconButton(onClick = onDeleteProduct) {
                         Icon(
-                            Icons.Default.Delete,
-                            contentDescription = "Delete product",
-                            tint = MaterialTheme.colorScheme.error
+                                Icons.Default.Delete,
+                                contentDescription = "Delete product",
+                                tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -186,62 +173,63 @@ fun ProductCard(
 
 @Composable
 fun ProductDialog(
-    title: String,
-    viewModel: ProductsViewModel,
-    onDismiss: () -> Unit,
-    onSave: () -> Unit
+        title: String,
+        viewModel: ProductsViewModel,
+        onDismiss: () -> Unit,
+        onSave: () -> Unit
 ) {
     val productName by viewModel.productName.collectAsState()
     val productPrice by viewModel.productPrice.collectAsState()
     val productDescription by viewModel.productDescription.collectAsState()
-    val isFormValid = viewModel.isFormValid()
+    val isFormValid by remember {
+        derivedStateOf {
+            val name = productName.trim()
+            val priceText = productPrice.trim()
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(title) },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedTextField(
-                    value = productName,
-                    onValueChange = { viewModel.setProductName(it) },
-                    label = { Text("Product Name") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-
-                OutlinedTextField(
-                    value = productPrice,
-                    onValueChange = { viewModel.setProductPrice(it) },
-                    label = { Text("Price") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true,
-                    prefix = { Text("$") }
-                )
-
-                OutlinedTextField(
-                    value = productDescription,
-                    onValueChange = { viewModel.setProductDescription(it) },
-                    label = { Text("Description (optional)") },
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 3
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = onSave,
-                enabled = isFormValid
-            ) {
-                Text("Save")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
+            if (name.isBlank() || priceText.isBlank()) {
+                false
+            } else {
+                val price = priceText.toDoubleOrNull()
+                price != null && price >= 0
             }
         }
+    }
+
+    AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(title) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                            value = productName,
+                            onValueChange = { viewModel.setProductName(it) },
+                            label = { Text("Product Name") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                    )
+
+                    OutlinedTextField(
+                            value = productPrice,
+                            onValueChange = { viewModel.setProductPrice(it) },
+                            label = { Text("Price") },
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            singleLine = true,
+                            prefix = { Text("$") }
+                    )
+
+                    OutlinedTextField(
+                            value = productDescription,
+                            onValueChange = { viewModel.setProductDescription(it) },
+                            label = { Text("Description (optional)") },
+                            modifier = Modifier.fillMaxWidth(),
+                            maxLines = 3
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = onSave, enabled = isFormValid) { Text("Save") }
+            },
+            dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     )
 }

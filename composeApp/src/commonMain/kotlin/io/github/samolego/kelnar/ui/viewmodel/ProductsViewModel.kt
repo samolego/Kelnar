@@ -80,14 +80,15 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         val price = priceText.toDoubleOrNull() ?: return
 
         viewModelScope.launch {
-            val product = Product(
-                id = _currentProduct.value?.id ?: generateId(),
-                name = name,
-                price = price,
-                description = description
-            )
+            val product =
+                    Product(
+                            id = _currentProduct.value?.id ?: generateId(),
+                            name = name,
+                            price = price,
+                            description = description
+                    )
 
-            repository.addProduct(product)
+            repository.saveProduct(product)
 
             if (_showAddProductDialog.value) {
                 hideAddProductDialog()
@@ -98,9 +99,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
     }
 
     fun deleteProduct(productId: String) {
-        viewModelScope.launch {
-            repository.removeProduct(productId)
-        }
+        viewModelScope.launch { repository.removeProduct(productId) }
     }
 
     private fun clearProductForm() {
@@ -111,17 +110,5 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
     private fun generateId(): String {
         return Clock.System.now().toEpochMilliseconds().toString()
-    }
-
-    fun isFormValid(): Boolean {
-        val name = _productName.value.trim()
-        val priceText = _productPrice.value.trim()
-
-        if (name.isBlank() || priceText.isBlank()) {
-            return false
-        }
-
-        val price = priceText.toDoubleOrNull()
-        return price != null && price > 0
     }
 }

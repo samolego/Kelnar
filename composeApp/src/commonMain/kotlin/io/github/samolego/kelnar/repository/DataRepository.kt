@@ -58,7 +58,7 @@ class DataRepository(private val localStorage: LocalStorage) {
         }
     }
 
-    suspend fun addProduct(product: Product) {
+    suspend fun saveProduct(product: Product) {
         val currentProducts = _products.value.toMutableList()
         val existingIndex = currentProducts.indexOfFirst { it.id == product.id }
 
@@ -79,7 +79,7 @@ class DataRepository(private val localStorage: LocalStorage) {
         saveProducts()
     }
 
-    suspend fun addOrder(order: Order) {
+    suspend fun saveOrder(order: Order) {
         val currentOrders = _orders.value.toMutableList()
         val existingIndex = currentOrders.indexOfFirst { it.id == order.id }
 
@@ -91,17 +91,6 @@ class DataRepository(private val localStorage: LocalStorage) {
 
         _orders.value = currentOrders
         saveOrders()
-    }
-
-    suspend fun updateOrder(order: Order) {
-        val currentOrders = _orders.value.toMutableList()
-        val existingIndex = currentOrders.indexOfFirst { it.id == order.id }
-
-        if (existingIndex >= 0) {
-            currentOrders[existingIndex] = order
-            _orders.value = currentOrders
-            saveOrders()
-        }
     }
 
     suspend fun removeOrder(orderId: String) {
