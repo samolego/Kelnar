@@ -24,7 +24,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.samolego.kelnar.repository.DataRepository
 import io.github.samolego.kelnar.ui.navigation.Routes
+import io.github.samolego.kelnar.ui.screens.EditOrderScreen
 import io.github.samolego.kelnar.ui.screens.NewOrderScreen
+import io.github.samolego.kelnar.ui.screens.OrderDetailsScreen
 import io.github.samolego.kelnar.ui.screens.OrdersScreen
 import io.github.samolego.kelnar.ui.screens.ProductsScreen
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
@@ -107,6 +109,9 @@ fun AppNavigation(
             OrdersScreen(
                     viewModel = viewModel,
                     onNavigateToNewOrder = { navController.navigate(Routes.NewOrder.route) },
+                    onNavigateToOrderDetails = { orderId ->
+                        navController.navigate(Routes.OrderDetails.createRoute(orderId))
+                    },
                     onOpenDrawer = onOpenDrawer
             )
         }
@@ -114,6 +119,30 @@ fun AppNavigation(
         composable(Routes.NewOrder.route) {
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             NewOrderScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onOrderSaved = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.OrderDetails.route) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: return@composable
+            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
+            OrderDetailsScreen(
+                    orderId = orderId,
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToEdit = {
+                        navController.navigate(Routes.EditOrder.createRoute(orderId))
+                    }
+            )
+        }
+
+        composable(Routes.EditOrder.route) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: return@composable
+            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
+            EditOrderScreen(
+                    orderId = orderId,
                     viewModel = viewModel,
                     onNavigateBack = { navController.popBackStack() },
                     onOrderSaved = { navController.popBackStack() }

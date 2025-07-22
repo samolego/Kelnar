@@ -22,6 +22,9 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
     private val _currentOrder = MutableStateFlow<Order?>(null)
     val currentOrder: StateFlow<Order?> = _currentOrder.asStateFlow()
 
+    private val _isEditingOrder = MutableStateFlow(false)
+    val isEditingOrder: StateFlow<Boolean> = _isEditingOrder.asStateFlow()
+
     private val _newOrderItems = MutableStateFlow<List<OrderItem>>(emptyList())
     val newOrderItems: StateFlow<List<OrderItem>> = _newOrderItems.asStateFlow()
 
@@ -157,6 +160,8 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         _newOrderItems.value = emptyList()
         _tableNumber.value = ""
         _searchQuery.value = ""
+        _currentOrder.value = null
+        _isEditingOrder.value = false
     }
 
     fun deleteOrder(orderId: String) {
@@ -169,6 +174,37 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
             if (order != null) {
                 val updatedOrder = order.copy(isCompleted = true)
                 repository.saveOrder(updatedOrder)
+            }
+        }
+    }
+
+    fun loadOrderForEditing(orderId: String) {
+        viewModelScope.launch {
+            val order = repository.getOrderById(orderId)
+            if (order != null) {
+                // Clear form data but not the editing state
+                _newOrderItems.value = emptyList()
+                _tableNumber.value = ""
+                _searchQuery.value = ""
+                _currentOrder.value = null
+
+                // Now load the order data
+                _currentOrder.value = order
+                _tableNumber.value = order.tableNumber
+                _newOrderItems.value = order.items
+                _isEditingOrder.value = true
+            }
+        }
+    }
+
+    fun updateExistingOrder() {
+        val order = _currentOrder.value
+        if (order != null && _tableNumber.value.isNotBlank() && _newOrderItems.value.isNotEmpty()) {
+            viewModelScope.launch {
+                val updatedOrder =
+                        order.copy(tableNumber = _tableNumber.value, items = _newOrderItems.value)
+                repository.saveOrder(updatedOrder)
+                clearNewOrder()
             }
         }
     }

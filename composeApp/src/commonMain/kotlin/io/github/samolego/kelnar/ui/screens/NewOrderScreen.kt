@@ -32,10 +32,25 @@ fun NewOrderScreen(
         onNavigateBack: () -> Unit,
         onOrderSaved: () -> Unit
 ) {
+    OrderFormScreen(
+            viewModel = viewModel,
+            onNavigateBack = onNavigateBack,
+            onOrderSaved = onOrderSaved
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OrderFormScreen(
+        viewModel: OrdersViewModel,
+        onNavigateBack: () -> Unit,
+        onOrderSaved: () -> Unit
+) {
     val tableNumber by viewModel.tableNumber.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val filteredProducts by viewModel.filteredProducts.collectAsState()
     val orderItems by viewModel.newOrderItems.collectAsState()
+    val isEditingOrder by viewModel.isEditingOrder.collectAsState()
     val total by remember { derivedStateOf { orderItems.sumOf { it.subtotal } } }
 
     var showProductSearch by remember { mutableStateOf(false) }
@@ -45,7 +60,7 @@ fun NewOrderScreen(
     Scaffold(
             topBar = {
                 TopAppBar(
-                        title = { Text("New Order") },
+                        title = { Text(if (isEditingOrder) "Edit Order" else "New Order") },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
@@ -58,7 +73,11 @@ fun NewOrderScreen(
                         actions = {
                             IconButton(
                                     onClick = {
-                                        viewModel.saveOrder()
+                                        if (isEditingOrder) {
+                                            viewModel.updateExistingOrder()
+                                        } else {
+                                            viewModel.saveOrder()
+                                        }
                                         onOrderSaved()
                                     },
                                     enabled = tableNumber.isNotBlank() && orderItems.isNotEmpty()

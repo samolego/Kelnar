@@ -3,6 +3,9 @@ package io.github.samolego.kelnar.ui.navigation
 sealed class Routes(val route: String) {
     object Orders : Routes("orders")
     object NewOrder : Routes("new-order")
+    object OrderDetails : Routes("order-details/{orderId}") {
+        fun createRoute(orderId: String) = "order-details/$orderId"
+    }
     object EditOrder : Routes("edit-order/{orderId}") {
         fun createRoute(orderId: String) = "edit-order/$orderId"
     }
