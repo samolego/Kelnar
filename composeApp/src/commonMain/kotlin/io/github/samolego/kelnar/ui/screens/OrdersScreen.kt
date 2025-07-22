@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Order
@@ -25,6 +26,10 @@ fun OrdersScreen(
     onOpenDrawer: () -> Unit
 ) {
     val orders by viewModel.orders.collectAsState()
+    var selectedTab by remember { mutableStateOf(0) }
+
+    val activeOrders = orders.filter { !it.isCompleted }
+    val completedOrders = orders.filter { it.isCompleted }
 
     Scaffold(
         topBar = {
@@ -32,57 +37,124 @@ fun OrdersScreen(
                 title = { Text("Orders") },
                 navigationIcon = {
                     IconButton(onClick = onOpenDrawer) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        Icon(
+                            Icons.Default.Menu,
+                            contentDescription = "Menu",
+                            tint = Color.White
+                        )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onNavigateToNewOrder
+                onClick = onNavigateToNewOrder,
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "New Order")
+                Icon(Icons.Default.Add, contentDescription = "New Order", tint = Color.White)
             }
         }
     ) { paddingValues ->
-        if (orders.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            // Tab Row
+            TabRow(
+                selectedTabIndex = selectedTab,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "No orders yet",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Tap + to create your first order",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                Tab(
+                    selected = selectedTab == 0,
+                    onClick = { selectedTab = 0 },
+                    text = {
+                        Text(
+                            "Active",
+                            fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Normal
+                        )
+                    }
+                )
+                Tab(
+                    selected = selectedTab == 1,
+                    onClick = { selectedTab = 1 },
+                    text = {
+                        Text(
+                            "Completed",
+                            fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Normal
+                        )
+                    }
+                )
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+
+            // Content based on selected tab
+            when (selectedTab) {
+                0 -> OrdersList(
+                    orders = activeOrders,
+                    onDeleteOrder = { viewModel.deleteOrder(it) },
+                    onMarkCompleted = { viewModel.markOrderCompleted(it) },
+                    emptyMessage = "No active orders",
+                    emptySubMessage = "Tap + to create your first order"
+                )
+                1 -> OrdersList(
+                    orders = completedOrders,
+                    onDeleteOrder = { viewModel.deleteOrder(it) },
+                    onMarkCompleted = { viewModel.markOrderCompleted(it) },
+                    emptyMessage = "No completed orders",
+                    emptySubMessage = "Complete some orders to see them here"
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun OrdersList(
+    orders: List<Order>,
+    onDeleteOrder: (String) -> Unit,
+    onMarkCompleted: (String) -> Unit,
+    emptyMessage: String,
+    emptySubMessage: String
+) {
+    if (orders.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(orders) { order ->
-                    OrderCard(
-                        order = order,
-                        onDeleteOrder = { viewModel.deleteOrder(order.id) },
-                        onMarkCompleted = { viewModel.markOrderCompleted(order.id) }
-                    )
-                }
+                Text(
+                    text = emptyMessage,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = emptySubMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(orders) { order ->
+                OrderCard(
+                    order = order,
+                    onDeleteOrder = { onDeleteOrder(order.id) },
+                    onMarkCompleted = { onMarkCompleted(order.id) }
+                )
             }
         }
     }
@@ -101,7 +173,8 @@ fun OrderCard(
                 MaterialTheme.colorScheme.surfaceVariant
             else
                 MaterialTheme.colorScheme.surface
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -116,17 +189,30 @@ fun OrderCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     if (!order.isCompleted) {
-                        TextButton(onClick = onMarkCompleted) {
-                            Text("Complete")
+                        Button(
+                            onClick = onMarkCompleted,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text("Complete", color = Color.White)
                         }
                     } else {
-                        Text(
-                            text = "Completed",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        Surface(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = MaterialTheme.shapes.small,
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(
+                                text = "✓ Completed",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
                     }
                     IconButton(onClick = onDeleteOrder) {
                         Icon(
@@ -138,51 +224,66 @@ fun OrderCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = "Items: ${order.items.size}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            order.items.take(3).forEach { item ->
-                Text(
-                    text = "• ${item.quantity}x ${item.product.name}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            if (order.items.
-size > 3) {
-                Text(
-                    text = "... and ${order.items.size - 3} more items",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
+            // Order summary
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Total: ${order.total.formatAsPrice()}",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    text = "Items: ${order.items.size}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = order.createdAt.toString().substringBefore('T'),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Items preview
+            order.items.take(3).forEach { item ->
+                Text(
+                    text = "• ${item.quantity}x ${item.product.name}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+
+            if (order.items.size > 3) {
+                Text(
+                    text = "• ... and ${order.items.size - 3} more items",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Total price
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text(
+                        text = "Total: ${order.total.formatAsPrice()}",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
             }
         }
     }

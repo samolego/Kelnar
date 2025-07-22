@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -37,16 +38,26 @@ fun ProductsScreen(
                 title = { Text("Products") },
                 navigationIcon = {
                     IconButton(onClick = onOpenDrawer) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        Icon(
+                            Icons.Default.Menu,
+                            contentDescription = "Menu",
+                            tint = Color.White
+                        )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.showAddProductDialog() }
+                onClick = { viewModel.showAddProductDialog() },
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Product")
+                Icon(Icons.Default.Add, contentDescription = "Add Product", tint = Color.White)
             }
         }
     ) { paddingValues ->

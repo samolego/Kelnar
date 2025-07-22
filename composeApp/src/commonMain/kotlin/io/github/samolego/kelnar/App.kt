@@ -37,10 +37,6 @@ fun App() {
         val localStorage = remember { getLocalStorage() }
         val repository = remember { DataRepository(localStorage) }
 
-        LaunchedEffect(Unit) {
-            repository.loadData()
-        }
-
         val navController = rememberNavController()
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
@@ -48,47 +44,32 @@ fun App() {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
+        // Wait for repository to load before setting up navigation
+        LaunchedEffect(repository) { repository.loadData() }
+
         ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet {
-                    NavigationDrawerItem(
-                        label = { Text("Orders") },
-                        selected = currentRoute == Routes.Orders.route,
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                                navController.navigate(Routes.Orders.route) {
-                                    popUpTo(Routes.Orders.route) { inclusive = true }
-                                }
-                            }
-                        }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text("Products") },
-                        selected = currentRoute == Routes.Products.route,
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                                navController.navigate(Routes.Products.route)
-                            }
-                        }
-                    )
-                }
-            }
-        ) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize()
-            ) { paddingValues ->
-                AppNavigation(
-                    navController = navController,
-                    repository = repository,
-                    modifier = Modifier.padding(paddingValues),
-                    onOpenDrawer = {
-                        scope.launch {
-                            drawerState.open()
-                        }
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet {
+                        NavigationDrawerItem(
+                                label = { Text("Orders") },
+                                selected = currentRoute == Routes.Orders.route,
+                                onClick = { scope.launch { drawerState.close() } }
+                        )
+                        NavigationDrawerItem(
+                                label = { Text("Products") },
+                                selected = currentRoute == Routes.Products.route,
+                                onClick = { scope.launch { drawerState.close() } }
+                        )
                     }
+                }
+        ) {
+            Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
+                AppNavigation(
+                        navController = navController,
+                        repository = repository,
+                        modifier = Modifier.padding(paddingValues),
+                        onOpenDrawer = { scope.launch { drawerState.open() } }
                 )
             }
         }
@@ -97,48 +78,40 @@ fun App() {
 
 @Composable
 fun AppNavigation(
-    navController: NavHostController,
-    repository: DataRepository,
-    modifier: Modifier = Modifier,
-    onOpenDrawer: () -> Unit
+        navController: NavHostController,
+        repository: DataRepository,
+        modifier: Modifier = Modifier,
+        onOpenDrawer: () -> Unit
 ) {
     NavHost(
-        navController = navController,
-        startDestination = Routes.Orders.route,
-        modifier = modifier
+            navController = navController,
+            startDestination = Routes.Orders.route,
+            modifier = modifier
     ) {
         composable(Routes.Orders.route) {
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             OrdersScreen(
-                viewModel = viewModel,
-                onNavigateToNewOrder = {
-                    navController.navigate(Routes.NewOrder.route)
-                },
-                onOpenDrawer = onOpenDrawer
+                    viewModel = viewModel,
+                    onNavigateToNewOrder = {},
+                    onOpenDrawer = onOpenDrawer
             )
         }
 
         composable(Routes.NewOrder.route) {
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             NewOrderScreen(
-                viewModel = viewModel,
-                onNavigateBack = {
-                    navController.popBackStack()
-                },
-                onOrderSaved = {
-                    navController.popBackStack()
-                }
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onOrderSaved = { navController.popBackStack() }
             )
         }
 
         composable(Routes.Products.route) {
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
-                viewModel = viewModel,
-                onNavigateBack = {
-                    navController.popBackStack()
-                },
-                onOpenDrawer = onOpenDrawer
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onOpenDrawer = onOpenDrawer
             )
         }
     }

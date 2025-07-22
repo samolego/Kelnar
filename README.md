@@ -5,7 +5,7 @@ A mobile-first Kotlin Multiplatform application for managing restaurant orders a
 ## Features
 
 ### 🍽️ Order Management
-- **Landing Page**: View all orders with a clean, card-based interface
+- **Landing Page**: View all orders with tabs for Active and Completed orders
 - **New Order Creation**: Easy-to-use interface for creating new orders
 - **Table Number Input**: Track which table each order belongs to
 - **Product Selection**: Searchable dropdown to quickly find and add products
@@ -21,9 +21,18 @@ A mobile-first Kotlin Multiplatform application for managing restaurant orders a
 - **Product Details**: Name, price, and optional description for each item
 - **Default Menu**: Comes pre-loaded with sample restaurant items
 
+### 🌐 Web Features
+- **URL Routing**: Direct access to pages via URLs (e.g., `/orders`, `/products`, `/menu`)
+- **Bookmarkable URLs**: All pages can be bookmarked and accessed directly
+- **SPA Routing**: Single Page Application with client-side routing
+- **History API**: Full browser back/forward button support
+- **Guest Menu**: Public read-only menu at `/menu` for customers
+- **Shareable Links**: Direct links to specific sections of the app
+- **Dynamic Page Titles**: Browser tab titles update based on current page
+
 ### 📱 User Interface
 - **Mobile-First Design**: Optimized for mobile use with touch-friendly interfaces
-- **Material Design 3**: Modern, clean UI following Google's design guidelines
+- **Material Design 3**: Modern, clean UI with custom styled navigation bars
 - **Navigation Drawer**: Easy access to different sections of the app
 - **Floating Action Buttons**: Quick access to create new orders and products
 - **Responsive Layout**: Works great on phones, tablets, and desktop screens
@@ -62,29 +71,53 @@ A mobile-first Kotlin Multiplatform application for managing restaurant orders a
 ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
 ```
 
+### Web URLs and Routing
+When running the web version, you can access different sections directly via URLs. All routes are bookmarkable and work with browser navigation:
+
+- **`/`** or **`/orders`** - Orders management (staff only)
+- **`/new-order`** - Create new order (staff only)
+- **`/products`** - Product management (staff only)
+- **`/menu`** - Public guest menu (read-only for customers)
+
+#### Routing Features:
+- **Direct Access**: Bookmark any URL and return to that exact page
+- **Browser Navigation**: Back/forward buttons work as expected
+- **Page Refresh**: URLs persist through page refreshes
+- **Deep Linking**: Share specific pages with others
+- **SPA Fallback**: All unknown routes redirect to the orders page
+
 ## App Structure
 
 ### Main Screens
 
-1. **Orders Screen** (Landing Page)
-   - Shows list of all orders
+1. **Orders Screen** (Landing Page) - `/orders`
+   - Two tabs: "Active" and "Completed" orders
+   - Active tab is selected by default
+   - Tab badges show count of orders in each category
    - FAB to create new orders
-   - Order cards showing table number, items count, total price
+   - Enhanced order cards with better styling and layout
    - Mark orders as completed or delete them
+   - Styled navigation bar with primary color theme
 
-2. **New Order Screen**
-   - Table number input (required)
+2. **New Order Screen** - `/new-order`
+   - Table number input (required first field)
    - Product search and selection
    - Order items list with quantity controls
-   - Customization options for each item
+   - Item customization options for each item
    - Real-time total calculation
    - Save order functionality
 
-3. **Products Screen**
+3. **Products Screen** - `/products`
    - List of all available products
    - Add new products with name, price, description
    - Edit existing products
    - Delete products (with confirmation)
+
+4. **Guest Menu Screen** - `/menu` (Web Only)
+   - Public-facing read-only menu for customers
+   - Beautiful card-based layout showcasing menu items
+   - No edit controls or management features
+   - Perfect for sharing with customers or displaying on tablets
 
 ### Navigation
 - **Drawer Menu**: Access Orders and Products screens
@@ -139,11 +172,13 @@ implementation("org.jetbrains.compose.material:material-icons-extended")
 
 ### Creating Your First Order
 
-1. **Open the app** - You'll see the Orders screen (initially empty)
+1. **Open the app** - You'll see the Orders screen with two tabs
+   - "Active" tab (default) - shows pending orders
+   - "Completed" tab - shows finished orders
 2. **Tap the + button** to create a new order
 3. **Enter table number** - This is required (e.g., "5", "A1", "Patio 3")
 4. **Add products**:
-   - Tap "Add Product" 
+   - Tap "Add Product"
    - Search for items in the dropdown
    - Tap a product to add it to the order
 5. **Customize items** (optional):
@@ -168,16 +203,19 @@ implementation("org.jetbrains.compose.material:material-icons-extended")
 
 ### Managing Orders
 
-- **View all orders** on the main screen
-- **Mark orders complete** by tapping "Complete"
+- **View orders** organized in two tabs:
+  - **Active Orders**: Current pending orders (default view)
+  - **Completed Orders**: Finished orders
+- **Tab badges** show the count of orders in each category
+- **Mark orders complete** by tapping the "Complete" button
 - **Delete orders** by tapping the delete icon
-- **Orders show**:
-  - Table number
-  - Number of items
+- **Enhanced order cards** show:
+  - Table number with prominent styling
+  - Number of items and creation date
   - Preview of first few items
-  - Total price
-  - Creation date
-  - Completion status
+  - Total price in highlighted badge
+  - Completion status with visual indicators
+  - Improved card elevation and spacing
 
 ## Sample Data
 
@@ -200,8 +238,10 @@ The app is built with extensibility in mind. You can easily:
 
 ### Modifying UI
 - Colors and themes can be changed in the Material Design 3 color scheme
+- Navigation bar styling is customized with primary color theme
 - Layout and spacing can be adjusted in individual screen composables
 - Icons can be replaced with custom designs
+- Tab styling and badges can be customized in OrdersScreen
 
 ## Data Location
 
@@ -232,9 +272,16 @@ Browser localStorage (accessible via browser dev tools)
    - Check storage permissions
    - Verify localStorage is enabled (Web)
 
-3. **Build errors**
+3. **Web routing not working**
+   - Ensure you're accessing the development server URL (usually http://localhost:8080)
+   - Check that JavaScript is enabled in your browser
+   - Clear browser cache and refresh
+   - For bookmarked URLs, make sure the development server is running
+
+4. **Build errors**
    - Clean and rebuild: `./gradlew clean build`
    - Check Kotlin and Compose versions compatibility
+   - Delete `.gradle` and `build` directories if cache issues persist
 
 ### Performance Tips
 
