@@ -54,12 +54,26 @@ fun App() {
                         NavigationDrawerItem(
                                 label = { Text("Orders") },
                                 selected = currentRoute == Routes.Orders.route,
-                                onClick = { scope.launch { drawerState.close() } }
+                                onClick = {
+                                    scope.launch {
+                                        drawerState.close()
+                                        navController.navigate(Routes.Orders.route) {
+                                            popUpTo(Routes.Orders.route) { inclusive = true }
+                                        }
+                                    }
+                                }
                         )
                         NavigationDrawerItem(
                                 label = { Text("Products") },
                                 selected = currentRoute == Routes.Products.route,
-                                onClick = { scope.launch { drawerState.close() } }
+                                onClick = {
+                                    scope.launch {
+                                        drawerState.close()
+                                        navController.navigate(Routes.Products.route) {
+                                            popUpTo(Routes.Orders.route)
+                                        }
+                                    }
+                                }
                         )
                     }
                 }
@@ -92,7 +106,7 @@ fun AppNavigation(
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             OrdersScreen(
                     viewModel = viewModel,
-                    onNavigateToNewOrder = {},
+                    onNavigateToNewOrder = { navController.navigate(Routes.NewOrder.route) },
                     onOpenDrawer = onOpenDrawer
             )
         }
