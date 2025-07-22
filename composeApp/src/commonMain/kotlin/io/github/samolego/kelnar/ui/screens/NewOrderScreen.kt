@@ -392,7 +392,7 @@ fun CustomizationDialog(
         onDismiss: () -> Unit
 ) {
     var customizationText by remember { mutableStateOf("") }
-    var customizations by remember { mutableStateOf(item.customizations.toMutableList()) }
+    var customizations by remember { mutableStateOf(item.customizations.toList()) }
 
     AlertDialog(
             onDismissRequest = onDismiss,
@@ -419,7 +419,7 @@ fun CustomizationDialog(
                         IconButton(
                                 onClick = {
                                     if (customizationText.isNotBlank()) {
-                                        customizations.add(customizationText.trim())
+                                        customizations = customizations + customizationText.trim()
                                         customizationText = ""
                                     }
                                 }
@@ -443,7 +443,14 @@ fun CustomizationDialog(
                                         style = MaterialTheme.typography.bodySmall,
                                         modifier = Modifier.weight(1f)
                                 )
-                                IconButton(onClick = { customizations.removeAt(index) }) {
+                                IconButton(
+                                        onClick = {
+                                            customizations =
+                                                    customizations.filterIndexed { i, _ ->
+                                                        i != index
+                                                    }
+                                        }
+                                ) {
                                     Icon(
                                             Icons.Default.Delete,
                                             contentDescription = "Remove customization",
@@ -458,7 +465,13 @@ fun CustomizationDialog(
             confirmButton = {
                 TextButton(
                         onClick = {
-                            onCustomizationsChanged(customizations)
+                            val finalCustomizations =
+                                    if (customizationText.trim().isNotEmpty()) {
+                                        customizations + customizationText.trim()
+                                    } else {
+                                        customizations
+                                    }
+                            onCustomizationsChanged(finalCustomizations)
                             onDismiss()
                         }
                 ) { Text("Save") }
