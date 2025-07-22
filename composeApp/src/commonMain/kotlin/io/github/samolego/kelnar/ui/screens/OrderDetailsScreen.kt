@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.OrderItem
+import io.github.samolego.kelnar.ui.components.CompletedBadge
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 
@@ -118,21 +119,7 @@ fun OrderDetailsScreen(
                                         fontWeight = FontWeight.Bold
                                 )
                                 if (currentOrder.isCompleted) {
-                                    Surface(
-                                            color = MaterialTheme.colorScheme.primary,
-                                            shape = MaterialTheme.shapes.small
-                                    ) {
-                                        Text(
-                                                text = "✓ Completed",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = Color.White,
-                                                modifier =
-                                                        Modifier.padding(
-                                                                horizontal = 8.dp,
-                                                                vertical = 4.dp
-                                                        )
-                                        )
-                                    }
+                                    CompletedBadge()
                                 }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
@@ -148,6 +135,36 @@ fun OrderDetailsScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
+                        Column() {
+                            // Total
+                            Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors =
+                                            CardDefaults.cardColors(
+                                                    containerColor =
+                                                            MaterialTheme.colorScheme.primary
+                                            )
+                            ) {
+                                Row(
+                                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                            text = "Total:",
+                                            style = MaterialTheme.typography.titleLarge,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color.White
+                                    )
+                                    Text(
+                                            text = currentOrder.total.formatAsPrice(),
+                                            style = MaterialTheme.typography.titleLarge,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color.White
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -160,36 +177,6 @@ fun OrderDetailsScreen(
                 }
 
                 items(currentOrder.items) { item -> OrderItemDetailCard(item = item) }
-
-                item {
-                    // Total
-                    Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors =
-                                    CardDefaults.cardColors(
-                                            containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                    ) {
-                        Row(
-                                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                    text = "Total:",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                            )
-                            Text(
-                                    text = currentOrder.total.formatAsPrice(),
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                            )
-                        }
-                    }
-                }
             }
         }
     }
@@ -206,7 +193,7 @@ fun OrderItemDetailCard(item: OrderItem) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                            text = item.product.name,
+                            text = "${item.quantity}x ${item.product.name}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                     )
@@ -224,11 +211,6 @@ fun OrderItemDetailCard(item: OrderItem) {
                     }
                 }
                 Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                            text = "Qty: ${item.quantity}",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Medium
-                    )
                     Text(
                             text = item.subtotal.formatAsPrice(),
                             style = MaterialTheme.typography.titleMedium,

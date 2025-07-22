@@ -200,19 +200,6 @@ fun OrderCard(
                                         ),
                                 modifier = Modifier.padding(end = 8.dp)
                         ) { Text("Complete", color = Color.White) }
-                    } else {
-                        Surface(
-                                color = MaterialTheme.colorScheme.primaryContainer,
-                                shape = MaterialTheme.shapes.small,
-                                modifier = Modifier.padding(end = 8.dp)
-                        ) {
-                            Text(
-                                    text = "✓ Completed",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
                     }
                     IconButton(onClick = onDeleteOrder) {
                         Icon(
