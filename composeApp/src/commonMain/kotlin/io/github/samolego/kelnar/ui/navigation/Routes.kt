@@ -3,7 +3,7 @@ package io.github.samolego.kelnar.ui.navigation
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable @SerialName("orders") data object Orders
+@Serializable @SerialName("orders") data class Orders(val tab: Int = 0)
 
 @Serializable @SerialName("products") data object Products
 

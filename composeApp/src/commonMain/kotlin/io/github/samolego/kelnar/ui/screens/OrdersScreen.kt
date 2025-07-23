@@ -22,12 +22,14 @@ import io.github.samolego.kelnar.utils.formatAsPrice
 @Composable
 fun OrdersScreen(
         viewModel: OrdersViewModel,
+        initialTab: Int = 0,
         onNavigateToNewOrder: () -> Unit,
-        onNavigateToOrderDetails: (String) -> Unit,
+        onNavigateToOrderDetails: (String, Int) -> Unit,
+        onTabChanged: (Int) -> Unit,
         onOpenDrawer: () -> Unit
 ) {
     val orders by viewModel.orders.collectAsState()
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember(initialTab) { mutableStateOf(initialTab) }
 
     val activeOrders = orders.filter { !it.isCompleted }
     val completedOrders = orders.filter { it.isCompleted }
@@ -69,7 +71,10 @@ fun OrdersScreen(
             ) {
                 Tab(
                         selected = selectedTab == 0,
-                        onClick = { selectedTab = 0 },
+                        onClick = {
+                            selectedTab = 0
+                            onTabChanged(0)
+                        },
                         text = {
                             Text(
                                     "Active",
@@ -81,7 +86,10 @@ fun OrdersScreen(
                 )
                 Tab(
                         selected = selectedTab == 1,
-                        onClick = { selectedTab = 1 },
+                        onClick = {
+                            selectedTab = 1
+                            onTabChanged(1)
+                        },
                         text = {
                             Text(
                                     "Completed",
@@ -98,7 +106,9 @@ fun OrdersScreen(
                 0 ->
                         OrdersList(
                                 orders = activeOrders,
-                                onOrderClick = onNavigateToOrderDetails,
+                                onOrderClick = { orderId ->
+                                    onNavigateToOrderDetails(orderId, selectedTab)
+                                },
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
                                 emptyMessage = "No active orders",
@@ -107,7 +117,9 @@ fun OrdersScreen(
                 1 ->
                         OrdersList(
                                 orders = completedOrders,
-                                onOrderClick = onNavigateToOrderDetails,
+                                onOrderClick = { orderId ->
+                                    onNavigateToOrderDetails(orderId, selectedTab)
+                                },
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
                                 emptyMessage = "No completed orders",

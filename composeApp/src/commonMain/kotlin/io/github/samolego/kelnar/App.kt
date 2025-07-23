@@ -68,8 +68,8 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                                 onClick = {
                                     scope.launch {
                                         drawerState.close()
-                                        navController.navigate(Orders) {
-                                            popUpTo(Orders) { inclusive = true }
+                                        navController.navigate(Orders()) {
+                                            popUpTo(Orders()) { inclusive = true }
                                         }
                                     }
                                 }
@@ -80,7 +80,7 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                                 onClick = {
                                     scope.launch {
                                         drawerState.close()
-                                        navController.navigate(Products) { popUpTo(Orders) }
+                                        navController.navigate(Products) { popUpTo(Orders()) }
                                     }
                                 }
                         )
@@ -106,14 +106,23 @@ fun AppNavigation(
         modifier: Modifier = Modifier,
         onOpenDrawer: () -> Unit
 ) {
-    NavHost(navController = navController, startDestination = Orders, modifier = modifier) {
-        composable<Orders> {
+    NavHost(navController = navController, startDestination = Orders(), modifier = modifier) {
+        composable<Orders> { backStackEntry ->
+            val orders = backStackEntry.toRoute<Orders>()
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             OrdersScreen(
                     viewModel = viewModel,
+                    initialTab = orders.tab,
                     onNavigateToNewOrder = { navController.navigate(NewOrder) },
-                    onNavigateToOrderDetails = { orderId ->
+                    onNavigateToOrderDetails = { orderId, currentTab ->
+                        // Save current tab state when navigating to details
                         navController.navigate(OrderDetails(orderId))
+                    },
+                    onTabChanged = { newTab ->
+                        // Update route with new tab when tab changes
+                        navController.navigate(Orders(newTab)) {
+                            popUpTo(Orders()) { inclusive = true }
+                        }
                     },
                     onOpenDrawer = onOpenDrawer
             )

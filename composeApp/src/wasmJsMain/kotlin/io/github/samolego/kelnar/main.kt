@@ -3,8 +3,7 @@ package io.github.samolego.kelnar
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import androidx.navigation.ExperimentalBrowserHistoryApi
-import androidx.navigation.bindToNavigation
-import androidx.navigation.toRoute
+import androidx.navigation.bindToBrowserNavigation
 import io.github.samolego.kelnar.ui.navigation.EditOrder
 import io.github.samolego.kelnar.ui.navigation.NewOrder
 import io.github.samolego.kelnar.ui.navigation.OrderDetails
@@ -24,18 +23,23 @@ fun main() {
         App(
                 onNavHostReady = { navController ->
                     // Parse initial URL and navigate if needed
-                    val initRoute = window.location.hash.substringAfter('#', "").trimStart('/')
+                    // The new bindToBrowserNavigation API uses @SerialName values directly
+                    val initRoute = window.location.pathname.trimStart('/')
                     when {
-                        initRoute.startsWith("orders") -> navController.navigate(Orders)
-                        initRoute.startsWith("products") -> navController.navigate(Products)
-                        initRoute.startsWith("new-order") -> navController.navigate(NewOrder)
-                        initRoute.startsWith("order-details") -> {
+                        initRoute == "orders" -> navController.navigate(Orders())
+                        initRoute.startsWith("orders/") -> {
+                            val tab = initRoute.substringAfter("orders/").toIntOrNull() ?: 0
+                            navController.navigate(Orders(tab))
+                        }
+                        initRoute == "products" -> navController.navigate(Products)
+                        initRoute == "new-order" -> navController.navigate(NewOrder)
+                        initRoute.startsWith("order-details/") -> {
                             val orderId = initRoute.substringAfter("order-details/")
                             if (orderId.isNotEmpty()) {
                                 navController.navigate(OrderDetails(orderId))
                             }
                         }
-                        initRoute.startsWith("edit-order") -> {
+                        initRoute.startsWith("edit-order/") -> {
                             val orderId = initRoute.substringAfter("edit-order/")
                             if (orderId.isNotEmpty()) {
                                 navController.navigate(EditOrder(orderId))
@@ -43,27 +47,8 @@ fun main() {
                         }
                     }
 
-                    // Bind navigation to browser history with custom URL transformation
-                    window.bindToNavigation(navController) { entry ->
-                        val route = entry.destination.route.orEmpty()
-                        when {
-                            route.startsWith(Orders.serializer().descriptor.serialName) ->
-                                    "#/orders"
-                            route.startsWith(Products.serializer().descriptor.serialName) ->
-                                    "#/products"
-                            route.startsWith(NewOrder.serializer().descriptor.serialName) ->
-                                    "#/new-order"
-                            route.startsWith(OrderDetails.serializer().descriptor.serialName) -> {
-                                val args = entry.toRoute<OrderDetails>()
-                                "#/order-details/${args.orderId}"
-                            }
-                            route.startsWith(EditOrder.serializer().descriptor.serialName) -> {
-                                val args = entry.toRoute<EditOrder>()
-                                "#/edit-order/${args.orderId}"
-                            }
-                            else -> ""
-                        }
-                    }
+                    // Use new non-deprecated API
+                    navController.bindToBrowserNavigation()
                 }
         )
     }
