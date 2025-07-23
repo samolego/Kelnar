@@ -1,18 +1,20 @@
 package io.github.samolego.kelnar.ui.navigation
 
-sealed class Routes(val route: String) {
-    object Orders : Routes("orders")
-    object NewOrder : Routes("new-order")
-    object OrderDetails : Routes("order-details/{orderId}") {
-        fun createRoute(orderId: String) = "order-details/$orderId"
-    }
-    object EditOrder : Routes("edit-order/{orderId}") {
-        fun createRoute(orderId: String) = "edit-order/$orderId"
-    }
-    object Products : Routes("products")
-    object AddProduct : Routes("add-product")
-    object EditProduct : Routes("edit-product/{productId}") {
-        fun createRoute(productId: String) = "edit-product/$productId"
-    }
-    object Menu : Routes("menu")
-}
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable @SerialName("orders") data object Orders
+
+@Serializable @SerialName("products") data object Products
+
+@Serializable @SerialName("new-order") data object NewOrder
+
+@Serializable @SerialName("add-product") data object AddProduct
+
+@Serializable @SerialName("menu") data object Menu
+
+@Serializable @SerialName("order-details") data class OrderDetails(val orderId: String)
+
+@Serializable @SerialName("edit-order") data class EditOrder(val orderId: String)
+
+@Serializable @SerialName("edit-product") data class EditProduct(val productId: String)
