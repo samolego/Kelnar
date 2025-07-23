@@ -13,6 +13,10 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.serialization.ExperimentalSerializationApi
 
+external fun decodeURIComponent(encodedURI: String): String
+
+external fun encodeURIComponent(str: String): String
+
 @OptIn(
         ExperimentalComposeUiApi::class,
         ExperimentalSerializationApi::class,
@@ -25,13 +29,25 @@ fun main() {
                     // Parse initial URL and navigate if needed
                     // The new bindToBrowserNavigation API uses @SerialName values directly
                     val initRoute = window.location.pathname.trimStart('/')
+                    val queryParams = window.location.search
+
                     when {
                         initRoute == "orders" -> navController.navigate(Orders())
                         initRoute.startsWith("orders/") -> {
                             val tab = initRoute.substringAfter("orders/").toIntOrNull() ?: 0
                             navController.navigate(Orders(tab))
                         }
-                        initRoute == "products" -> navController.navigate(Products)
+                        initRoute == "products" -> {
+                            // Check for import parameter
+                            val importParam =
+                                    if (queryParams.contains("import=")) {
+                                        queryParams
+                                                .substringAfter("import=")
+                                                .substringBefore("&")
+                                                .let { decodeURIComponent(it) }
+                                    } else ""
+                            navController.navigate(Products(importParam))
+                        }
                         initRoute == "new-order" -> navController.navigate(NewOrder)
                         initRoute.startsWith("order-details/") -> {
                             val orderId = initRoute.substringAfter("order-details/")
@@ -47,7 +63,6 @@ fun main() {
                         }
                     }
 
-                    // Use new non-deprecated API
                     navController.bindToBrowserNavigation()
                 }
         )

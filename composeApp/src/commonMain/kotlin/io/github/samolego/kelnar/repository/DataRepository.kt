@@ -79,6 +79,11 @@ class DataRepository(private val localStorage: LocalStorage) {
         saveProducts()
     }
 
+    suspend fun clearAllProducts() {
+        _products.value = emptyList()
+        saveProducts()
+    }
+
     suspend fun saveOrder(order: Order) {
         val currentOrders = _orders.value.toMutableList()
         val existingIndex = currentOrders.indexOfFirst { it.id == order.id }

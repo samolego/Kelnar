@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Product
+import io.github.samolego.kelnar.ui.viewmodel.ImportAction
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 
@@ -25,12 +26,21 @@ import io.github.samolego.kelnar.utils.formatAsPrice
 @Composable
 fun ProductsScreen(
         viewModel: ProductsViewModel,
+        importParam: String = "",
         onNavigateBack: () -> Unit,
         onOpenDrawer: () -> Unit
 ) {
     val products by viewModel.products.collectAsState()
     val showAddProductDialog by viewModel.showAddProductDialog.collectAsState()
     val showEditProductDialog by viewModel.showEditProductDialog.collectAsState()
+    val importState by viewModel.importState.collectAsState()
+
+    // Handle import parameter
+    LaunchedEffect(importParam) {
+        if (importParam.isNotBlank()) {
+            viewModel.parseImportUrl(importParam)
+        }
+    }
 
     Scaffold(
             topBar = {
@@ -117,6 +127,14 @@ fun ProductsScreen(
                 onSave = { viewModel.saveProduct() }
         )
     }
+
+    // Import Products Dialog
+    if (importState.isVisible) {
+        ImportProductsDialog(
+                importState = importState,
+                onAction = { action -> viewModel.executeImport(action) }
+        )
+    }
 }
 
 @Composable
@@ -172,6 +190,100 @@ fun ProductCard(product: Product, onEditProduct: () -> Unit, onDeleteProduct: ()
 }
 
 @Composable
+fun ImportProductsDialog(
+        importState: io.github.samolego.kelnar.ui.viewmodel.ImportState,
+        onAction: (ImportAction) -> Unit
+) {
+    AlertDialog(
+            onDismissRequest = { onAction(ImportAction.CANCEL) },
+            title = { Text("Import Products") },
+            text = {
+                Column {
+                    Text(
+                            text = "Found ${importState.products.size} products to import:",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    LazyColumn(
+                            modifier = Modifier.heightIn(max = 300.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(importState.products) { product ->
+                            Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors =
+                                            CardDefaults.cardColors(
+                                                    containerColor =
+                                                            MaterialTheme.colorScheme.surfaceVariant
+                                            )
+                            ) {
+                                Column(modifier = Modifier.padding(8.dp)) {
+                                    Text(
+                                            text = product.name,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                            text = product.price.formatAsPrice(),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.primary
+                                    )
+                                    if (product.description.isNotBlank()) {
+                                        Text(
+                                                text = product.description,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (importState.skippedItems.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                                text = "Skipped ${importState.skippedItems.size} invalid items:",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                        )
+                        importState.skippedItems.take(3).forEach { skipped ->
+                            Text(
+                                    text = "• $skipped",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                        if (importState.skippedItems.size > 3) {
+                            Text(
+                                    text = "• ... and ${importState.skippedItems.size - 3} more",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = { onAction(ImportAction.ADD_TO_CURRENT) }) {
+                        Text("Add to Current")
+                    }
+                    Button(onClick = { onAction(ImportAction.OVERWRITE_ALL) }) {
+                        Text("Overwrite All")
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onAction(ImportAction.CANCEL) }) { Text("Cancel") }
+            }
+    )
+}
+
+@Composable
 fun ProductDialog(
         title: String,
         viewModel: ProductsViewModel,
@@ -181,19 +293,18 @@ fun ProductDialog(
     val productName by viewModel.productName.collectAsState()
     val productPrice by viewModel.productPrice.collectAsState()
     val productDescription by viewModel.productDescription.collectAsState()
-    val isFormValid by remember {
-        derivedStateOf {
-            val name = productName.trim()
-            val priceText = productPrice.trim()
 
-            if (name.isBlank() || priceText.isBlank()) {
-                false
-            } else {
-                val price = priceText.toDoubleOrNull()
-                price != null && price >= 0
+    val isFormValid =
+            remember(productName, productPrice) {
+                val name = productName.trim()
+                val priceText = productPrice.trim()
+                if (name.isBlank() || priceText.isBlank()) {
+                    false
+                } else {
+                    val price = priceText.toDoubleOrNull()
+                    price != null && price >= 0
+                }
             }
-        }
-    }
 
     AlertDialog(
             onDismissRequest = onDismiss,

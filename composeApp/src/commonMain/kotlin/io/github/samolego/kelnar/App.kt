@@ -80,7 +80,7 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                                 onClick = {
                                     scope.launch {
                                         drawerState.close()
-                                        navController.navigate(Products) { popUpTo(Orders()) }
+                                        navController.navigate(Products()) { popUpTo(Orders()) }
                                     }
                                 }
                         )
@@ -159,10 +159,12 @@ fun AppNavigation(
             )
         }
 
-        composable<Products> {
+        composable<Products> { backStackEntry ->
+            val products = backStackEntry.toRoute<Products>()
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
                     viewModel = viewModel,
+                    importParam = products.import,
                     onNavigateBack = { navController.popBackStack() },
                     onOpenDrawer = onOpenDrawer
             )

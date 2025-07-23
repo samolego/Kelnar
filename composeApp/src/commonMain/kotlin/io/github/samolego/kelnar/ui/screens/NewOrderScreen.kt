@@ -87,7 +87,6 @@ fun OrderFormScreen(
                                         contentDescription = "save",
                                         tint = Color.White,
                                 )
-                                Text("Save", color = Color.White)
                             }
                         },
                         colors =

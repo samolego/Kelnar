@@ -9,10 +9,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ImportProduct(val name: String, val price: Double, val description: String = "")
+
+enum class ImportAction {
+    CANCEL,
+    OVERWRITE_ALL,
+    ADD_TO_CURRENT
+}
+
+data class ImportState(
+        val products: List<ImportProduct> = emptyList(),
+        val isVisible: Boolean = false,
+        val skippedItems: List<String> = emptyList()
+)
 
 class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
     val products = repository.products
+
+    private val _importState = MutableStateFlow(ImportState())
+    val importState: StateFlow<ImportState> = _importState.asStateFlow()
 
     private val _currentProduct = MutableStateFlow<Product?>(null)
     val currentProduct: StateFlow<Product?> = _currentProduct.asStateFlow()
@@ -110,5 +129,96 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
     private fun generateId(): String {
         return Clock.System.now().toEpochMilliseconds().toString()
+    }
+
+    fun parseImportUrl(importParam: String) {
+        if (importParam.isBlank()) return
+
+        val cleanParam = importParam.trim().removeSurrounding("[", "]")
+        val productStrings = cleanParam.split("|")
+        val validProducts = mutableListOf<ImportProduct>()
+        val skippedItems = mutableListOf<String>()
+
+        productStrings.forEach { productStr ->
+            val parts = productStr.split(";")
+            if (parts.size >= 2) {
+                val name = parts[0].trim()
+                val priceStr = parts[1].trim()
+                val description = parts.getOrNull(2)?.trim() ?: ""
+
+                if (name.isNotBlank()) {
+                    val price = priceStr.toDoubleOrNull()
+                    if (price != null && price > 0) {
+                        validProducts.add(ImportProduct(name, price, description))
+                    } else {
+                        skippedItems.add("$name (invalid price: $priceStr)")
+                    }
+                } else {
+                    skippedItems.add("Product with empty name")
+                }
+            } else {
+                skippedItems.add("Malformed product: $productStr")
+            }
+        }
+
+        if (validProducts.isNotEmpty()) {
+            _importState.value =
+                    ImportState(
+                            products = validProducts,
+                            isVisible = true,
+                            skippedItems = skippedItems
+                    )
+        }
+    }
+
+    fun hideImportDialog() {
+        _importState.value = ImportState()
+    }
+
+    fun executeImport(action: ImportAction) {
+        val currentImportState = _importState.value
+        if (!currentImportState.isVisible || currentImportState.products.isEmpty()) return
+
+        viewModelScope.launch {
+            when (action) {
+                ImportAction.CANCEL -> {
+                    // Do nothing, just close dialog
+                }
+                ImportAction.OVERWRITE_ALL -> {
+                    // Clear all existing products and add imported ones
+                    repository.clearAllProducts()
+                    currentImportState.products.forEach { importProduct ->
+                        val product =
+                                Product(
+                                        id = generateId(),
+                                        name = importProduct.name,
+                                        price = importProduct.price,
+                                        description = importProduct.description
+                                )
+                        repository.saveProduct(product)
+                    }
+                }
+                ImportAction.ADD_TO_CURRENT -> {
+                    // Add imported products, overwriting duplicates by name
+                    currentImportState.products.forEach { importProduct ->
+                        // Check if product with same name exists
+                        val existingProduct =
+                                repository.products.value.find {
+                                    it.name.equals(importProduct.name, ignoreCase = true)
+                                }
+
+                        val product =
+                                Product(
+                                        id = existingProduct?.id ?: generateId(),
+                                        name = importProduct.name,
+                                        price = importProduct.price,
+                                        description = importProduct.description
+                                )
+                        repository.saveProduct(product)
+                    }
+                }
+            }
+            hideImportDialog()
+        }
     }
 }
