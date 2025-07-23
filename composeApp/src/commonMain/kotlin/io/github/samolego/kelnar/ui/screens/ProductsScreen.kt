@@ -26,7 +26,6 @@ import io.github.samolego.kelnar.utils.formatAsPrice
 @Composable
 fun ProductsScreen(
         viewModel: ProductsViewModel,
-        onNavigateBack: () -> Unit,
         onOpenDrawer: () -> Unit,
         importParam: String = ""
 ) {

@@ -10,7 +10,7 @@ object FormatUtils {
         return "$wholePart.${fractionalPart.toString().padStart(2, '0')}"
     }
 
-    fun formatPrice(price: Double): String = "$${formatCurrency(price)}"
+    fun formatPrice(price: Double): String = "${formatCurrency(price)} €"
 }
 
 // Extension function for Double to format as currency

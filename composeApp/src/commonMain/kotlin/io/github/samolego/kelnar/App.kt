@@ -1,5 +1,9 @@
 package io.github.samolego.kelnar
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -8,6 +12,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -43,58 +48,68 @@ import kotlinx.coroutines.launch
 @Composable
 fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
     MaterialTheme {
-        val localStorage = remember { getLocalStorage() }
-        val repository = remember { DataRepository(localStorage) }
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            val localStorage = remember { getLocalStorage() }
+            val repository = remember { DataRepository(localStorage) }
 
-        val navController = rememberNavController()
-        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-        val scope = rememberCoroutineScope()
+            val navController = rememberNavController()
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+            val scope = rememberCoroutineScope()
 
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
 
-        // Wait for repository to load before setting up navigation
-        LaunchedEffect(repository) { repository.loadData() }
+            // Wait for repository to load before setting up navigation
+            LaunchedEffect(repository) { repository.loadData() }
 
-        // Notify when NavController is ready
-        LaunchedEffect(navController) { onNavHostReady(navController) }
+            // Notify when NavController is ready
+            LaunchedEffect(navController) { onNavHostReady(navController) }
 
-        ModalNavigationDrawer(
-                drawerState = drawerState,
-                drawerContent = {
-                    ModalDrawerSheet {
-                        NavigationDrawerItem(
-                                label = { Text("Orders") },
-                                selected = currentRoute?.contains("orders") == true,
-                                onClick = {
-                                    scope.launch {
-                                        drawerState.close()
-                                        navController.navigate(Orders()) {
-                                            popUpTo(Orders()) { inclusive = true }
+            ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    drawerContent = {
+                        ModalDrawerSheet(
+                            drawerContainerColor = MaterialTheme.colorScheme.surface
+                        ) {
+                            NavigationDrawerItem(
+                                    label = { Text("Orders") },
+                                    selected = currentRoute?.contains("orders") == true,
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.close()
+                                            navController.navigate(Orders())
                                         }
                                     }
-                                }
-                        )
-                        NavigationDrawerItem(
-                                label = { Text("Products") },
-                                selected = currentRoute?.contains("products") == true,
-                                onClick = {
-                                    scope.launch {
-                                        drawerState.close()
-                                        navController.navigate(Products) { popUpTo(Orders()) }
+                            )
+                            NavigationDrawerItem(
+                                    label = { Text("Products") },
+                                    selected = currentRoute?.contains("products") == true,
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.close()
+                                            navController.navigate(Products) { popUpTo(Orders()) }
+                                        }
                                     }
-                                }
-                        )
+                            )
+                        }
                     }
+            ) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = MaterialTheme.colorScheme.background
+                ) { paddingValues ->
+                    AppNavigation(
+                            navController = navController,
+                            repository = repository,
+                            modifier = Modifier
+                                .padding(paddingValues)
+                                .fillMaxSize(),
+                            onOpenDrawer = { scope.launch { drawerState.open() } }
+                    )
                 }
-        ) {
-            Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
-                AppNavigation(
-                        navController = navController,
-                        repository = repository,
-                        modifier = Modifier.padding(paddingValues),
-                        onOpenDrawer = { scope.launch { drawerState.open() } }
-                )
             }
         }
     }
@@ -107,8 +122,19 @@ fun AppNavigation(
         modifier: Modifier = Modifier,
         onOpenDrawer: () -> Unit
 ) {
-    NavHost(navController = navController, startDestination = Orders(), modifier = modifier) {
-        composable<Orders> { backStackEntry ->
+    NavHost(
+        navController = navController,
+        startDestination = Orders(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        enterTransition = { fadeIn(animationSpec = tween(150)) },
+        exitTransition = { fadeOut(animationSpec = tween(150)) }
+    ) {
+        composable<Orders>(
+            enterTransition = { fadeIn(animationSpec = tween(150)) },
+            exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) { backStackEntry ->
             val orders = backStackEntry.toRoute<Orders>()
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             OrdersScreen(
@@ -129,7 +155,10 @@ fun AppNavigation(
             )
         }
 
-        composable<NewOrder> {
+        composable<NewOrder>(
+            enterTransition = { fadeIn(animationSpec = tween(150)) },
+            exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) {
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             NewOrderScreen(
                     viewModel = viewModel,
@@ -138,7 +167,10 @@ fun AppNavigation(
             )
         }
 
-        composable<OrderDetails> { backStackEntry ->
+        composable<OrderDetails>(
+            enterTransition = { fadeIn(animationSpec = tween(150)) },
+            exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) { backStackEntry ->
             val orderDetails = backStackEntry.toRoute<OrderDetails>()
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             OrderDetailsScreen(
@@ -149,7 +181,10 @@ fun AppNavigation(
             )
         }
 
-        composable<EditOrder> { backStackEntry ->
+        composable<EditOrder>(
+            enterTransition = { fadeIn(animationSpec = tween(150)) },
+            exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) { backStackEntry ->
             val editOrder = backStackEntry.toRoute<EditOrder>()
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             EditOrderScreen(
@@ -160,23 +195,27 @@ fun AppNavigation(
             )
         }
 
-        composable<Products> {
+        composable<Products>(
+            enterTransition = { fadeIn(animationSpec = tween(150)) },
+            exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) {
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
                     viewModel = viewModel,
-                    onNavigateBack = { navController.popBackStack() },
                     onOpenDrawer = onOpenDrawer
             )
         }
 
-        composable<ProductsImport> { backStackEntry ->
+        composable<ProductsImport>(
+            enterTransition = { fadeIn(animationSpec = tween(150)) },
+            exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) { backStackEntry ->
             val productsImport = backStackEntry.toRoute<ProductsImport>()
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
                     viewModel = viewModel,
-                    importParam = productsImport.data,
-                    onNavigateBack = { navController.popBackStack() },
-                    onOpenDrawer = onOpenDrawer
+                    onOpenDrawer = onOpenDrawer,
+                    importParam = productsImport.data
             )
         }
     }
