@@ -30,6 +30,7 @@ import io.github.samolego.kelnar.ui.navigation.NewOrder
 import io.github.samolego.kelnar.ui.navigation.OrderDetails
 import io.github.samolego.kelnar.ui.navigation.Orders
 import io.github.samolego.kelnar.ui.navigation.Products
+import io.github.samolego.kelnar.ui.navigation.ProductsImport
 import io.github.samolego.kelnar.ui.screens.EditOrderScreen
 import io.github.samolego.kelnar.ui.screens.NewOrderScreen
 import io.github.samolego.kelnar.ui.screens.OrderDetailsScreen
@@ -80,7 +81,7 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                                 onClick = {
                                     scope.launch {
                                         drawerState.close()
-                                        navController.navigate(Products()) { popUpTo(Orders()) }
+                                        navController.navigate(Products) { popUpTo(Orders()) }
                                     }
                                 }
                         )
@@ -159,12 +160,21 @@ fun AppNavigation(
             )
         }
 
-        composable<Products> { backStackEntry ->
-            val products = backStackEntry.toRoute<Products>()
+        composable<Products> {
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
                     viewModel = viewModel,
-                    importParam = products.import,
+                    onNavigateBack = { navController.popBackStack() },
+                    onOpenDrawer = onOpenDrawer
+            )
+        }
+
+        composable<ProductsImport> { backStackEntry ->
+            val productsImport = backStackEntry.toRoute<ProductsImport>()
+            val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
+            ProductsScreen(
+                    viewModel = viewModel,
+                    importParam = productsImport.data,
                     onNavigateBack = { navController.popBackStack() },
                     onOpenDrawer = onOpenDrawer
             )

@@ -9,6 +9,7 @@ import io.github.samolego.kelnar.ui.navigation.NewOrder
 import io.github.samolego.kelnar.ui.navigation.OrderDetails
 import io.github.samolego.kelnar.ui.navigation.Orders
 import io.github.samolego.kelnar.ui.navigation.Products
+import io.github.samolego.kelnar.ui.navigation.ProductsImport
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -38,15 +39,18 @@ fun main() {
                             navController.navigate(Orders(tab))
                         }
                         initRoute == "products" -> {
-                            // Check for import parameter
-                            val importParam =
-                                    if (queryParams.contains("import=")) {
+                            navController.navigate(Products)
+                        }
+                        initRoute == "products/import" -> {
+                            // Check for data parameter
+                            val importData =
+                                    if (queryParams.contains("data=")) {
                                         queryParams
-                                                .substringAfter("import=")
+                                                .substringAfter("data=")
                                                 .substringBefore("&")
                                                 .let { decodeURIComponent(it) }
                                     } else ""
-                            navController.navigate(Products(importParam))
+                            navController.navigate(ProductsImport(importData))
                         }
                         initRoute == "new-order" -> navController.navigate(NewOrder)
                         initRoute.startsWith("order-details/") -> {

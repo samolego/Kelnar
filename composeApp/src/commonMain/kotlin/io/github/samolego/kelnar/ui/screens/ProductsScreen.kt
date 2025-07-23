@@ -26,9 +26,9 @@ import io.github.samolego.kelnar.utils.formatAsPrice
 @Composable
 fun ProductsScreen(
         viewModel: ProductsViewModel,
-        importParam: String = "",
         onNavigateBack: () -> Unit,
-        onOpenDrawer: () -> Unit
+        onOpenDrawer: () -> Unit,
+        importParam: String = ""
 ) {
     val products by viewModel.products.collectAsState()
     val showAddProductDialog by viewModel.showAddProductDialog.collectAsState()

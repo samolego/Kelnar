@@ -5,7 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable @SerialName("orders") data class Orders(val tab: Int = 0)
 
-@Serializable @SerialName("products") data class Products(val import: String = "")
+@Serializable @SerialName("products") data object Products
+
+@Serializable @SerialName("products/import") data class ProductsImport(val data: String = "")
 
 @Serializable @SerialName("new-order") data object NewOrder
 
