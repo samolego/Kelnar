@@ -91,7 +91,10 @@ fun ProductsScreen(
                                                 showDeleteAllDialog = true
                                             },
                                             leadingIcon = {
-                                                Icon(Icons.Default.Delete, contentDescription = null)
+                                                Icon(
+                                                        Icons.Default.Delete,
+                                                        contentDescription = null
+                                                )
                                             }
                                     )
                                 }
@@ -184,7 +187,9 @@ fun ProductsScreen(
                 onDismissRequest = { showDeleteAllDialog = false },
                 title = { Text("Delete All Products") },
                 text = {
-                    Text("Are you sure you want to delete all products? This action cannot be undone.")
+                    Text(
+                            "Are you sure you want to delete all products? This action cannot be undone."
+                    )
                 },
                 confirmButton = {
                     TextButton(
@@ -192,14 +197,10 @@ fun ProductsScreen(
                                 showDeleteAllDialog = false
                                 viewModel.deleteAllProducts()
                             }
-                    ) {
-                        Text("Delete")
-                    }
+                    ) { Text("Delete") }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showDeleteAllDialog = false }) {
-                        Text("Cancel")
-                    }
+                    TextButton(onClick = { showDeleteAllDialog = false }) { Text("Cancel") }
                 }
         )
     }
@@ -394,7 +395,7 @@ fun ProductDialog(
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             singleLine = true,
-                            prefix = { Text("$") }
+                            prefix = { Text("€") }
                     )
 
                     OutlinedTextField(

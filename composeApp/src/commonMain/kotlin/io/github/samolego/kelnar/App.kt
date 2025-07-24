@@ -50,10 +50,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
     MaterialTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             val localStorage = remember { getLocalStorage() }
             val repository = remember { DataRepository(localStorage) }
 
@@ -67,15 +64,10 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
             // Wait for repository to load before setting up navigation
             LaunchedEffect(repository) { repository.loadData() }
 
-            // Notify when NavController is ready
-            LaunchedEffect(navController) { onNavHostReady(navController) }
-
             ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
-                        ModalDrawerSheet(
-                            drawerContainerColor = MaterialTheme.colorScheme.surface
-                        ) {
+                        ModalDrawerSheet(drawerContainerColor = MaterialTheme.colorScheme.surface) {
                             NavigationDrawerItem(
                                     label = { Text("Orders") },
                                     selected = currentRoute?.contains("orders") == true,
@@ -100,16 +92,15 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                     }
             ) {
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    containerColor = MaterialTheme.colorScheme.background
+                        modifier = Modifier.fillMaxSize(),
+                        containerColor = MaterialTheme.colorScheme.background
                 ) { paddingValues ->
                     AppNavigation(
                             navController = navController,
                             repository = repository,
-                            modifier = Modifier
-                                .padding(paddingValues)
-                                .fillMaxSize(),
-                            onOpenDrawer = { scope.launch { drawerState.open() } }
+                            modifier = Modifier.padding(paddingValues).fillMaxSize(),
+                            onOpenDrawer = { scope.launch { drawerState.open() } },
+                            onNavHostReady = onNavHostReady
                     )
                 }
             }
@@ -122,20 +113,19 @@ fun AppNavigation(
         navController: NavHostController,
         repository: DataRepository,
         modifier: Modifier = Modifier,
-        onOpenDrawer: () -> Unit
+        onOpenDrawer: () -> Unit,
+        onNavHostReady: suspend (NavController) -> Unit = {}
 ) {
     NavHost(
-        navController = navController,
-        startDestination = Orders(),
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        enterTransition = { fadeIn(animationSpec = tween(150)) },
-        exitTransition = { fadeOut(animationSpec = tween(150)) }
-    ) {
-        composable<Orders>(
+            navController = navController,
+            startDestination = Orders(),
+            modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
             enterTransition = { fadeIn(animationSpec = tween(150)) },
             exitTransition = { fadeOut(animationSpec = tween(150)) }
+    ) {
+        composable<Orders>(
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val orders = backStackEntry.toRoute<Orders>()
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
@@ -158,8 +148,8 @@ fun AppNavigation(
         }
 
         composable<NewOrder>(
-            enterTransition = { fadeIn(animationSpec = tween(150)) },
-            exitTransition = { fadeOut(animationSpec = tween(150)) }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             NewOrderScreen(
@@ -170,8 +160,8 @@ fun AppNavigation(
         }
 
         composable<OrderDetails>(
-            enterTransition = { fadeIn(animationSpec = tween(150)) },
-            exitTransition = { fadeOut(animationSpec = tween(150)) }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val orderDetails = backStackEntry.toRoute<OrderDetails>()
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
@@ -184,8 +174,8 @@ fun AppNavigation(
         }
 
         composable<EditOrder>(
-            enterTransition = { fadeIn(animationSpec = tween(150)) },
-            exitTransition = { fadeOut(animationSpec = tween(150)) }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val editOrder = backStackEntry.toRoute<EditOrder>()
             val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
@@ -198,38 +188,34 @@ fun AppNavigation(
         }
 
         composable<Products>(
-            enterTransition = { fadeIn(animationSpec = tween(150)) },
-            exitTransition = { fadeOut(animationSpec = tween(150)) }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
                     viewModel = viewModel,
                     onOpenDrawer = onOpenDrawer,
-                    onNavigateToShare = { _ ->
-                        navController.navigate(ProductsShare)
-                    }
+                    onNavigateToShare = { _ -> navController.navigate(ProductsShare) }
             )
         }
 
         composable<ProductsImport>(
-            enterTransition = { fadeIn(animationSpec = tween(150)) },
-            exitTransition = { fadeOut(animationSpec = tween(150)) }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val productsImport = backStackEntry.toRoute<ProductsImport>()
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
                     viewModel = viewModel,
                     onOpenDrawer = onOpenDrawer,
-                    onNavigateToShare = { _ ->
-                        navController.navigate(ProductsShare)
-                    },
+                    onNavigateToShare = { _ -> navController.navigate(ProductsShare) },
                     importParam = productsImport.data
             )
         }
 
         composable<ProductsShare>(
-            enterTransition = { fadeIn(animationSpec = tween(150)) },
-            exitTransition = { fadeOut(animationSpec = tween(150)) }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsShareScreen(
@@ -238,6 +224,9 @@ fun AppNavigation(
             )
         }
     }
+
+    // Notify when NavController is ready
+    LaunchedEffect(navController) { onNavHostReady(navController) }
 }
 
 expect fun getLocalStorage(): io.github.samolego.kelnar.repository.LocalStorage
