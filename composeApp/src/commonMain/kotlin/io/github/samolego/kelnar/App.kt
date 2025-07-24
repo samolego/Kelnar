@@ -36,11 +36,13 @@ import io.github.samolego.kelnar.ui.navigation.OrderDetails
 import io.github.samolego.kelnar.ui.navigation.Orders
 import io.github.samolego.kelnar.ui.navigation.Products
 import io.github.samolego.kelnar.ui.navigation.ProductsImport
+import io.github.samolego.kelnar.ui.navigation.ProductsShare
 import io.github.samolego.kelnar.ui.screens.EditOrderScreen
 import io.github.samolego.kelnar.ui.screens.NewOrderScreen
 import io.github.samolego.kelnar.ui.screens.OrderDetailsScreen
 import io.github.samolego.kelnar.ui.screens.OrdersScreen
 import io.github.samolego.kelnar.ui.screens.ProductsScreen
+import io.github.samolego.kelnar.ui.screens.ProductsShareScreen
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import kotlinx.coroutines.launch
@@ -202,7 +204,10 @@ fun AppNavigation(
             val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
                     viewModel = viewModel,
-                    onOpenDrawer = onOpenDrawer
+                    onOpenDrawer = onOpenDrawer,
+                    onNavigateToShare = { _ ->
+                        navController.navigate(ProductsShare)
+                    }
             )
         }
 
@@ -215,7 +220,21 @@ fun AppNavigation(
             ProductsScreen(
                     viewModel = viewModel,
                     onOpenDrawer = onOpenDrawer,
+                    onNavigateToShare = { _ ->
+                        navController.navigate(ProductsShare)
+                    },
                     importParam = productsImport.data
+            )
+        }
+
+        composable<ProductsShare>(
+            enterTransition = { fadeIn(animationSpec = tween(150)) },
+            exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) {
+            val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
+            ProductsShareScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
             )
         }
     }

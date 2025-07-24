@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,12 +29,16 @@ import io.github.samolego.kelnar.utils.formatAsPrice
 fun ProductsScreen(
         viewModel: ProductsViewModel,
         onOpenDrawer: () -> Unit,
+        onNavigateToShare: (String) -> Unit = {},
         importParam: String = ""
 ) {
     val products by viewModel.products.collectAsState()
     val showAddProductDialog by viewModel.showAddProductDialog.collectAsState()
     val showEditProductDialog by viewModel.showEditProductDialog.collectAsState()
     val importState by viewModel.importState.collectAsState()
+
+    var showOptionsMenu by remember { mutableStateOf(false) }
+    var showDeleteAllDialog by remember { mutableStateOf(false) }
 
     // Handle import parameter
     LaunchedEffect(importParam) {
@@ -52,6 +58,43 @@ fun ProductsScreen(
                                         contentDescription = "Menu",
                                         tint = Color.White
                                 )
+                            }
+                        },
+                        actions = {
+                            Box {
+                                IconButton(onClick = { showOptionsMenu = true }) {
+                                    Icon(
+                                            Icons.Default.MoreVert,
+                                            contentDescription = "More options",
+                                            tint = Color.White
+                                    )
+                                }
+                                DropdownMenu(
+                                        expanded = showOptionsMenu,
+                                        onDismissRequest = { showOptionsMenu = false }
+                                ) {
+                                    DropdownMenuItem(
+                                            text = { Text("Share Products") },
+                                            onClick = {
+                                                showOptionsMenu = false
+                                                val shareData = viewModel.generateShareData()
+                                                onNavigateToShare(shareData)
+                                            },
+                                            leadingIcon = {
+                                                Icon(Icons.Default.Share, contentDescription = null)
+                                            }
+                                    )
+                                    DropdownMenuItem(
+                                            text = { Text("Delete All") },
+                                            onClick = {
+                                                showOptionsMenu = false
+                                                showDeleteAllDialog = true
+                                            },
+                                            leadingIcon = {
+                                                Icon(Icons.Default.Delete, contentDescription = null)
+                                            }
+                                    )
+                                }
                             }
                         },
                         colors =
@@ -132,6 +175,32 @@ fun ProductsScreen(
         ImportProductsDialog(
                 importState = importState,
                 onAction = { action -> viewModel.executeImport(action) }
+        )
+    }
+
+    // Delete All Confirmation Dialog
+    if (showDeleteAllDialog) {
+        AlertDialog(
+                onDismissRequest = { showDeleteAllDialog = false },
+                title = { Text("Delete All Products") },
+                text = {
+                    Text("Are you sure you want to delete all products? This action cannot be undone.")
+                },
+                confirmButton = {
+                    TextButton(
+                            onClick = {
+                                showDeleteAllDialog = false
+                                viewModel.deleteAllProducts()
+                            }
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteAllDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
         )
     }
 }

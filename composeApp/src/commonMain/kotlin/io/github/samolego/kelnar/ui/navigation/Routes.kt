@@ -9,6 +9,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable @SerialName("products/import") data class ProductsImport(val data: String = "")
 
+@Serializable @SerialName("products/share") data object ProductsShare
+
 @Serializable @SerialName("new-order") data object NewOrder
 
 @Serializable @SerialName("add-product") data object AddProduct

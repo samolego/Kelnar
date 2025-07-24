@@ -37,12 +37,7 @@ class DataRepository(private val localStorage: LocalStorage) {
                 val productsList = json.decodeFromString<List<Product>>(productsJson)
                 _products.value = productsList
             } catch (e: Exception) {
-                _products.value = getDefaultProducts()
-                saveProducts()
             }
-        } else {
-            _products.value = getDefaultProducts()
-            saveProducts()
         }
     }
 

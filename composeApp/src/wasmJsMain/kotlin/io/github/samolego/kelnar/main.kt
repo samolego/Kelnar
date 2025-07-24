@@ -10,6 +10,7 @@ import io.github.samolego.kelnar.ui.navigation.OrderDetails
 import io.github.samolego.kelnar.ui.navigation.Orders
 import io.github.samolego.kelnar.ui.navigation.Products
 import io.github.samolego.kelnar.ui.navigation.ProductsImport
+import io.github.samolego.kelnar.ui.navigation.ProductsShare
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.serialization.ExperimentalSerializationApi

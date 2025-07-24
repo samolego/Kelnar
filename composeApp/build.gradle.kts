@@ -64,6 +64,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
             implementation(libs.material.icons.extended)
+            implementation(libs.qrcode.kotlin)
         }
         commonTest.dependencies { implementation(libs.kotlin.test) }
         desktopMain.dependencies {

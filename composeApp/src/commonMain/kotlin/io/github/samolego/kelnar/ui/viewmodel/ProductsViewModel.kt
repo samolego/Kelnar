@@ -221,4 +221,21 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
             hideImportDialog()
         }
     }
+
+    fun generateShareData(): String {
+        val currentProducts = repository.products.value
+        if (currentProducts.isEmpty()) return "[]"
+
+        val data = currentProducts.joinToString("|") { product ->
+            "${product.name};${product.price}" +
+            if (product.description.isNotBlank()) ";${product.description}" else ""
+        }
+        return "[$data]"
+    }
+
+    fun deleteAllProducts() {
+        viewModelScope.launch {
+            repository.clearAllProducts()
+        }
+    }
 }
