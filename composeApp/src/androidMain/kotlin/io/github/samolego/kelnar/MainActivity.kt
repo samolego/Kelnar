@@ -9,9 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.samolego.kelnar.ui.navigation.ProductsImport
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,44 +17,34 @@ class MainActivity : ComponentActivity() {
 
         AppContext.init(this)
 
-        val appLinkIntent: Intent = intent
-        val appLinkAction: String? = appLinkIntent.action
-        val appLinkData: Uri? = appLinkIntent.data
+        val originalIntent: Intent = intent
+        val originalUri: Uri? = originalIntent.data
 
-        Log.d("MainActivity", "appLinkAction: $appLinkAction")
-        Log.d("MainActivity", "appLinkData: $appLinkData")
+        // Since we use # in our app due to SPA routing,
+        // navcontroller cannot really follow the deeplinks normally.
+        originalUri?.toString()?.let { uriString ->
+            // Check if this is a hash-based URL that needs to be transformed.
+            if (uriString.contains("/#")) {
+                // Replace "/#/" with a standard path separator "/".
+                val newUriString = uriString.replace("/#", "/")
+                val newUri = Uri.parse(newUriString)
 
-        setContent {
-            App(
-                    onNavHostReady = { navController ->
-                        appLinkData?.let { uri ->
-                            val fragment = uri.fragment?.removePrefix("/") ?: ""
-                            val path = fragment.split("?")[0]
-                            val queryParams = fragment.substringAfter("?", "")
-
-                            Log.d("MainActivity", "Parsed path: $path")
-                            Log.d("MainActivity", "Query params: $queryParams")
-
-                            if (path == "products/import") {
-                                // Check for data parameter
-                                val fragmentUri = Uri.parse("kelnar://$fragment")
-                                val importData =
-                                        fragmentUri.getQueryParameter("data")?.let { encodedData ->
-                                            Log.d("MainActivity", "encoded data: $encodedData")
-                                            URLDecoder.decode(
-                                                    encodedData,
-                                                    StandardCharsets.UTF_8.toString()
-                                            )
-                                        }
-                                                ?: ""
-
-                                Log.d("MainActivity", "Import data: $importData")
-                                navController.navigate(ProductsImport(importData))
-                            }
+                // Create a new Intent with the same action but the new URI.
+                val newIntent =
+                        Intent(originalIntent.action, newUri).apply {
+                            // It's good practice to ensure the BROWSABLE category is present.
+                            addCategory(Intent.CATEGORY_BROWSABLE)
                         }
-                    }
-            )
+
+                Log.d("MainActivity", "replaced link: $newUri")
+
+                // CRITICAL STEP: Replace the Activity's intent with our new one.
+                // The NavController will now use this new intent for deep linking.
+                intent = newIntent
+            }
         }
+
+        setContent { App() }
     }
 }
 

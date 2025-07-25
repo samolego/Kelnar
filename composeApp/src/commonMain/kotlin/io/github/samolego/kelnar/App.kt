@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import io.github.samolego.kelnar.repository.DataRepository
 import io.github.samolego.kelnar.repository.LocalStorage
@@ -45,6 +46,7 @@ import io.github.samolego.kelnar.ui.screens.ProductsScreen
 import io.github.samolego.kelnar.ui.screens.ProductsShareScreen
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
+import io.github.samolego.kelnar.utils.AppConfig
 import kotlinx.coroutines.launch
 
 @Composable
@@ -101,7 +103,7 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                     AppNavigation(
                             modifier = Modifier.padding(paddingValues).fillMaxSize(),
                             navController = navController,
-                        ordersViewModel = ordersViewModel,
+                            ordersViewModel = ordersViewModel,
                             productsViewModel = productsViewModel,
                             onOpenDrawer = { scope.launch { drawerState.open() } },
                             onNavHostReady = onNavHostReady
@@ -129,6 +131,12 @@ fun AppNavigation(
             exitTransition = { fadeOut(animationSpec = tween(150)) }
     ) {
         composable<Orders>(
+                deepLinks =
+                        listOf(
+                                navDeepLink {
+                                    uriPattern = "${AppConfig.BASE_URL}/orders?tab={tab}"
+                                }
+                        ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
@@ -152,6 +160,7 @@ fun AppNavigation(
         }
 
         composable<NewOrder>(
+                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/new-order" }),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
@@ -163,6 +172,13 @@ fun AppNavigation(
         }
 
         composable<OrderDetails>(
+                deepLinks =
+                        listOf(
+                                navDeepLink {
+                                    uriPattern =
+                                            "${AppConfig.BASE_URL}/order-details?orderId={orderId}"
+                                }
+                        ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
@@ -176,6 +192,13 @@ fun AppNavigation(
         }
 
         composable<EditOrder>(
+                deepLinks =
+                        listOf(
+                                navDeepLink {
+                                    uriPattern =
+                                            "${AppConfig.BASE_URL}/edit-order?orderId={orderId}"
+                                }
+                        ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
@@ -189,6 +212,7 @@ fun AppNavigation(
         }
 
         composable<Products>(
+                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/products" }),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
@@ -200,6 +224,12 @@ fun AppNavigation(
         }
 
         composable<ProductsImport>(
+                deepLinks =
+                        listOf(
+                                navDeepLink {
+                                    uriPattern = "${AppConfig.BASE_URL}/products/import?data={data}"
+                                }
+                        ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
@@ -213,6 +243,8 @@ fun AppNavigation(
         }
 
         composable<ProductsShare>(
+                deepLinks =
+                        listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/products/share" }),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
