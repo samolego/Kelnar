@@ -145,8 +145,7 @@ fun AppNavigation(
                     viewModel = ordersViewModel,
                     initialTab = orders.tab,
                     onNavigateToNewOrder = { navController.navigate(NewOrder) },
-                    onNavigateToOrderDetails = { orderId, currentTab ->
-                        // Save current tab state when navigating to details
+                    onNavigateToOrderDetails = { orderId, _currentTab ->
                         navController.navigate(OrderDetails(orderId))
                     },
                     onTabChanged = { newTab ->
@@ -160,7 +159,7 @@ fun AppNavigation(
         }
 
         composable<NewOrder>(
-                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/new-order" }),
+                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/orders/new" }),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
@@ -175,8 +174,7 @@ fun AppNavigation(
                 deepLinks =
                         listOf(
                                 navDeepLink {
-                                    uriPattern =
-                                            "${AppConfig.BASE_URL}/order-details?orderId={orderId}"
+                                    uriPattern = "${AppConfig.BASE_URL}/orders/{orderId}"
                                 }
                         ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
@@ -195,8 +193,7 @@ fun AppNavigation(
                 deepLinks =
                         listOf(
                                 navDeepLink {
-                                    uriPattern =
-                                            "${AppConfig.BASE_URL}/edit-order?orderId={orderId}"
+                                    uriPattern = "${AppConfig.BASE_URL}/orders/edit/{orderId}"
                                 }
                         ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
