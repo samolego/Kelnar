@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Order
+import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 
@@ -36,7 +37,7 @@ fun OrdersScreen(
 
     Scaffold(
             topBar = {
-                TopAppBar(
+                KelnarAppBar(
                         title = { Text("Orders") },
                         navigationIcon = {
                             IconButton(onClick = onOpenDrawer) {
@@ -47,12 +48,6 @@ fun OrdersScreen(
                                 )
                             }
                         },
-                        colors =
-                                TopAppBarDefaults.topAppBarColors(
-                                        containerColor = MaterialTheme.colorScheme.primary,
-                                        titleContentColor = Color.White,
-                                        navigationIconContentColor = Color.White
-                                )
                 )
             },
             floatingActionButton = {

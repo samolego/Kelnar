@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.OrderItem
 import io.github.samolego.kelnar.ui.components.CompletedBadge
+import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 
@@ -39,7 +40,7 @@ fun OrderDetailsScreen(
     order?.let { currentOrder ->
         Scaffold(
                 topBar = {
-                    TopAppBar(
+                    KelnarAppBar(
                             title = { Text("Order Details") },
                             navigationIcon = {
                                 IconButton(onClick = onNavigateBack) {
@@ -61,13 +62,6 @@ fun OrderDetailsScreen(
                                     }
                                 }
                             },
-                            colors =
-                                    TopAppBarDefaults.topAppBarColors(
-                                            containerColor = MaterialTheme.colorScheme.primary,
-                                            titleContentColor = Color.White,
-                                            navigationIconContentColor = Color.White,
-                                            actionIconContentColor = Color.White
-                                    )
                     )
                 },
                 floatingActionButton = {
@@ -104,10 +98,11 @@ fun OrderDetailsScreen(
                                             containerColor =
                                                     if (currentOrder.isCompleted)
                                                             MaterialTheme.colorScheme.surfaceVariant
-                                                    else MaterialTheme.colorScheme.primaryContainer
+                                                    else MaterialTheme.colorScheme.primary
                                     )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
+                            val textColor = if (currentOrder.isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onPrimary
                             Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -116,6 +111,7 @@ fun OrderDetailsScreen(
                                 Text(
                                         text = "Table ${currentOrder.tableNumber}",
                                         style = MaterialTheme.typography.headlineSmall,
+                                        color = textColor,
                                         fontWeight = FontWeight.Bold
                                 )
                                 if (currentOrder.isCompleted) {
@@ -127,12 +123,12 @@ fun OrderDetailsScreen(
                                     text =
                                             "Created: ${currentOrder.createdAt.toString().substringBefore('T')}",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = textColor,
                             )
                             Text(
                                     text = "Items: ${currentOrder.items.size}",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = textColor,
                             )
                         }
                         Column {
@@ -142,7 +138,7 @@ fun OrderDetailsScreen(
                                     colors =
                                             CardDefaults.cardColors(
                                                     containerColor =
-                                                            MaterialTheme.colorScheme.primary
+                                                            MaterialTheme.colorScheme.secondaryContainer
                                             )
                             ) {
                                 Row(
@@ -154,13 +150,13 @@ fun OrderDetailsScreen(
                                             text = "Total:",
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
-                                            color = Color.White
+                                            color = MaterialTheme.colorScheme.onSecondaryContainer,
                                     )
                                     Text(
                                             text = currentOrder.total.formatAsPrice(),
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
-                                            color = Color.White
+                                            color = MaterialTheme.colorScheme.onSecondaryContainer,
                                     )
                                 }
                             }

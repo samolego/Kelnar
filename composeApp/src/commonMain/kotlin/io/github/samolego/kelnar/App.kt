@@ -44,15 +44,23 @@ import io.github.samolego.kelnar.ui.screens.OrderDetailsScreen
 import io.github.samolego.kelnar.ui.screens.OrdersScreen
 import io.github.samolego.kelnar.ui.screens.ProductsScreen
 import io.github.samolego.kelnar.ui.screens.ProductsShareScreen
+import io.github.samolego.kelnar.ui.theme.KelnarTheme
+import io.github.samolego.kelnar.ui.theme.ApplyStatusBarColor
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.AppConfig
 import kotlinx.coroutines.launch
 
 @Composable
-fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+fun App(
+        modifier: Modifier = Modifier,
+        onNavHostReady: suspend (NavController) -> Unit = {},
+) {
+    KelnarTheme {
+
+        ApplyStatusBarColor()
+
+        Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             val localStorage = remember { getLocalStorage() }
             val repository = remember { DataRepository(localStorage) }
 

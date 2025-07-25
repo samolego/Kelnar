@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.QRCodeImage
 import io.github.samolego.kelnar.utils.copyToClipboard
@@ -49,7 +50,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
     Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
-                TopAppBar(
+                KelnarAppBar(
                         title = { Text("Share Products") },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
@@ -60,12 +61,6 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                                 )
                             }
                         },
-                        colors =
-                                TopAppBarDefaults.topAppBarColors(
-                                        containerColor = MaterialTheme.colorScheme.primary,
-                                        titleContentColor = Color.White,
-                                        navigationIconContentColor = Color.White
-                                )
                 )
             }
     ) { paddingValues ->

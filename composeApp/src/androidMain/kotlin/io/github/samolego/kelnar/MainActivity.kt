@@ -7,7 +7,11 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
@@ -32,7 +36,6 @@ class MainActivity : ComponentActivity() {
                 // Create a new Intent with the same action but the new URI.
                 val newIntent =
                         Intent(originalIntent.action, newUri).apply {
-                            // It's good practice to ensure the BROWSABLE category is present.
                             addCategory(Intent.CATEGORY_BROWSABLE)
                         }
 
@@ -44,7 +47,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        setContent { App() }
+        setContent { App(modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars)) }
     }
 }
 

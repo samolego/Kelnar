@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Product
+import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.ImportAction
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
@@ -49,7 +50,7 @@ fun ProductsScreen(
 
     Scaffold(
             topBar = {
-                TopAppBar(
+                KelnarAppBar(
                         title = { Text("Products") },
                         navigationIcon = {
                             IconButton(onClick = onOpenDrawer) {
@@ -100,12 +101,6 @@ fun ProductsScreen(
                                 }
                             }
                         },
-                        colors =
-                                TopAppBarDefaults.topAppBarColors(
-                                        containerColor = MaterialTheme.colorScheme.primary,
-                                        titleContentColor = Color.White,
-                                        navigationIconContentColor = Color.White
-                                )
                 )
             },
             floatingActionButton = {

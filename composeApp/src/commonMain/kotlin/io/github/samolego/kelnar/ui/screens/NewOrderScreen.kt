@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.OrderItem
 import io.github.samolego.kelnar.data.Product
+import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 
@@ -59,7 +60,7 @@ fun OrderFormScreen(
 
     Scaffold(
             topBar = {
-                TopAppBar(
+                KelnarAppBar(
                         title = { Text(if (isEditingOrder) "Edit Order" else "New Order") },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
@@ -89,12 +90,6 @@ fun OrderFormScreen(
                                 )
                             }
                         },
-                        colors =
-                                TopAppBarDefaults.topAppBarColors(
-                                        containerColor = MaterialTheme.colorScheme.primary,
-                                        titleContentColor = Color.White,
-                                        navigationIconContentColor = Color.White
-                                )
                 )
             }
     ) { paddingValues ->
