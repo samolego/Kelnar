@@ -1,5 +1,6 @@
 package io.github.samolego.kelnar.ui.screens
 
+import io.github.samolego.kelnar.utils.AppConfig
 import java.net.URLEncoder
 
 actual fun encodeURIComponent(str: String): String {
