@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import io.github.samolego.kelnar.repository.DataRepository
+import io.github.samolego.kelnar.repository.LocalStorage
 import io.github.samolego.kelnar.ui.navigation.EditOrder
 import io.github.samolego.kelnar.ui.navigation.NewOrder
 import io.github.samolego.kelnar.ui.navigation.OrderDetails
@@ -101,8 +101,7 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                     AppNavigation(
                             modifier = Modifier.padding(paddingValues).fillMaxSize(),
                             navController = navController,
-                            repository = repository,
-                            ordersViewModel = ordersViewModel,
+                        ordersViewModel = ordersViewModel,
                             productsViewModel = productsViewModel,
                             onOpenDrawer = { scope.launch { drawerState.open() } },
                             onNavHostReady = onNavHostReady
@@ -117,7 +116,6 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
 fun AppNavigation(
         modifier: Modifier = Modifier,
         navController: NavHostController,
-        repository: DataRepository,
         ordersViewModel: OrdersViewModel,
         productsViewModel: ProductsViewModel,
         onOpenDrawer: () -> Unit,
@@ -229,4 +227,4 @@ fun AppNavigation(
     LaunchedEffect(navController) { onNavHostReady(navController) }
 }
 
-expect fun getLocalStorage(): io.github.samolego.kelnar.repository.LocalStorage
+expect fun getLocalStorage(): LocalStorage
