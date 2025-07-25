@@ -58,6 +58,9 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
 
+            val ordersViewModel = remember { OrdersViewModel(repository) }
+            val productsViewModel = remember { ProductsViewModel(repository) }
+
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
 
@@ -96,9 +99,11 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
                         containerColor = MaterialTheme.colorScheme.background
                 ) { paddingValues ->
                     AppNavigation(
+                            modifier = Modifier.padding(paddingValues).fillMaxSize(),
                             navController = navController,
                             repository = repository,
-                            modifier = Modifier.padding(paddingValues).fillMaxSize(),
+                            ordersViewModel = ordersViewModel,
+                            productsViewModel = productsViewModel,
                             onOpenDrawer = { scope.launch { drawerState.open() } },
                             onNavHostReady = onNavHostReady
                     )
@@ -110,9 +115,11 @@ fun App(onNavHostReady: suspend (NavController) -> Unit = {}) {
 
 @Composable
 fun AppNavigation(
+        modifier: Modifier = Modifier,
         navController: NavHostController,
         repository: DataRepository,
-        modifier: Modifier = Modifier,
+        ordersViewModel: OrdersViewModel,
+        productsViewModel: ProductsViewModel,
         onOpenDrawer: () -> Unit,
         onNavHostReady: suspend (NavController) -> Unit = {}
 ) {
@@ -128,9 +135,8 @@ fun AppNavigation(
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val orders = backStackEntry.toRoute<Orders>()
-            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             OrdersScreen(
-                    viewModel = viewModel,
+                    viewModel = ordersViewModel,
                     initialTab = orders.tab,
                     onNavigateToNewOrder = { navController.navigate(NewOrder) },
                     onNavigateToOrderDetails = { orderId, currentTab ->
@@ -151,9 +157,8 @@ fun AppNavigation(
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
-            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             NewOrderScreen(
-                    viewModel = viewModel,
+                    viewModel = ordersViewModel,
                     onNavigateBack = { navController.popBackStack() },
                     onOrderSaved = { navController.popBackStack() }
             )
@@ -164,10 +169,9 @@ fun AppNavigation(
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val orderDetails = backStackEntry.toRoute<OrderDetails>()
-            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             OrderDetailsScreen(
                     orderId = orderDetails.orderId,
-                    viewModel = viewModel,
+                    viewModel = ordersViewModel,
                     onNavigateBack = { navController.popBackStack() },
                     onNavigateToEdit = { navController.navigate(EditOrder(orderDetails.orderId)) }
             )
@@ -178,10 +182,9 @@ fun AppNavigation(
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val editOrder = backStackEntry.toRoute<EditOrder>()
-            val viewModel: OrdersViewModel = viewModel { OrdersViewModel(repository) }
             EditOrderScreen(
                     orderId = editOrder.orderId,
-                    viewModel = viewModel,
+                    viewModel = ordersViewModel,
                     onNavigateBack = { navController.popBackStack() },
                     onOrderSaved = { navController.popBackStack() }
             )
@@ -191,9 +194,8 @@ fun AppNavigation(
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
-            val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
-                    viewModel = viewModel,
+                    viewModel = productsViewModel,
                     onOpenDrawer = onOpenDrawer,
                     onNavigateToShare = { _ -> navController.navigate(ProductsShare) }
             )
@@ -204,9 +206,8 @@ fun AppNavigation(
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val productsImport = backStackEntry.toRoute<ProductsImport>()
-            val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsScreen(
-                    viewModel = viewModel,
+                    viewModel = productsViewModel,
                     onOpenDrawer = onOpenDrawer,
                     onNavigateToShare = { _ -> navController.navigate(ProductsShare) },
                     importParam = productsImport.data
@@ -217,9 +218,8 @@ fun AppNavigation(
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
-            val viewModel: ProductsViewModel = viewModel { ProductsViewModel(repository) }
             ProductsShareScreen(
-                    viewModel = viewModel,
+                    viewModel = productsViewModel,
                     onNavigateBack = { navController.popBackStack() }
             )
         }
