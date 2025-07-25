@@ -3,8 +3,6 @@ package io.github.samolego.kelnar.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import io.github.samolego.kelnar.AppContext
 
 actual fun copyToClipboard(text: String) {

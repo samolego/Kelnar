@@ -135,7 +135,7 @@ fun OrderDetailsScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Column() {
+                        Column {
                             // Total
                             Card(
                                     modifier = Modifier.fillMaxWidth(),

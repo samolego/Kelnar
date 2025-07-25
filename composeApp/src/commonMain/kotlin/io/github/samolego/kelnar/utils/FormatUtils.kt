@@ -14,5 +14,4 @@ object FormatUtils {
 }
 
 // Extension function for Double to format as currency
-fun Double.formatAsCurrency(): String = FormatUtils.formatCurrency(this)
 fun Double.formatAsPrice(): String = FormatUtils.formatPrice(this)
