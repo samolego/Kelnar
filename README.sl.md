@@ -2,6 +2,8 @@
 
 Aplikacija za upravljanje naročil na (gasilskih) veselicah, v restavracijah, ipd. zgrajena s Kotlin Multiplatform in Compose Multiplatform.
 
+[**Demo**](https://samolego.github.io/Kelnar/#menu/import?data=%5BPica%20NMK%3B8.5%3BPica%20z%20gobicami%20gobicami%20in%20pa%C5%A1teto%7CHot%20Dog%3B3.0%7CCockta%3B2.5%7CJabol%C4%8Dni%20sok%3B1.5%5D)
+
 ## Pregled
 
 Kelnar pomaga osebju upravljati naročila in jedi na napravah Android, računalniku ali preko spleta. Vsi podatki so shranjeni lokalno - internetna povezava ni potrebna. Podpira tudi deljenje menija z ostalimi natakarji preko QR kod ali povezav.
