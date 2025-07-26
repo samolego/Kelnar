@@ -8,6 +8,6 @@ import io.github.samolego.kelnar.AppContext
 actual fun copyToClipboard(text: String) {
     val context = AppContext.get()
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    val clipData = ClipData.newPlainText("Shared Products", text)
+    val clipData = ClipData.newPlainText("Shared Menu", text)
     clipboardManager.setPrimaryClip(clipData)
 }

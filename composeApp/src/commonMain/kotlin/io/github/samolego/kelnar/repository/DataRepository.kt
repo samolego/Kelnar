@@ -14,13 +14,13 @@ class DataRepository(private val localStorage: LocalStorage) {
     }
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
-    val products: StateFlow<List<Product>> = _products.asStateFlow()
+    val menu: StateFlow<List<Product>> = _products.asStateFlow()
 
     private val _orders = MutableStateFlow<List<Order>>(emptyList())
     val orders: StateFlow<List<Order>> = _orders.asStateFlow()
 
     companion object {
-        private const val PRODUCTS_KEY = "products"
+        private const val PRODUCTS_KEY = "menu"
         private const val ORDERS_KEY = "orders"
     }
 

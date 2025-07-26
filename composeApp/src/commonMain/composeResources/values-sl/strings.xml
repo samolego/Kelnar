@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <!-- App name -->
+    <string name="app_name" translatable="false">Kelnar</string>
+
+    <!-- Navigation -->
+    <string name="orders">Naročila</string>
+    <string name="menu">Meni</string>
+    <string name="back">Nazaj</string>
+
+    <!-- Order tabs -->
+    <string name="active">Aktivna</string>
+    <string name="completed">Zaključena</string>
+
+    <!-- Basic actions -->
+    <string name="save">Shrani</string>
+    <string name="cancel">Prekliči</string>
+    <string name="delete">Izbriši</string>
+    <string name="complete">Zaključi</string>
+    <string name="edit">Uredi</string>
+    <string name="add">Dodaj</string>
+
+    <!-- Order screen -->
+    <string name="new_order">Novo naročilo</string>
+    <string name="edit_order">@string/edit naročilo</string>
+    <string name="order_details">Podrobnosti naročila</string>
+    <string name="table_number">Številka mize</string>
+    <string name="add_product">@string/add proizvod</string>
+    <string name="order_items">Postavke naročila</string>
+    <string name="no_items_added_yet">Še ni dodanih postavk</string>
+    <string
+        name="tap_add_product_to_get_started"
+    >Tapni \'@string/add_product\' za začetek</string>
+    <string name="total">Skupaj:</string>
+    <string name="complete_order">@string/complete naročilo</string>
+    <string name="delete_order">@string/delete naročilo</string>
+
+    <!-- Order details with format placeholders -->
+    <string name="table_format">Miza %s</string>
+    <string name="created_format">Ustvarjeno: %s</string>
+    <string name="items_format">Postavke: %d</string>
+    <string name="customizations">Prilagoditve:</string>
+    <string name="customizations_format">@string/customizations %s</string>
+    <string name="price_each_format">%s za kos</string>
+    <string name="quantity_product_format">%dx %s</string>
+
+    <!-- Order list -->
+    <string name="no_active_orders">Ni aktivnih naročil</string>
+    <string
+        name="tap_plus_to_create_first_order"
+    >Tapni + za ustvaritev prvega naročila</string>
+    <string name="no_completed_orders">Ni zaključenih naročil</string>
+    <string
+        name="complete_orders_to_see_them_here"
+    >@string/complete nekaj naročil, da jih boš videl tukaj</string>
+    <string
+        name="swipe_right_to_complete_order"
+    >Povleci desno za zaključek naročila</string>
+    <string name="mark_as_active">Označi kot @string/active</string>
+    <string name="and_more_items_format">• ... in še %d postavk</string>
+    <string name="total_format">@string/total %s</string>
+
+    <!-- Product screen -->
+    <string name="no_products_yet">Še ni proizvodov</string>
+    <string
+        name="tap_plus_to_add_first_product"
+    >Tapni + za dodajanje prvega proizvoda</string>
+    <string name="more_options">Več možnosti</string>
+    <string name="share_products">Deli @string/products</string>
+    <string name="delete_all">@string/delete vse</string>
+    <string
+        name="delete_all_products"
+    >@string/delete_all @string/products</string>
+    <string
+        name="delete_all_products_confirmation"
+    >Ali si prepričan, da želiš izbrisati vse proizvode? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="edit_product">@string/edit proizvod</string>
+    <string name="delete_product">@string/delete proizvod</string>
+
+    <!-- Product import -->
+    <string name="import_products">Uvozi @string/products</string>
+    <string
+        name="found_products_to_import_format"
+    >Najdenih %d proizvodov za uvoz:</string>
+
+    <!-- Product dialog -->
+    <string name="select_product">Izberi proizvod</string>
+    <string name="search_products">Išči proizvode...</string>
+    <string name="clear_search">Počisti iskanje</string>
+    <string name="customize_product_format">Prilagodi %s</string>
+    <string
+        name="add_special_instructions"
+    >@string/add posebna navodila ali spremembe:</string>
+    <string name="customization_example">npr. brez kečapa</string>
+    <string name="add_customization">@string/add prilagoditev</string>
+    <string name="current_customizations">Trenutne prilagoditve:</string>
+    <string name="remove_customization">Odstrani prilagoditev</string>
+    <string name="customize">Prilagodi</string>
+
+    <!-- Actions -->
+    <string name="remove_item">Odstrani postavko</string>
+    <string name="decrease_quantity">Zmanjšaj količino</string>
+    <string name="increase_quantity">Povečaj količino</string>
+    <string name="uncomplete">Razveljavi</string>
+
+    <!-- Content descriptions -->
+    <string name="completed_badge">@string/completed</string>
+
+    <!-- Default product data -->
+    <string name="default_product_burger">Hamburger</string>
+    <string
+        name="default_product_burger_description"
+    >Klasičen govejski hamburger z zeleno solato, paradižnikom in čebulo</string>
+    <string name="default_product_hot_dog">Hrenovka</string>
+    <string
+        name="default_product_hot_dog_description"
+    >Pečena hrenovka s kečapom in gorčico</string>
+    <string name="default_product_french_fries">Pomfri</string>
+    <string
+        name="default_product_french_fries_description"
+    >Hrustljav zlat pomfri</string>
+    <string name="default_product_coca_cola">Coca Cola</string>
+    <string
+        name="default_product_coca_cola_description"
+    >Hladen osvežilen cola napitek</string>
+    <string name="default_product_pizza_margherita">Pizza Margherita</string>
+    <string
+        name="default_product_pizza_margherita_description"
+    >Klasična pizza s paradižnikovo omako, mocarelo in baziliko</string>
+
+    <!-- Clipboard -->
+    <string name="shared_products">Deljeni @string/products</string>
+
+    <!-- Storage keys -->
+    <string name="storage_products_key" translatable="false">products</string>
+    <string name="storage_orders_key" translatable="false">orders</string>
+    <string name="storage_prefs_name" translatable="false">kelnar_prefs</string>
+
+    <!-- Encoding -->
+    <string name="encoding_utf8" translatable="false">UTF-8</string>
+</resources>

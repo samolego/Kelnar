@@ -36,7 +36,7 @@ import io.github.samolego.kelnar.ui.navigation.OrderTab
 import io.github.samolego.kelnar.ui.navigation.Orders
 import io.github.samolego.kelnar.ui.navigation.OrdersActive
 import io.github.samolego.kelnar.ui.navigation.OrdersCompleted
-import io.github.samolego.kelnar.ui.navigation.Products
+import io.github.samolego.kelnar.ui.navigation.Menu
 import io.github.samolego.kelnar.ui.navigation.ProductsImport
 import io.github.samolego.kelnar.ui.navigation.ProductsShare
 import io.github.samolego.kelnar.ui.screens.EditOrderScreen
@@ -52,7 +52,7 @@ import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.AppConfig
 import kelnar.composeapp.generated.resources.Res
 import kelnar.composeapp.generated.resources.orders
-import kelnar.composeapp.generated.resources.products
+import kelnar.composeapp.generated.resources.menu
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -96,12 +96,12 @@ fun App(
                                     }
                             )
                             NavigationDrawerItem(
-                                    label = { Text(stringResource(Res.string.products)) },
-                                    selected = currentRoute?.contains("products") == true,
+                                    label = { Text(stringResource(Res.string.menu)) },
+                                    selected = currentRoute?.contains("menu") == true,
                                     onClick = {
                                         scope.launch {
                                             drawerState.close()
-                                            navController.navigate(Products) {
+                                            navController.navigate(Menu) {
                                                 popUpTo(OrdersActive)
                                             }
                                         }
@@ -262,8 +262,8 @@ fun AppNavigation(
             )
         }
 
-        composable<Products>(
-                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/products" }),
+        composable<Menu>(
+                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/menu" }),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {
@@ -278,7 +278,7 @@ fun AppNavigation(
                 deepLinks =
                         listOf(
                                 navDeepLink {
-                                    uriPattern = "${AppConfig.BASE_URL}/products/import?data={data}"
+                                    uriPattern = "${AppConfig.BASE_URL}/menu/import?data={data}"
                                 }
                         ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
@@ -295,7 +295,7 @@ fun AppNavigation(
 
         composable<ProductsShare>(
                 deepLinks =
-                        listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/products/share" }),
+                        listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/menu/share" }),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {

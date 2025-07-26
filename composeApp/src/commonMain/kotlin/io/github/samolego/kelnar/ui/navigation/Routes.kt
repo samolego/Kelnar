@@ -14,11 +14,11 @@ enum class OrderTab {
 
 @Serializable @SerialName("orders/completed") data object OrdersCompleted
 
-@Serializable @SerialName("products") data object Products
+@Serializable @SerialName("menu") data object Menu
 
-@Serializable @SerialName("products/import") data class ProductsImport(val data: String = "")
+@Serializable @SerialName("menu/import") data class ProductsImport(val data: String = "")
 
-@Serializable @SerialName("products/share") data object ProductsShare
+@Serializable @SerialName("menu/share") data object ProductsShare
 
 @Serializable @SerialName("orders/new") data object NewOrder
 

@@ -21,14 +21,14 @@ enum class ImportAction {
 }
 
 data class ImportState(
-        val products: List<ImportProduct> = emptyList(),
+        val menu: List<ImportProduct> = emptyList(),
         val isVisible: Boolean = false,
         val skippedItems: List<String> = emptyList()
 )
 
 class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
-    val products = repository.products
+    val menu = repository.menu
 
     private val _importState = MutableStateFlow(ImportState())
     val importState: StateFlow<ImportState> = _importState.asStateFlow()
@@ -164,7 +164,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         if (validProducts.isNotEmpty()) {
             _importState.value =
                     ImportState(
-                            products = validProducts,
+                            menu = validProducts,
                             isVisible = true,
                             skippedItems = skippedItems
                     )
@@ -177,7 +177,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
     fun executeImport(action: ImportAction) {
         val currentImportState = _importState.value
-        if (!currentImportState.isVisible || currentImportState.products.isEmpty()) return
+        if (!currentImportState.isVisible || currentImportState.menu.isEmpty()) return
 
         viewModelScope.launch {
             when (action) {
@@ -185,9 +185,9 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
                     // Do nothing, just close dialog
                 }
                 ImportAction.OVERWRITE_ALL -> {
-                    // Clear all existing products and add imported ones
+                    // Clear all existing menu and add imported ones
                     repository.clearAllProducts()
-                    currentImportState.products.forEach { importProduct ->
+                    currentImportState.menu.forEach { importProduct ->
                         val product =
                                 Product(
                                         id = generateId(),
@@ -199,11 +199,11 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
                     }
                 }
                 ImportAction.ADD_TO_CURRENT -> {
-                    // Add imported products, overwriting duplicates by name
-                    currentImportState.products.forEach { importProduct ->
+                    // Add imported menu, overwriting duplicates by name
+                    currentImportState.menu.forEach { importProduct ->
                         // Check if product with same name exists
                         val existingProduct =
-                                repository.products.value.find {
+                                repository.menu.value.find {
                                     it.name.equals(importProduct.name, ignoreCase = true)
                                 }
 
@@ -223,7 +223,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
     }
 
     fun generateShareData(): String {
-        val currentProducts = repository.products.value
+        val currentProducts = repository.menu.value
         if (currentProducts.isEmpty()) return "[]"
 
         val data = currentProducts.joinToString("|") { product ->

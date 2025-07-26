@@ -25,7 +25,6 @@ import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 import kelnar.composeapp.generated.resources.Res
 import kelnar.composeapp.generated.resources.add_product
-import kelnar.composeapp.generated.resources.add_product_dialog
 import kelnar.composeapp.generated.resources.cancel
 import kelnar.composeapp.generated.resources.delete
 import kelnar.composeapp.generated.resources.delete_all
@@ -33,13 +32,11 @@ import kelnar.composeapp.generated.resources.delete_all_products
 import kelnar.composeapp.generated.resources.delete_all_products_confirmation
 import kelnar.composeapp.generated.resources.delete_product
 import kelnar.composeapp.generated.resources.edit_product
-import kelnar.composeapp.generated.resources.edit_product_dialog
 import kelnar.composeapp.generated.resources.found_products_to_import_format
 import kelnar.composeapp.generated.resources.import_products
 import kelnar.composeapp.generated.resources.menu
 import kelnar.composeapp.generated.resources.more_options
 import kelnar.composeapp.generated.resources.no_products_yet
-import kelnar.composeapp.generated.resources.products
 import kelnar.composeapp.generated.resources.share_products
 import kelnar.composeapp.generated.resources.tap_plus_to_add_first_product
 import org.jetbrains.compose.resources.stringResource
@@ -52,7 +49,7 @@ fun ProductsScreen(
         onNavigateToShare: (String) -> Unit = {},
         importParam: String = ""
 ) {
-    val products by viewModel.products.collectAsState()
+    val menu by viewModel.menu.collectAsState()
     val showAddProductDialog by viewModel.showAddProductDialog.collectAsState()
     val showEditProductDialog by viewModel.showEditProductDialog.collectAsState()
     val importState by viewModel.importState.collectAsState()
@@ -70,7 +67,7 @@ fun ProductsScreen(
     Scaffold(
             topBar = {
                 KelnarAppBar(
-                        title = { Text(stringResource(Res.string.products)) },
+                        title = { Text(stringResource(Res.string.menu)) },
                         navigationIcon = {
                             IconButton(onClick = onOpenDrawer) {
                                 Icon(
@@ -135,7 +132,7 @@ fun ProductsScreen(
                 }
             }
     ) { paddingValues ->
-        if (products.isEmpty()) {
+        if (menu.isEmpty()) {
             Box(
                     modifier = Modifier.fillMaxSize().padding(paddingValues),
                     contentAlignment = Alignment.Center
@@ -160,7 +157,7 @@ fun ProductsScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(products) { product ->
+                items(menu) { product ->
                     ProductCard(
                             product = product,
                             onEditProduct = { viewModel.showEditProductDialog(product) },
@@ -174,7 +171,7 @@ fun ProductsScreen(
     // Add Product Dialog
     if (showAddProductDialog) {
         ProductDialog(
-                title = stringResource(Res.string.add_product_dialog),
+                title = stringResource(Res.string.add_product),
                 viewModel = viewModel,
                 onDismiss = { viewModel.hideAddProductDialog() },
                 onSave = { viewModel.saveProduct() }
@@ -184,14 +181,14 @@ fun ProductsScreen(
     // Edit Product Dialog
     if (showEditProductDialog) {
         ProductDialog(
-                title = stringResource(Res.string.edit_product_dialog),
+                title = stringResource(Res.string.edit_product),
                 viewModel = viewModel,
                 onDismiss = { viewModel.hideEditProductDialog() },
                 onSave = { viewModel.saveProduct() }
         )
     }
 
-    // Import Products Dialog
+    // Import Menu Dialog
     if (importState.isVisible) {
         ImportProductsDialog(
                 importState = importState,
@@ -288,7 +285,7 @@ fun ImportProductsDialog(
                             text =
                                     stringResource(
                                             Res.string.found_products_to_import_format,
-                                            importState.products.size
+                                            importState.menu.size
                                     ),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -298,7 +295,7 @@ fun ImportProductsDialog(
                             modifier = Modifier.heightIn(max = 300.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        items(importState.products) { product ->
+                        items(importState.menu) { product ->
                             Card(
                                     modifier = Modifier.fillMaxWidth(),
                                     colors =

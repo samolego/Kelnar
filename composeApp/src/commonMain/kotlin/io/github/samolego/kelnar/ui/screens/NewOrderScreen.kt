@@ -214,7 +214,7 @@ fun OrderFormScreen(
     if (showProductSearch) {
         ProductSearchDialog(
                 searchQuery = searchQuery,
-                products = filteredProducts,
+                menu = filteredProducts,
                 onSearchQueryChange = { viewModel.setSearchQuery(it) },
                 onProductSelected = { product ->
                     viewModel.addProductToOrder(product)
@@ -388,7 +388,7 @@ fun TotalCard(total: Double, modifier: Modifier = Modifier) {
 @Composable
 fun ProductSearchDialog(
         searchQuery: String,
-        products: List<Product>,
+        menu: List<Product>,
         onSearchQueryChange: (String) -> Unit,
         onProductSelected: (Product) -> Unit,
         onDismiss: () -> Unit
@@ -422,7 +422,7 @@ fun ProductSearchDialog(
                             modifier = Modifier.height(300.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        items(products) { product ->
+                        items(menu) { product ->
                             Card(
                                     onClick = { onProductSelected(product) },
                                     modifier = Modifier.fillMaxWidth()

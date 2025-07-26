@@ -25,7 +25,7 @@ import kelnar.composeapp.generated.resources.complete
 import kelnar.composeapp.generated.resources.complete_order
 import kelnar.composeapp.generated.resources.created_format
 import kelnar.composeapp.generated.resources.customizations
-import kelnar.composeapp.generated.resources.edit_order_action
+import kelnar.composeapp.generated.resources.edit_order
 import kelnar.composeapp.generated.resources.items_format
 import kelnar.composeapp.generated.resources.order_details
 import kelnar.composeapp.generated.resources.order_items
@@ -72,7 +72,7 @@ fun OrderDetailsScreen(
                                                 Icons.Default.Edit,
                                                 contentDescription =
                                                         stringResource(
-                                                                Res.string.edit_order_action
+                                                                Res.string.edit_order
                                                         ),
                                         )
                                     }

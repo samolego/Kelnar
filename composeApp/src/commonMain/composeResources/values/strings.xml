@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Kelnar</string>
+    <string name="app_name" translatable="false">Kelnar</string>
 
     <!-- Navigation -->
     <string name="orders">Orders</string>
-    <string name="products">Products</string>
     <string name="menu">Menu</string>
     <string name="back">Back</string>
 
@@ -12,68 +12,87 @@
     <string name="active">Active</string>
     <string name="completed">Completed</string>
 
-    <!-- Order screen -->
-    <string name="new_order">New Order</string>
-    <string name="edit_order">Edit Order</string>
-    <string name="order_details">Order Details</string>
-    <string name="table_number">Table Number</string>
-    <string name="add_product">Add Product</string>
-    <string name="order_items">Order Items</string>
-    <string name="no_items_added_yet">No items added yet</string>
-    <string name="tap_add_product_to_get_started">Tap 'Add Product' to get started</string>
-    <string name="total">Total:</string>
+    <!-- Basic actions -->
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
     <string name="complete">Complete</string>
-    <string name="complete_order">Complete Order</string>
-    <string name="delete_order">Delete order</string>
-    <string name="edit_order_action">Edit Order</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+
+    <!-- Order screen -->
+    <string name="new_order">New Order</string>
+    <string name="edit_order">@string/edit Order</string>
+    <string name="order_details">Order Details</string>
+    <string name="table_number">Table Number</string>
+    <string name="add_product">@string/add Product</string>
+    <string name="order_items">Order Items</string>
+    <string name="no_items_added_yet">No items added yet</string>
+    <string
+        name="tap_add_product_to_get_started"
+    >Tap \'@string/add_product\' to get started</string>
+    <string name="total">Total:</string>
+    <string name="complete_order">@string/complete Order</string>
+    <string name="delete_order">@string/delete order</string>
 
     <!-- Order details with format placeholders -->
     <string name="table_format">Table %s</string>
     <string name="created_format">Created: %s</string>
     <string name="items_format">Items: %d</string>
     <string name="customizations">Customizations:</string>
-    <string name="customizations_format">Customizations: %s</string>
+    <string name="customizations_format">@string/customizations %s</string>
     <string name="price_each_format">%s each</string>
     <string name="quantity_product_format">%dx %s</string>
 
     <!-- Order list -->
     <string name="no_active_orders">No active orders</string>
-    <string name="tap_plus_to_create_first_order">Tap + to create your first order</string>
+    <string
+        name="tap_plus_to_create_first_order"
+    >Tap + to create your first order</string>
     <string name="no_completed_orders">No completed orders</string>
-    <string name="complete_orders_to_see_them_here">Complete some orders to see them here</string>
-    <string name="swipe_right_to_complete_order">Swipe right to complete an order</string>
-    <string name="mark_as_active">Mark as Active</string>
+    <string
+        name="complete_orders_to_see_them_here"
+    >@string/complete some orders to see them here</string>
+    <string
+        name="swipe_right_to_complete_order"
+    >Swipe right to complete an order</string>
+    <string name="mark_as_active">Mark as @string/active</string>
     <string name="and_more_items_format">• ... and %d more items</string>
-    <string name="total_format">Total: %s</string>
+    <string name="total_format">@string/total %s</string>
 
     <!-- Product screen -->
-    <string name="add_product_dialog">Add Product</string>
-    <string name="edit_product_dialog">Edit Product</string>
     <string name="no_products_yet">No products yet</string>
-    <string name="tap_plus_to_add_first_product">Tap + to add your first product</string>
+    <string
+        name="tap_plus_to_add_first_product"
+    >Tap + to add your first product</string>
     <string name="more_options">More options</string>
-    <string name="share_products">Share Products</string>
-    <string name="delete_all">Delete All</string>
-    <string name="delete_all_products">Delete All Products</string>
-    <string name="delete_all_products_confirmation">Are you sure you want to delete all products? This action cannot be undone.</string>
-    <string name="delete">Delete</string>
-    <string name="edit_product">Edit product</string>
-    <string name="delete_product">Delete product</string>
+    <string name="share_products">Share @string/products</string>
+    <string name="delete_all">@string/delete All</string>
+    <string
+        name="delete_all_products"
+    >@string/delete_all @string/products</string>
+    <string
+        name="delete_all_products_confirmation"
+    >Are you sure you want to delete all products? This action cannot be undone.</string>
+    <string name="edit_product">@string/edit product</string>
+    <string name="delete_product">@string/delete product</string>
 
     <!-- Product import -->
-    <string name="import_products">Import Products</string>
-    <string name="found_products_to_import_format">Found %d products to import:</string>
+    <string name="import_products">Import @string/products</string>
+    <string
+        name="found_products_to_import_format"
+    >Found %d products to import:</string>
 
     <!-- Product dialog -->
     <string name="select_product">Select Product</string>
     <string name="search_products">Search products...</string>
     <string name="clear_search">Clear search</string>
     <string name="customize_product_format">Customize %s</string>
-    <string name="add_special_instructions">Add special instructions or modifications:</string>
+    <string
+        name="add_special_instructions"
+    >@string/add special instructions or modifications:</string>
     <string name="customization_example">e.g., no ketchup</string>
-    <string name="add_customization">Add customization</string>
+    <string name="add_customization">@string/add customization</string>
     <string name="current_customizations">Current customizations:</string>
     <string name="remove_customization">Remove customization</string>
     <string name="customize">Customize</string>
@@ -85,28 +104,38 @@
     <string name="uncomplete">Uncomplete</string>
 
     <!-- Content descriptions -->
-    <string name="completed_badge">Completed</string>
+    <string name="completed_badge">@string/completed</string>
 
     <!-- Default product data -->
     <string name="default_product_burger">Burger</string>
-    <string name="default_product_burger_description">Classic beef burger with lettuce, tomato, and onion</string>
+    <string
+        name="default_product_burger_description"
+    >Classic beef burger with lettuce, tomato, and onion</string>
     <string name="default_product_hot_dog">Hot Dog</string>
-    <string name="default_product_hot_dog_description">Grilled hot dog with ketchup and mustard</string>
+    <string
+        name="default_product_hot_dog_description"
+    >Grilled hot dog with ketchup and mustard</string>
     <string name="default_product_french_fries">French Fries</string>
-    <string name="default_product_french_fries_description">Crispy golden french fries</string>
+    <string
+        name="default_product_french_fries_description"
+    >Crispy golden french fries</string>
     <string name="default_product_coca_cola">Coca Cola</string>
-    <string name="default_product_coca_cola_description">Cold refreshing cola drink</string>
+    <string
+        name="default_product_coca_cola_description"
+    >Cold refreshing cola drink</string>
     <string name="default_product_pizza_margherita">Pizza Margherita</string>
-    <string name="default_product_pizza_margherita_description">Classic pizza with tomato sauce, mozzarella, and basil</string>
+    <string
+        name="default_product_pizza_margherita_description"
+    >Classic pizza with tomato sauce, mozzarella, and basil</string>
 
     <!-- Clipboard -->
-    <string name="shared_products">Shared Products</string>
+    <string name="shared_products">Shared @string/products</string>
 
     <!-- Storage keys -->
-    <string name="storage_products_key">products</string>
-    <string name="storage_orders_key">orders</string>
-    <string name="storage_prefs_name">kelnar_prefs</string>
+    <string name="storage_products_key" translatable="false">products</string>
+    <string name="storage_orders_key" translatable="false">orders</string>
+    <string name="storage_prefs_name" translatable="false">kelnar_prefs</string>
 
     <!-- Encoding -->
-    <string name="encoding_utf8">UTF-8</string>
+    <string name="encoding_utf8" translatable="false">UTF-8</string>
 </resources>

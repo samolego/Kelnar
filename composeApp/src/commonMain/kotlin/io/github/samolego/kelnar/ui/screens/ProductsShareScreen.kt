@@ -30,13 +30,13 @@ expect fun getCurrentBaseUrl(): String
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit) {
-    val products by viewModel.products.collectAsState()
+    val menu by viewModel.menu.collectAsState()
     var showCopiedSnackbar by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Generate share data and URL
-    val shareData: String = remember(products) { viewModel.generateShareData() }
-    val baseUrl: String = remember { getCurrentBaseUrl() + "#products/import?data=" }
+    val shareData: String = remember(menu) { viewModel.generateShareData() }
+    val baseUrl: String = remember { getCurrentBaseUrl() + "#menu/import?data=" }
     val shareUrl: String = remember(shareData) { baseUrl + encodeURIComponent(shareData) }
     var textFieldValue by remember(shareUrl) { mutableStateOf(TextFieldValue(shareUrl)) }
 
@@ -54,7 +54,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 KelnarAppBar(
-                        title = { Text("Share Products") },
+                        title = { Text("Share Menu") },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
@@ -146,7 +146,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
 
                     Text(
                             text =
-                                    "Share this link to let others import these ${products.size} products",
+                                    "Share this link to let others import this menu with ${menu.size} products.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -164,23 +164,23 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                 }
             }
 
-            // Products preview section
+            // Menu preview section
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                            text = "Products to Share (${products.size})",
+                            text = "Menu to Share (${menu.size})",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                     )
 
-                    if (products.isEmpty()) {
+                    if (menu.isEmpty()) {
                         Box(
                                 modifier = Modifier.fillMaxWidth().padding(32.dp),
                                 contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                    text = "No products to share",
+                                    text = "No menu to share",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -190,7 +190,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                                 modifier = Modifier.heightIn(max = 400.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(products) { product ->
+                            items(menu) { product ->
                                 Card(
                                         modifier = Modifier.fillMaxWidth(),
                                         colors =

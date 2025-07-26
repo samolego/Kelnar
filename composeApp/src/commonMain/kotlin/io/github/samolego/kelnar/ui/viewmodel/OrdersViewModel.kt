@@ -17,7 +17,7 @@ import kotlinx.datetime.toLocalDateTime
 class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
 
     val orders = repository.orders
-    val products = repository.products
+    val menu = repository.menu
 
     private val _currentOrder = MutableStateFlow<Order?>(null)
     val currentOrder: StateFlow<Order?> = _currentOrder.asStateFlow()
@@ -39,13 +39,13 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            products.collect { productsList ->
+            menu.collect { productsList ->
                 updateFilteredProducts(productsList, _searchQuery.value)
             }
         }
 
         viewModelScope.launch {
-            searchQuery.collect { query -> updateFilteredProducts(products.value, query) }
+            searchQuery.collect { query -> updateFilteredProducts(menu.value, query) }
         }
     }
 
