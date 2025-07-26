@@ -23,6 +23,7 @@ import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.navigation.OrderTab
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
+import io.github.samolego.kelnar.utils.formatAsTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -202,7 +203,7 @@ fun OrdersList(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(orders, key = { it.id }) { order ->
-                Box(modifier = Modifier.animateItemPlacement()) {
+                Box {
                     when {
                         showSwipeToComplete && !order.isCompleted -> {
                             SwipeToCompleteOrderCard(
@@ -231,6 +232,8 @@ fun OrdersList(
                     }
                 }
             }
+
+            item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
 }
@@ -427,7 +430,7 @@ fun OrderCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                        text = order.createdAt.toString().substringBefore('T'),
+                        text = order.createdAt.formatAsTime(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

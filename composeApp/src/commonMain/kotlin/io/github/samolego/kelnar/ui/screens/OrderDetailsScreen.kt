@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.OrderItem
@@ -19,6 +18,7 @@ import io.github.samolego.kelnar.ui.components.CompletedBadge
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
+import io.github.samolego.kelnar.utils.formatAsTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,7 +99,10 @@ fun OrderDetailsScreen(
                                     )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            val textColor = if (currentOrder.isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onPrimary
+                            val textColor =
+                                    if (currentOrder.isCompleted)
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                    else MaterialTheme.colorScheme.onPrimary
                             Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -117,8 +120,7 @@ fun OrderDetailsScreen(
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                    text =
-                                            "Created: ${currentOrder.createdAt.toString().substringBefore('T')}",
+                                    text = "Created: ${currentOrder.createdAt.formatAsTime()}",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = textColor,
                             )
@@ -135,7 +137,8 @@ fun OrderDetailsScreen(
                                     colors =
                                             CardDefaults.cardColors(
                                                     containerColor =
-                                                            MaterialTheme.colorScheme.secondaryContainer
+                                                            MaterialTheme.colorScheme
+                                                                    .secondaryContainer
                                             )
                             ) {
                                 Row(
