@@ -96,6 +96,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = project.property("version_code")?.toString()?.toInt() ?: 1
         versionName = project.property("version_name")?.toString() ?: "1.0.0"
+        setProperty("archivesBaseName", "kelnar-${versionName}")
     }
     signingConfigs {
         create("release") {

@@ -70,7 +70,7 @@ jobs:
       - name: 🤖🚀 Upload to GitHub release
         uses: AButler/upload-release-assets@v3.0
         with:
-          files: "composeApp/build/compose/binaries/main/app/*"
+          files: "composeApp/build/compose/binaries/main/**/*"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   deployWeb:
