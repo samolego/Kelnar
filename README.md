@@ -4,6 +4,8 @@ A cross-platform restaurant order management app built with Kotlin Multiplatform
 
 *[Slovenščina](README.sl.md) | English*
 
+[**DEMO**](https://samolego.github.io/Kelnar/#menu/import?data=%5BFanta%3B2.5%3B0.25%20l%7CBurger%3B6.3%3BBeef%2C%20onions%2C%20tomato%7CIce%20Tea%3B2.5%3B0.5%20l%5D)
+
 ## Overview
 
 Kelnar helps restaurant staff manage orders and menu items across Android, Desktop, and Web platforms. All data is stored locally - no internet connection required.
