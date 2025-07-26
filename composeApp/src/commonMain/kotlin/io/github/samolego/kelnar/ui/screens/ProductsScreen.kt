@@ -15,12 +15,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
-import io.github.samolego.kelnar.ui.components.KelnarTextField
 import io.github.samolego.kelnar.ui.viewmodel.ImportAction
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
@@ -105,7 +105,9 @@ fun ProductsScreen(
                 FloatingActionButton(
                         onClick = { viewModel.showAddProductDialog() },
                         containerColor = MaterialTheme.colorScheme.primaryContainer
-                ) { Icon(Icons.Default.Add, contentDescription = "Add Product") }
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Product")
+                }
             }
     ) { paddingValues ->
         if (products.isEmpty()) {
@@ -371,7 +373,7 @@ fun ProductDialog(
             title = { Text(title) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    KelnarTextField(
+                    OutlinedTextField(
                             value = productName,
                             onValueChange = { viewModel.setProductName(it) },
                             label = { Text("Product Name") },
@@ -379,17 +381,17 @@ fun ProductDialog(
                             singleLine = true
                     )
 
-                    KelnarTextField(
+                    OutlinedTextField(
                             value = productPrice,
                             onValueChange = { viewModel.setProductPrice(it) },
                             label = { Text("Price") },
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             singleLine = true,
-                            suffix = { Text("€") }
+                            prefix = { Text("€") }
                     )
 
-                    KelnarTextField(
+                    OutlinedTextField(
                             value = productDescription,
                             onValueChange = { viewModel.setProductDescription(it) },
                             label = { Text("Description (optional)") },
