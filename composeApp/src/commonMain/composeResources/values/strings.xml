@@ -127,15 +127,4 @@
     <string
         name="default_product_pizza_margherita_description"
     >Classic pizza with tomato sauce, mozzarella, and basil</string>
-
-    <!-- Clipboard -->
-    <string name="shared_products">Shared @string/products</string>
-
-    <!-- Storage keys -->
-    <string name="storage_products_key" translatable="false">products</string>
-    <string name="storage_orders_key" translatable="false">orders</string>
-    <string name="storage_prefs_name" translatable="false">kelnar_prefs</string>
-
-    <!-- Encoding -->
-    <string name="encoding_utf8" translatable="false">UTF-8</string>
 </resources>

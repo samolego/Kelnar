@@ -22,25 +22,25 @@
 
     <!-- Order screen -->
     <string name="new_order">Novo naročilo</string>
-    <string name="edit_order">@string/edit naročilo</string>
+    <string name="edit_order">Uredi naročilo</string>
     <string name="order_details">Podrobnosti naročila</string>
     <string name="table_number">Številka mize</string>
-    <string name="add_product">@string/add proizvod</string>
+    <string name="add_product">Dodaj izdelek</string>
     <string name="order_items">Postavke naročila</string>
     <string name="no_items_added_yet">Še ni dodanih postavk</string>
     <string
         name="tap_add_product_to_get_started"
-    >Tapni \'@string/add_product\' za začetek</string>
+    >Tapni \'Dodaj izdelek\' za začetek</string>
     <string name="total">Skupaj:</string>
-    <string name="complete_order">@string/complete naročilo</string>
-    <string name="delete_order">@string/delete naročilo</string>
+    <string name="complete_order">Zaključi naročilo</string>
+    <string name="delete_order">Izbriši naročilo</string>
 
     <!-- Order details with format placeholders -->
     <string name="table_format">Miza %s</string>
     <string name="created_format">Ustvarjeno: %s</string>
     <string name="items_format">Postavke: %d</string>
     <string name="customizations">Prilagoditve:</string>
-    <string name="customizations_format">@string/customizations %s</string>
+    <string name="customizations_format">Prilagoditve: %s</string>
     <string name="price_each_format">%s za kos</string>
     <string name="quantity_product_format">%dx %s</string>
 
@@ -52,47 +52,45 @@
     <string name="no_completed_orders">Ni zaključenih naročil</string>
     <string
         name="complete_orders_to_see_them_here"
-    >@string/complete nekaj naročil, da jih boš videl tukaj</string>
+    >Zaključi nekaj naročil, da jih boš videl tukaj</string>
     <string
         name="swipe_right_to_complete_order"
     >Povleci desno za zaključek naročila</string>
-    <string name="mark_as_active">Označi kot @string/active</string>
+    <string name="mark_as_active">Označi kot aktivno</string>
     <string name="and_more_items_format">• ... in še %d postavk</string>
-    <string name="total_format">@string/total %s</string>
+    <string name="total_format">Skupaj: %s</string>
 
     <!-- Product screen -->
-    <string name="no_products_yet">Še ni proizvodov</string>
+    <string name="no_products_yet">Še ni izdelkov</string>
     <string
         name="tap_plus_to_add_first_product"
-    >Tapni + za dodajanje prvega proizvoda</string>
+    >Tapni + za dodajanje prvega izdelka</string>
     <string name="more_options">Več možnosti</string>
-    <string name="share_products">Deli @string/products</string>
-    <string name="delete_all">@string/delete vse</string>
-    <string
-        name="delete_all_products"
-    >@string/delete_all @string/products</string>
+    <string name="share_products">Deli meni</string>
+    <string name="delete_all">Izbriši vse</string>
+    <string name="delete_all_products">Izbriši vse izdelke</string>
     <string
         name="delete_all_products_confirmation"
-    >Ali si prepričan, da želiš izbrisati vse proizvode? Tega dejanja ni mogoče razveljaviti.</string>
-    <string name="edit_product">@string/edit proizvod</string>
-    <string name="delete_product">@string/delete proizvod</string>
+    >Ali si prepričan, da želiš izbrisati vse izdelke? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="edit_product">Uredi izdelek</string>
+    <string name="delete_product">Izbriši izdelek</string>
 
     <!-- Product import -->
-    <string name="import_products">Uvozi @string/products</string>
+    <string name="import_products">Uvozi meni</string>
     <string
         name="found_products_to_import_format"
-    >Najdenih %d proizvodov za uvoz:</string>
+    >Najdenih %d izdelkov za uvoz:</string>
 
     <!-- Product dialog -->
-    <string name="select_product">Izberi proizvod</string>
-    <string name="search_products">Išči proizvode...</string>
+    <string name="select_product">Izberi izdelek</string>
+    <string name="search_products">Išči izdelke...</string>
     <string name="clear_search">Počisti iskanje</string>
     <string name="customize_product_format">Prilagodi %s</string>
     <string
         name="add_special_instructions"
-    >@string/add posebna navodila ali spremembe:</string>
+    >Dodaj posebna navodila ali spremembe:</string>
     <string name="customization_example">npr. brez kečapa</string>
-    <string name="add_customization">@string/add prilagoditev</string>
+    <string name="add_customization">Dodaj prilagoditev</string>
     <string name="current_customizations">Trenutne prilagoditve:</string>
     <string name="remove_customization">Odstrani prilagoditev</string>
     <string name="customize">Prilagodi</string>
@@ -104,7 +102,7 @@
     <string name="uncomplete">Razveljavi</string>
 
     <!-- Content descriptions -->
-    <string name="completed_badge">@string/completed</string>
+    <string name="completed_badge">Zaključena</string>
 
     <!-- Default product data -->
     <string name="default_product_burger">Hamburger</string>
@@ -123,19 +121,8 @@
     <string
         name="default_product_coca_cola_description"
     >Hladen osvežilen cola napitek</string>
-    <string name="default_product_pizza_margherita">Pizza Margherita</string>
+    <string name="default_product_pizza_margherita">Pica Margerita</string>
     <string
         name="default_product_pizza_margherita_description"
-    >Klasična pizza s paradižnikovo omako, mocarelo in baziliko</string>
-
-    <!-- Clipboard -->
-    <string name="shared_products">Deljeni @string/products</string>
-
-    <!-- Storage keys -->
-    <string name="storage_products_key" translatable="false">products</string>
-    <string name="storage_orders_key" translatable="false">orders</string>
-    <string name="storage_prefs_name" translatable="false">kelnar_prefs</string>
-
-    <!-- Encoding -->
-    <string name="encoding_utf8" translatable="false">UTF-8</string>
+    >Klasična pica s paradižnikovo omako, mocarelo in baziliko</string>
 </resources>
