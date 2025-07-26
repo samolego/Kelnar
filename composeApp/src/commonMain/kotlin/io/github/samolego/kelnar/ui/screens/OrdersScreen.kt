@@ -11,11 +11,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Order
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
+import io.github.samolego.kelnar.ui.navigation.OrderTab
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 
@@ -23,10 +23,10 @@ import io.github.samolego.kelnar.utils.formatAsPrice
 @Composable
 fun OrdersScreen(
         viewModel: OrdersViewModel,
-        initialTab: Int = 0,
+        initialTab: OrderTab = OrderTab.ACTIVE,
         onNavigateToNewOrder: () -> Unit,
-        onNavigateToOrderDetails: (String, Int) -> Unit,
-        onTabChanged: (Int) -> Unit,
+        onNavigateToOrderDetails: (String) -> Unit,
+        onTabChanged: (OrderTab) -> Unit,
         onOpenDrawer: () -> Unit
 ) {
     val orders by viewModel.orders.collectAsState()
@@ -59,36 +59,36 @@ fun OrdersScreen(
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             // Tab Row
             TabRow(
-                    selectedTabIndex = selectedTab,
+                    selectedTabIndex = selectedTab.ordinal,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             ) {
                 Tab(
-                        selected = selectedTab == 0,
+                        selected = selectedTab == OrderTab.ACTIVE,
                         onClick = {
-                            selectedTab = 0
-                            onTabChanged(0)
+                            selectedTab = OrderTab.ACTIVE
+                            onTabChanged(OrderTab.ACTIVE)
                         },
                         text = {
                             Text(
                                     "Active",
                                     fontWeight =
-                                            if (selectedTab == 0) FontWeight.Bold
+                                            if (selectedTab == OrderTab.ACTIVE) FontWeight.Bold
                                             else FontWeight.Normal
                             )
                         }
                 )
                 Tab(
-                        selected = selectedTab == 1,
+                        selected = selectedTab == OrderTab.COMPLETED,
                         onClick = {
-                            selectedTab = 1
-                            onTabChanged(1)
+                            selectedTab = OrderTab.COMPLETED
+                            onTabChanged(OrderTab.COMPLETED)
                         },
                         text = {
                             Text(
                                     "Completed",
                                     fontWeight =
-                                            if (selectedTab == 1) FontWeight.Bold
+                                            if (selectedTab == OrderTab.COMPLETED) FontWeight.Bold
                                             else FontWeight.Normal
                             )
                         }
@@ -97,23 +97,19 @@ fun OrdersScreen(
 
             // Content based on selected tab
             when (selectedTab) {
-                0 ->
+                OrderTab.ACTIVE ->
                         OrdersList(
                                 orders = activeOrders,
-                                onOrderClick = { orderId ->
-                                    onNavigateToOrderDetails(orderId, selectedTab)
-                                },
+                                onOrderClick = { orderId -> onNavigateToOrderDetails(orderId) },
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
                                 emptyMessage = "No active orders",
                                 emptySubMessage = "Tap + to create your first order"
                         )
-                1 ->
+                OrderTab.COMPLETED ->
                         OrdersList(
                                 orders = completedOrders,
-                                onOrderClick = { orderId ->
-                                    onNavigateToOrderDetails(orderId, selectedTab)
-                                },
+                                onOrderClick = { orderId -> onNavigateToOrderDetails(orderId) },
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
                                 emptyMessage = "No completed orders",

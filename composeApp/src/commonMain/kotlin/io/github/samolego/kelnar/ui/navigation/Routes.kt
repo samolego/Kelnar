@@ -3,7 +3,16 @@ package io.github.samolego.kelnar.ui.navigation
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable @SerialName("orders") data class Orders(val tab: Int = 0)
+enum class OrderTab {
+    ACTIVE,
+    COMPLETED
+}
+
+@Serializable @SerialName("orders") data object Orders
+
+@Serializable @SerialName("orders/active") data object OrdersActive
+
+@Serializable @SerialName("orders/completed") data object OrdersCompleted
 
 @Serializable @SerialName("products") data object Products
 
@@ -13,6 +22,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable @SerialName("orders/new") data object NewOrder
 
-@Serializable @SerialName("orders") data class OrderDetails(val orderId: String)
+@Serializable @SerialName("orders/details") data class OrderDetails(val orderId: String)
 
 @Serializable @SerialName("orders/edit") data class EditOrder(val orderId: String)

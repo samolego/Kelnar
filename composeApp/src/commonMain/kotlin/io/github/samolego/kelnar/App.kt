@@ -32,7 +32,10 @@ import io.github.samolego.kelnar.repository.LocalStorage
 import io.github.samolego.kelnar.ui.navigation.EditOrder
 import io.github.samolego.kelnar.ui.navigation.NewOrder
 import io.github.samolego.kelnar.ui.navigation.OrderDetails
+import io.github.samolego.kelnar.ui.navigation.OrderTab
 import io.github.samolego.kelnar.ui.navigation.Orders
+import io.github.samolego.kelnar.ui.navigation.OrdersActive
+import io.github.samolego.kelnar.ui.navigation.OrdersCompleted
 import io.github.samolego.kelnar.ui.navigation.Products
 import io.github.samolego.kelnar.ui.navigation.ProductsImport
 import io.github.samolego.kelnar.ui.navigation.ProductsShare
@@ -84,7 +87,7 @@ fun App(
                                     onClick = {
                                         scope.launch {
                                             drawerState.close()
-                                            navController.navigate(Orders())
+                                            navController.navigate(OrdersActive)
                                         }
                                     }
                             )
@@ -94,7 +97,9 @@ fun App(
                                     onClick = {
                                         scope.launch {
                                             drawerState.close()
-                                            navController.navigate(Products) { popUpTo(Orders()) }
+                                            navController.navigate(Products) {
+                                                popUpTo(OrdersActive)
+                                            }
                                         }
                                     }
                             )
@@ -125,33 +130,78 @@ fun AppNavigation(
 ) {
     NavHost(
             navController = navController,
-            startDestination = Orders(),
+            startDestination = OrdersActive,
             modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
             enterTransition = { fadeIn(animationSpec = tween(150)) },
             exitTransition = { fadeOut(animationSpec = tween(150)) }
     ) {
+        // Redirect base orders route to active orders
         composable<Orders>(
+                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/orders" }),
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) {
+            LaunchedEffect(Unit) {
+                navController.navigate(OrdersActive) { popUpTo(Orders) { inclusive = true } }
+            }
+        }
+
+        composable<OrdersActive>(
+                deepLinks =
+                        listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/orders/active" }),
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) }
+        ) {
+            OrdersScreen(
+                    viewModel = ordersViewModel,
+                    initialTab = OrderTab.ACTIVE,
+                    onNavigateToNewOrder = { navController.navigate(NewOrder) },
+                    onNavigateToOrderDetails = { orderId ->
+                        navController.navigate(OrderDetails(orderId))
+                    },
+                    onTabChanged = { newTab: OrderTab ->
+                        when (newTab) {
+                            OrderTab.ACTIVE ->
+                                    navController.navigate(OrdersActive) {
+                                        popUpTo(OrdersActive) { inclusive = true }
+                                    }
+                            OrderTab.COMPLETED ->
+                                    navController.navigate(OrdersCompleted) {
+                                        popUpTo(OrdersActive) { inclusive = true }
+                                    }
+                        }
+                    },
+                    onOpenDrawer = onOpenDrawer
+            )
+        }
+
+        composable<OrdersCompleted>(
                 deepLinks =
                         listOf(
                                 navDeepLink {
-                                    uriPattern = "${AppConfig.BASE_URL}/orders?tab={tab}"
+                                    uriPattern = "${AppConfig.BASE_URL}/orders/completed"
                                 }
                         ),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
-        ) { backStackEntry ->
-            val orders = backStackEntry.toRoute<Orders>()
+        ) {
             OrdersScreen(
                     viewModel = ordersViewModel,
-                    initialTab = orders.tab,
+                    initialTab = OrderTab.COMPLETED,
                     onNavigateToNewOrder = { navController.navigate(NewOrder) },
-                    onNavigateToOrderDetails = { orderId, _currentTab ->
+                    onNavigateToOrderDetails = { orderId ->
                         navController.navigate(OrderDetails(orderId))
                     },
-                    onTabChanged = { newTab ->
-                        // Update route with new tab when tab changes
-                        navController.navigate(Orders(newTab)) {
-                            popUpTo(Orders()) { inclusive = true }
+                    onTabChanged = { newTab: OrderTab ->
+                        when (newTab) {
+                            OrderTab.ACTIVE ->
+                                    navController.navigate(OrdersActive) {
+                                        popUpTo(OrdersCompleted) { inclusive = true }
+                                    }
+                            OrderTab.COMPLETED ->
+                                    navController.navigate(OrdersCompleted) {
+                                        popUpTo(OrdersCompleted) { inclusive = true }
+                                    }
                         }
                     },
                     onOpenDrawer = onOpenDrawer
