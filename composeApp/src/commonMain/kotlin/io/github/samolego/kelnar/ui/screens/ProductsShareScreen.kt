@@ -57,7 +57,6 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                                 Icon(
                                         Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = "Back",
-                                        tint = Color.White
                                 )
                             }
                         },

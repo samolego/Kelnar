@@ -57,7 +57,6 @@ fun ProductsScreen(
                                 Icon(
                                         Icons.Default.Menu,
                                         contentDescription = "Menu",
-                                        tint = Color.White
                                 )
                             }
                         },
@@ -67,7 +66,6 @@ fun ProductsScreen(
                                     Icon(
                                             Icons.Default.MoreVert,
                                             contentDescription = "More options",
-                                            tint = Color.White
                                     )
                                 }
                                 DropdownMenu(
@@ -106,9 +104,9 @@ fun ProductsScreen(
             floatingActionButton = {
                 FloatingActionButton(
                         onClick = { viewModel.showAddProductDialog() },
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Product", tint = Color.White)
+                    Icon(Icons.Default.Add, contentDescription = "Add Product")
                 }
             }
     ) { paddingValues ->

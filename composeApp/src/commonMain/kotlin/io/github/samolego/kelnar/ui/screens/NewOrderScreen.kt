@@ -67,7 +67,6 @@ fun OrderFormScreen(
                                 Icon(
                                         Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = "Back",
-                                        tint = Color.White
                                 )
                             }
                         },
@@ -86,7 +85,6 @@ fun OrderFormScreen(
                                 Icon(
                                         Icons.Default.Save,
                                         contentDescription = "save",
-                                        tint = Color.White,
                                 )
                             }
                         },

@@ -16,7 +16,7 @@ fun Badge(
         text: String,
         icon: ImageVector = Icons.Default.CheckCircle,
         backgroundColor: Color = MaterialTheme.colorScheme.primary,
-        contentColor: Color = Color.White,
+        contentColor: Color =  MaterialTheme.colorScheme.onPrimary,
         modifier: Modifier = Modifier
 ) {
     Surface(color = backgroundColor, shape = MaterialTheme.shapes.small, modifier = modifier) {
@@ -42,7 +42,7 @@ fun CompletedBadge(modifier: Modifier = Modifier) {
             text = "Completed",
             icon = Icons.Default.CheckCircle,
             backgroundColor = MaterialTheme.colorScheme.primary,
-            contentColor = Color.White,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             modifier = modifier
     )
 }

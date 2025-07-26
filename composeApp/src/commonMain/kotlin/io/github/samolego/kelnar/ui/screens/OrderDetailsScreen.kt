@@ -47,7 +47,6 @@ fun OrderDetailsScreen(
                                     Icon(
                                             Icons.AutoMirrored.Filled.ArrowBack,
                                             contentDescription = "Back",
-                                            tint = Color.White
                                     )
                                 }
                             },
@@ -57,7 +56,6 @@ fun OrderDetailsScreen(
                                         Icon(
                                                 Icons.Default.Edit,
                                                 contentDescription = "Edit Order",
-                                                tint = Color.White
                                         )
                                     }
                                 }
@@ -71,16 +69,15 @@ fun OrderDetailsScreen(
                                     viewModel.markOrderCompleted(orderId)
                                     onNavigateBack()
                                 },
-                                containerColor = MaterialTheme.colorScheme.primary
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
                         ) {
                             Icon(
                                     Icons.Default.CheckCircle,
                                     contentDescription = "Complete Order",
-                                    tint = Color.White,
                                     modifier = Modifier.size(20.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Complete", color = Color.White)
+                            Text("Complete")
                         }
                     }
                 }

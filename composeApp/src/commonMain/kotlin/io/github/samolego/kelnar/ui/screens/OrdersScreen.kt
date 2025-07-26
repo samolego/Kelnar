@@ -44,7 +44,6 @@ fun OrdersScreen(
                                 Icon(
                                         Icons.Default.Menu,
                                         contentDescription = "Menu",
-                                        tint = Color.White
                                 )
                             }
                         },
@@ -53,8 +52,8 @@ fun OrdersScreen(
             floatingActionButton = {
                 FloatingActionButton(
                         onClick = onNavigateToNewOrder,
-                        containerColor = MaterialTheme.colorScheme.primary
-                ) { Icon(Icons.Default.Add, contentDescription = "New Order", tint = Color.White) }
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                ) { Icon(Icons.Default.Add, contentDescription = "New Order") }
             }
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
@@ -206,7 +205,7 @@ fun OrderCard(
                                                 containerColor = MaterialTheme.colorScheme.primary
                                         ),
                                 modifier = Modifier.padding(end = 8.dp)
-                        ) { Text("Complete", color = Color.White) }
+                        ) { Text("Complete") }
                     }
                     IconButton(onClick = onDeleteOrder) {
                         Icon(
@@ -271,7 +270,7 @@ fun OrderCard(
                             text = "Total: ${order.total.formatAsPrice()}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                     )
                 }
