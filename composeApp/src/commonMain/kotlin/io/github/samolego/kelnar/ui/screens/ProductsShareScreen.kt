@@ -11,7 +11,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
@@ -36,6 +38,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
     val shareData: String = remember(products) { viewModel.generateShareData() }
     val baseUrl: String = remember { getCurrentBaseUrl() + "#products/import?data=" }
     val shareUrl: String = remember(shareData) { baseUrl + encodeURIComponent(shareData) }
+    var textFieldValue by remember(shareUrl) { mutableStateOf(TextFieldValue(shareUrl)) }
 
     LaunchedEffect(showCopiedSnackbar) {
         if (showCopiedSnackbar) {
@@ -98,7 +101,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                             verticalAlignment = Alignment.CenterVertically
                     ) {
                         OutlinedTextField(
-                                value = shareUrl,
+                                value = textFieldValue,
                                 onValueChange = {}, // Read-only
                                 enabled = true,
                                 readOnly = true,
@@ -125,6 +128,10 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
 
                         IconButton(
                                 onClick = {
+                                    textFieldValue =
+                                            textFieldValue.copy(
+                                                    selection = TextRange(0, shareUrl.length)
+                                            )
                                     copyToClipboard(shareUrl)
                                     showCopiedSnackbar = true
                                 }
@@ -148,7 +155,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         QRCodeImage(
                                 data = shareUrl,
-                                size = 150,
+                                size = 250,
                                 backgroundColor = Color.White,
                                 foregroundColor = Color.Black,
                                 modifier = Modifier.padding(8.dp)

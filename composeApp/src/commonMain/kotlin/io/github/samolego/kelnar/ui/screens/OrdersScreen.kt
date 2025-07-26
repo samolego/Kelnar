@@ -204,7 +204,7 @@ fun OrdersList(
         ) {
             items(orders, key = { it.id }) { order ->
                 Box {
-                    when {
+                   when {
                         showSwipeToComplete && !order.isCompleted -> {
                             SwipeToCompleteOrderCard(
                                     order = order,
