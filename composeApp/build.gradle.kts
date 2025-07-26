@@ -1,11 +1,10 @@
-
+import java.io.FileInputStream
+import java.util.Properties
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-import java.io.FileInputStream
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -98,7 +97,6 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = project.property("version_code")?.toString()?.toInt() ?: 1
         versionName = project.property("version_name")?.toString() ?: "1.0.0"
-        setProperty("archivesBaseName", "kelnar-${versionName}")
     }
     signingConfigs {
         create("release") {
@@ -123,9 +121,6 @@ android {
             
             // Additional R8 disabling
             proguardFiles.clear()
-
-            // Build config for debugging
-            buildConfigField("boolean", "DEBUG_MODE", "true")
         }
 
         release {
