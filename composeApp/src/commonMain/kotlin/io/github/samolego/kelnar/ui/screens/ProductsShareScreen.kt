@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
+import io.github.samolego.kelnar.ui.components.KelnarTextField
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.QRCodeImage
 import io.github.samolego.kelnar.utils.copyToClipboard
@@ -100,7 +101,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                     ) {
-                        OutlinedTextField(
+                        KelnarTextField(
                                 value = textFieldValue,
                                 onValueChange = {}, // Read-only
                                 enabled = true,

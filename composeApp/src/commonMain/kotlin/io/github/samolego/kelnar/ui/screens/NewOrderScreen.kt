@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.OrderItem
 import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
+import io.github.samolego.kelnar.ui.components.KelnarTextField
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 
@@ -97,7 +98,7 @@ fun OrderFormScreen(
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp)) {
             // Table Number Input
-            OutlinedTextField(
+            KelnarTextField(
                     value = tableNumber,
                     onValueChange = { viewModel.setTableNumber(it) },
                     label = { Text("Table Number") },
@@ -349,7 +350,7 @@ fun ProductSearchDialog(
             title = { Text("Select Product") },
             text = {
                 Column {
-                    OutlinedTextField(
+                    KelnarTextField(
                             value = searchQuery,
                             onValueChange = onSearchQueryChange,
                             label = { Text("Search products...") },
@@ -430,7 +431,7 @@ fun CustomizationDialog(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        OutlinedTextField(
+                        KelnarTextField(
                                 value = customizationText,
                                 onValueChange = { customizationText = it },
                                 label = { Text("e.g., no ketchup") },
