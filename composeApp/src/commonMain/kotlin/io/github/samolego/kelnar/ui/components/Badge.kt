@@ -10,13 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import kelnar.composeapp.generated.resources.Res
+import kelnar.composeapp.generated.resources.completed_badge
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun Badge(
         text: String,
         icon: ImageVector = Icons.Default.CheckCircle,
         backgroundColor: Color = MaterialTheme.colorScheme.primary,
-        contentColor: Color =  MaterialTheme.colorScheme.onPrimary,
+        contentColor: Color = MaterialTheme.colorScheme.onPrimary,
         modifier: Modifier = Modifier
 ) {
     Surface(color = backgroundColor, shape = MaterialTheme.shapes.small, modifier = modifier) {
@@ -39,7 +42,7 @@ fun Badge(
 @Composable
 fun CompletedBadge(modifier: Modifier = Modifier) {
     Badge(
-            text = "Completed",
+            text = stringResource(Res.string.completed_badge),
             icon = Icons.Default.CheckCircle,
             backgroundColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,

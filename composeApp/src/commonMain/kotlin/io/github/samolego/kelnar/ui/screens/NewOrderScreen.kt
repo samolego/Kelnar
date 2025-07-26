@@ -25,6 +25,34 @@ import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
+import kelnar.composeapp.generated.resources.Res
+import kelnar.composeapp.generated.resources.add_customization
+import kelnar.composeapp.generated.resources.add_product
+import kelnar.composeapp.generated.resources.add_special_instructions
+import kelnar.composeapp.generated.resources.back
+import kelnar.composeapp.generated.resources.cancel
+import kelnar.composeapp.generated.resources.clear_search
+import kelnar.composeapp.generated.resources.current_customizations
+import kelnar.composeapp.generated.resources.customization_example
+import kelnar.composeapp.generated.resources.customizations_format
+import kelnar.composeapp.generated.resources.customize
+import kelnar.composeapp.generated.resources.customize_product_format
+import kelnar.composeapp.generated.resources.decrease_quantity
+import kelnar.composeapp.generated.resources.edit_order
+import kelnar.composeapp.generated.resources.increase_quantity
+import kelnar.composeapp.generated.resources.new_order
+import kelnar.composeapp.generated.resources.no_items_added_yet
+import kelnar.composeapp.generated.resources.order_items
+import kelnar.composeapp.generated.resources.price_each_format
+import kelnar.composeapp.generated.resources.remove_customization
+import kelnar.composeapp.generated.resources.remove_item
+import kelnar.composeapp.generated.resources.save
+import kelnar.composeapp.generated.resources.search_products
+import kelnar.composeapp.generated.resources.select_product
+import kelnar.composeapp.generated.resources.table_number
+import kelnar.composeapp.generated.resources.tap_add_product_to_get_started
+import kelnar.composeapp.generated.resources.total
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,12 +93,17 @@ fun OrderFormScreen(
     Scaffold(
             topBar = {
                 KelnarAppBar(
-                        title = { Text(if (isEditingOrder) "Edit Order" else "New Order") },
+                        title = {
+                            Text(
+                                    if (isEditingOrder) stringResource(Res.string.edit_order)
+                                    else stringResource(Res.string.new_order)
+                            )
+                        },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
                                         Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Back",
+                                        contentDescription = stringResource(Res.string.back),
                                 )
                             }
                         },
@@ -88,7 +121,7 @@ fun OrderFormScreen(
                             ) {
                                 Icon(
                                         Icons.Default.Save,
-                                        contentDescription = "save",
+                                        contentDescription = stringResource(Res.string.save),
                                 )
                             }
                         },
@@ -100,7 +133,7 @@ fun OrderFormScreen(
             OutlinedTextField(
                     value = tableNumber,
                     onValueChange = { viewModel.setTableNumber(it) },
-                    label = { Text("Table Number") },
+                    label = { Text(stringResource(Res.string.table_number)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true
@@ -118,7 +151,7 @@ fun OrderFormScreen(
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Add Product")
+                Text(stringResource(Res.string.add_product))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -126,7 +159,7 @@ fun OrderFormScreen(
             // Order Items
             if (orderItems.isNotEmpty()) {
                 Text(
-                        text = "Order Items",
+                        text = stringResource(Res.string.order_items),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                 )
@@ -161,13 +194,13 @@ fun OrderFormScreen(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                                text = "No items added yet",
+                                text = stringResource(Res.string.no_items_added_yet),
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                                text = "Tap 'Add Product' to get started",
+                                text = stringResource(Res.string.tap_add_product_to_get_started),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -234,7 +267,11 @@ fun OrderItemCard(
                             fontWeight = FontWeight.Bold
                     )
                     Text(
-                            text = "${item.product.price.formatAsPrice()} each",
+                            text =
+                                    stringResource(
+                                            Res.string.price_each_format,
+                                            item.product.price.formatAsPrice()
+                                    ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -242,7 +279,7 @@ fun OrderItemCard(
                 IconButton(onClick = onRemove) {
                     Icon(
                             Icons.Default.Delete,
-                            contentDescription = "Remove item",
+                            contentDescription = stringResource(Res.string.remove_item),
                             tint = MaterialTheme.colorScheme.error
                     )
                 }
@@ -251,7 +288,11 @@ fun OrderItemCard(
             if (item.customizations.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                        text = "Customizations: ${item.customizations.joinToString(", ")}",
+                        text =
+                                stringResource(
+                                        Res.string.customizations_format,
+                                        item.customizations.joinToString(", ")
+                                ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                 )
@@ -268,14 +309,22 @@ fun OrderItemCard(
                     IconButton(
                             onClick = { onQuantityChange(item.quantity - 1) },
                             enabled = item.quantity > 1
-                    ) { Icon(Icons.Default.Remove, contentDescription = "Decrease quantity") }
+                    ) {
+                        Icon(
+                                Icons.Default.Remove,
+                                contentDescription = stringResource(Res.string.decrease_quantity)
+                        )
+                    }
                     Text(
                             text = item.quantity.toString(),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(horizontal = 16.dp)
                     )
                     IconButton(onClick = { onQuantityChange(item.quantity + 1) }) {
-                        Icon(Icons.Default.Add, contentDescription = "Increase quantity")
+                        Icon(
+                                Icons.Default.Add,
+                                contentDescription = stringResource(Res.string.increase_quantity)
+                        )
                     }
                 }
 
@@ -287,7 +336,7 @@ fun OrderItemCard(
                                 modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Customize")
+                        Text(stringResource(Res.string.customize))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -318,7 +367,7 @@ fun TotalCard(total: Double, modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                    text = "Total:",
+                    text = stringResource(Res.string.total),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
             )
@@ -346,20 +395,21 @@ fun ProductSearchDialog(
 ) {
     AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("Select Product") },
+            title = { Text(stringResource(Res.string.select_product)) },
             text = {
                 Column {
                     OutlinedTextField(
                             value = searchQuery,
                             onValueChange = onSearchQueryChange,
-                            label = { Text("Search products...") },
+                            label = { Text(stringResource(Res.string.search_products)) },
                             modifier = Modifier.fillMaxWidth(),
                             trailingIcon = {
                                 if (searchQuery.isNotEmpty()) {
                                     IconButton(onClick = { onSearchQueryChange("") }) {
                                         Icon(
                                                 Icons.Default.Clear,
-                                                contentDescription = "Clear search"
+                                                contentDescription =
+                                                        stringResource(Res.string.clear_search)
                                         )
                                     }
                                 }
@@ -401,7 +451,9 @@ fun ProductSearchDialog(
                     }
                 }
             },
-            confirmButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+            confirmButton = {
+                TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
+            }
     )
 }
 
@@ -416,11 +468,13 @@ fun CustomizationDialog(
 
     AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("Customize ${item.product.name}") },
+            title = {
+                Text(stringResource(Res.string.customize_product_format, item.product.name))
+            },
             text = {
                 Column {
                     Text(
-                            text = "Add special instructions or modifications:",
+                            text = stringResource(Res.string.add_special_instructions),
                             style = MaterialTheme.typography.bodyMedium
                     )
 
@@ -433,7 +487,7 @@ fun CustomizationDialog(
                         OutlinedTextField(
                                 value = customizationText,
                                 onValueChange = { customizationText = it },
-                                label = { Text("e.g., no ketchup") },
+                                label = { Text(stringResource(Res.string.customization_example)) },
                                 modifier = Modifier.weight(1f)
                         )
                         IconButton(
@@ -443,13 +497,19 @@ fun CustomizationDialog(
                                         customizationText = ""
                                     }
                                 }
-                        ) { Icon(Icons.Default.Add, contentDescription = "Add customization") }
+                        ) {
+                            Icon(
+                                    Icons.Default.Add,
+                                    contentDescription =
+                                            stringResource(Res.string.add_customization)
+                            )
+                        }
                     }
 
                     if (customizations.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                                text = "Current customizations:",
+                                text = stringResource(Res.string.current_customizations),
                                 style = MaterialTheme.typography.labelMedium
                         )
                         customizations.forEachIndexed { index, customization ->
@@ -473,7 +533,8 @@ fun CustomizationDialog(
                                 ) {
                                     Icon(
                                             Icons.Default.Delete,
-                                            contentDescription = "Remove customization",
+                                            contentDescription =
+                                                    stringResource(Res.string.remove_customization),
                                             modifier = Modifier.size(16.dp)
                                     )
                                 }
@@ -494,8 +555,10 @@ fun CustomizationDialog(
                             onCustomizationsChanged(finalCustomizations)
                             onDismiss()
                         }
-                ) { Text("Save") }
+                ) { Text(stringResource(Res.string.save)) }
             },
-            dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+            dismissButton = {
+                TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
+            }
     )
 }

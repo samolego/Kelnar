@@ -19,6 +19,21 @@ import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 import io.github.samolego.kelnar.utils.formatAsTime
+import kelnar.composeapp.generated.resources.Res
+import kelnar.composeapp.generated.resources.back
+import kelnar.composeapp.generated.resources.complete
+import kelnar.composeapp.generated.resources.complete_order
+import kelnar.composeapp.generated.resources.created_format
+import kelnar.composeapp.generated.resources.customizations
+import kelnar.composeapp.generated.resources.edit_order_action
+import kelnar.composeapp.generated.resources.items_format
+import kelnar.composeapp.generated.resources.order_details
+import kelnar.composeapp.generated.resources.order_items
+import kelnar.composeapp.generated.resources.price_each_format
+import kelnar.composeapp.generated.resources.quantity_product_format
+import kelnar.composeapp.generated.resources.table_format
+import kelnar.composeapp.generated.resources.total
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,12 +56,12 @@ fun OrderDetailsScreen(
         Scaffold(
                 topBar = {
                     KelnarAppBar(
-                            title = { Text("Order Details") },
+                            title = { Text(stringResource(Res.string.order_details)) },
                             navigationIcon = {
                                 IconButton(onClick = onNavigateBack) {
                                     Icon(
                                             Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = "Back",
+                                            contentDescription = stringResource(Res.string.back),
                                     )
                                 }
                             },
@@ -55,7 +70,10 @@ fun OrderDetailsScreen(
                                     IconButton(onClick = onNavigateToEdit) {
                                         Icon(
                                                 Icons.Default.Edit,
-                                                contentDescription = "Edit Order",
+                                                contentDescription =
+                                                        stringResource(
+                                                                Res.string.edit_order_action
+                                                        ),
                                         )
                                     }
                                 }
@@ -73,11 +91,11 @@ fun OrderDetailsScreen(
                         ) {
                             Icon(
                                     Icons.Default.CheckCircle,
-                                    contentDescription = "Complete Order",
+                                    contentDescription = stringResource(Res.string.complete_order),
                                     modifier = Modifier.size(20.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Complete")
+                            Text(stringResource(Res.string.complete))
                         }
                     }
                 }
@@ -109,7 +127,11 @@ fun OrderDetailsScreen(
                                     verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                        text = "Table ${currentOrder.tableNumber}",
+                                        text =
+                                                stringResource(
+                                                        Res.string.table_format,
+                                                        currentOrder.tableNumber
+                                                ),
                                         style = MaterialTheme.typography.headlineSmall,
                                         color = textColor,
                                         fontWeight = FontWeight.Bold
@@ -120,12 +142,20 @@ fun OrderDetailsScreen(
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                    text = "Created: ${currentOrder.createdAt.formatAsTime()}",
+                                    text =
+                                            stringResource(
+                                                    Res.string.created_format,
+                                                    currentOrder.createdAt.formatAsTime()
+                                            ),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = textColor,
                             )
                             Text(
-                                    text = "Items: ${currentOrder.items.size}",
+                                    text =
+                                            stringResource(
+                                                    Res.string.items_format,
+                                                    currentOrder.items.size
+                                            ),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = textColor,
                             )
@@ -147,7 +177,7 @@ fun OrderDetailsScreen(
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                            text = "Total:",
+                                            text = stringResource(Res.string.total),
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -166,7 +196,7 @@ fun OrderDetailsScreen(
 
                 item {
                     Text(
-                            text = "Order Items",
+                            text = stringResource(Res.string.order_items),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                     )
@@ -189,12 +219,21 @@ fun OrderItemDetailCard(item: OrderItem) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                            text = "${item.quantity}x ${item.product.name}",
+                            text =
+                                    stringResource(
+                                            Res.string.quantity_product_format,
+                                            item.quantity,
+                                            item.product.name
+                                    ),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                     )
                     Text(
-                            text = "${item.product.price.formatAsPrice()} each",
+                            text =
+                                    stringResource(
+                                            Res.string.price_each_format,
+                                            item.product.price.formatAsPrice()
+                                    ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -219,7 +258,7 @@ fun OrderItemDetailCard(item: OrderItem) {
             if (item.customizations.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                        text = "Customizations:",
+                        text = stringResource(Res.string.customizations),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary

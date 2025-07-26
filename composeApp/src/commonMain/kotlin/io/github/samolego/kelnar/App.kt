@@ -50,7 +50,11 @@ import io.github.samolego.kelnar.ui.theme.KelnarTheme
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.AppConfig
+import kelnar.composeapp.generated.resources.Res
+import kelnar.composeapp.generated.resources.orders
+import kelnar.composeapp.generated.resources.products
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun App(
@@ -82,7 +86,7 @@ fun App(
                     drawerContent = {
                         ModalDrawerSheet(drawerContainerColor = MaterialTheme.colorScheme.surface) {
                             NavigationDrawerItem(
-                                    label = { Text("Orders") },
+                                    label = { Text(stringResource(Res.string.orders)) },
                                     selected = currentRoute?.contains("orders") == true,
                                     onClick = {
                                         scope.launch {
@@ -92,7 +96,7 @@ fun App(
                                     }
                             )
                             NavigationDrawerItem(
-                                    label = { Text("Products") },
+                                    label = { Text(stringResource(Res.string.products)) },
                                     selected = currentRoute?.contains("products") == true,
                                     onClick = {
                                         scope.launch {

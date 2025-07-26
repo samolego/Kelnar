@@ -23,6 +23,26 @@ import io.github.samolego.kelnar.ui.components.KelnarAppBar
 import io.github.samolego.kelnar.ui.viewmodel.ImportAction
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
+import kelnar.composeapp.generated.resources.Res
+import kelnar.composeapp.generated.resources.add_product
+import kelnar.composeapp.generated.resources.add_product_dialog
+import kelnar.composeapp.generated.resources.cancel
+import kelnar.composeapp.generated.resources.delete
+import kelnar.composeapp.generated.resources.delete_all
+import kelnar.composeapp.generated.resources.delete_all_products
+import kelnar.composeapp.generated.resources.delete_all_products_confirmation
+import kelnar.composeapp.generated.resources.delete_product
+import kelnar.composeapp.generated.resources.edit_product
+import kelnar.composeapp.generated.resources.edit_product_dialog
+import kelnar.composeapp.generated.resources.found_products_to_import_format
+import kelnar.composeapp.generated.resources.import_products
+import kelnar.composeapp.generated.resources.menu
+import kelnar.composeapp.generated.resources.more_options
+import kelnar.composeapp.generated.resources.no_products_yet
+import kelnar.composeapp.generated.resources.products
+import kelnar.composeapp.generated.resources.share_products
+import kelnar.composeapp.generated.resources.tap_plus_to_add_first_product
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,12 +70,12 @@ fun ProductsScreen(
     Scaffold(
             topBar = {
                 KelnarAppBar(
-                        title = { Text("Products") },
+                        title = { Text(stringResource(Res.string.products)) },
                         navigationIcon = {
                             IconButton(onClick = onOpenDrawer) {
                                 Icon(
                                         Icons.Default.Menu,
-                                        contentDescription = "Menu",
+                                        contentDescription = stringResource(Res.string.menu),
                                 )
                             }
                         },
@@ -64,7 +84,8 @@ fun ProductsScreen(
                                 IconButton(onClick = { showOptionsMenu = true }) {
                                     Icon(
                                             Icons.Default.MoreVert,
-                                            contentDescription = "More options",
+                                            contentDescription =
+                                                    stringResource(Res.string.more_options),
                                     )
                                 }
                                 DropdownMenu(
@@ -72,7 +93,9 @@ fun ProductsScreen(
                                         onDismissRequest = { showOptionsMenu = false }
                                 ) {
                                     DropdownMenuItem(
-                                            text = { Text("Share Products") },
+                                            text = {
+                                                Text(stringResource(Res.string.share_products))
+                                            },
                                             onClick = {
                                                 showOptionsMenu = false
                                                 val shareData = viewModel.generateShareData()
@@ -83,7 +106,7 @@ fun ProductsScreen(
                                             }
                                     )
                                     DropdownMenuItem(
-                                            text = { Text("Delete All") },
+                                            text = { Text(stringResource(Res.string.delete_all)) },
                                             onClick = {
                                                 showOptionsMenu = false
                                                 showDeleteAllDialog = true
@@ -104,7 +127,12 @@ fun ProductsScreen(
                 FloatingActionButton(
                         onClick = { viewModel.showAddProductDialog() },
                         containerColor = MaterialTheme.colorScheme.primaryContainer
-                ) { Icon(Icons.Default.Add, contentDescription = "Add Product") }
+                ) {
+                    Icon(
+                            Icons.Default.Add,
+                            contentDescription = stringResource(Res.string.add_product)
+                    )
+                }
             }
     ) { paddingValues ->
         if (products.isEmpty()) {
@@ -114,13 +142,13 @@ fun ProductsScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                            text = "No products yet",
+                            text = stringResource(Res.string.no_products_yet),
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                            text = "Tap + to add your first product",
+                            text = stringResource(Res.string.tap_plus_to_add_first_product),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -146,7 +174,7 @@ fun ProductsScreen(
     // Add Product Dialog
     if (showAddProductDialog) {
         ProductDialog(
-                title = "Add Product",
+                title = stringResource(Res.string.add_product_dialog),
                 viewModel = viewModel,
                 onDismiss = { viewModel.hideAddProductDialog() },
                 onSave = { viewModel.saveProduct() }
@@ -156,7 +184,7 @@ fun ProductsScreen(
     // Edit Product Dialog
     if (showEditProductDialog) {
         ProductDialog(
-                title = "Edit Product",
+                title = stringResource(Res.string.edit_product_dialog),
                 viewModel = viewModel,
                 onDismiss = { viewModel.hideEditProductDialog() },
                 onSave = { viewModel.saveProduct() }
@@ -175,22 +203,20 @@ fun ProductsScreen(
     if (showDeleteAllDialog) {
         AlertDialog(
                 onDismissRequest = { showDeleteAllDialog = false },
-                title = { Text("Delete All Products") },
-                text = {
-                    Text(
-                            "Are you sure you want to delete all products? This action cannot be undone."
-                    )
-                },
+                title = { Text(stringResource(Res.string.delete_all_products)) },
+                text = { Text(stringResource(Res.string.delete_all_products_confirmation)) },
                 confirmButton = {
                     TextButton(
                             onClick = {
                                 showDeleteAllDialog = false
                                 viewModel.deleteAllProducts()
                             }
-                    ) { Text("Delete") }
+                    ) { Text(stringResource(Res.string.delete)) }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showDeleteAllDialog = false }) { Text("Cancel") }
+                    TextButton(onClick = { showDeleteAllDialog = false }) {
+                        Text(stringResource(Res.string.cancel))
+                    }
                 }
         )
     }
@@ -231,14 +257,14 @@ fun ProductCard(product: Product, onEditProduct: () -> Unit, onDeleteProduct: ()
                     IconButton(onClick = onEditProduct) {
                         Icon(
                                 Icons.Default.Edit,
-                                contentDescription = "Edit product",
+                                contentDescription = stringResource(Res.string.edit_product),
                                 tint = MaterialTheme.colorScheme.primary
                         )
                     }
                     IconButton(onClick = onDeleteProduct) {
                         Icon(
                                 Icons.Default.Delete,
-                                contentDescription = "Delete product",
+                                contentDescription = stringResource(Res.string.delete_product),
                                 tint = MaterialTheme.colorScheme.error
                         )
                     }
@@ -255,11 +281,15 @@ fun ImportProductsDialog(
 ) {
     AlertDialog(
             onDismissRequest = { onAction(ImportAction.CANCEL) },
-            title = { Text("Import Products") },
+            title = { Text(stringResource(Res.string.import_products)) },
             text = {
                 Column {
                     Text(
-                            text = "Found ${importState.products.size} products to import:",
+                            text =
+                                    stringResource(
+                                            Res.string.found_products_to_import_format,
+                                            importState.products.size
+                                    ),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
                     )

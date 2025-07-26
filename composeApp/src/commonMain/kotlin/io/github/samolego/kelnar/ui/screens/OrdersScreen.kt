@@ -24,6 +24,28 @@ import io.github.samolego.kelnar.ui.navigation.OrderTab
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 import io.github.samolego.kelnar.utils.formatAsTime
+import kelnar.composeapp.generated.resources.Res
+import kelnar.composeapp.generated.resources.active
+import kelnar.composeapp.generated.resources.and_more_items_format
+import kelnar.composeapp.generated.resources.complete
+import kelnar.composeapp.generated.resources.complete_order
+import kelnar.composeapp.generated.resources.complete_orders_to_see_them_here
+import kelnar.composeapp.generated.resources.completed
+import kelnar.composeapp.generated.resources.delete_order
+import kelnar.composeapp.generated.resources.items_format
+import kelnar.composeapp.generated.resources.mark_as_active
+import kelnar.composeapp.generated.resources.menu
+import kelnar.composeapp.generated.resources.new_order
+import kelnar.composeapp.generated.resources.no_active_orders
+import kelnar.composeapp.generated.resources.no_completed_orders
+import kelnar.composeapp.generated.resources.orders
+import kelnar.composeapp.generated.resources.quantity_product_format
+import kelnar.composeapp.generated.resources.swipe_right_to_complete_order
+import kelnar.composeapp.generated.resources.table_format
+import kelnar.composeapp.generated.resources.tap_plus_to_create_first_order
+import kelnar.composeapp.generated.resources.total_format
+import kelnar.composeapp.generated.resources.uncomplete
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,12 +66,12 @@ fun OrdersScreen(
     Scaffold(
             topBar = {
                 KelnarAppBar(
-                        title = { Text("Orders") },
+                        title = { Text(stringResource(Res.string.orders)) },
                         navigationIcon = {
                             IconButton(onClick = onOpenDrawer) {
                                 Icon(
                                         Icons.Default.Menu,
-                                        contentDescription = "Menu",
+                                        contentDescription = stringResource(Res.string.menu),
                                 )
                             }
                         },
@@ -59,7 +81,12 @@ fun OrdersScreen(
                 FloatingActionButton(
                         onClick = onNavigateToNewOrder,
                         containerColor = MaterialTheme.colorScheme.primaryContainer
-                ) { Icon(Icons.Default.Add, contentDescription = "New Order") }
+                ) {
+                    Icon(
+                            Icons.Default.Add,
+                            contentDescription = stringResource(Res.string.new_order)
+                    )
+                }
             }
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
@@ -77,7 +104,7 @@ fun OrdersScreen(
                         },
                         text = {
                             Text(
-                                    "Active",
+                                    stringResource(Res.string.active),
                                     fontWeight =
                                             if (selectedTab == OrderTab.ACTIVE) FontWeight.Bold
                                             else FontWeight.Normal
@@ -92,7 +119,7 @@ fun OrdersScreen(
                         },
                         text = {
                             Text(
-                                    "Completed",
+                                    stringResource(Res.string.completed),
                                     fontWeight =
                                             if (selectedTab == OrderTab.COMPLETED) FontWeight.Bold
                                             else FontWeight.Normal
@@ -114,8 +141,9 @@ fun OrdersScreen(
                                 onOrderClick = { orderId -> onNavigateToOrderDetails(orderId) },
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
-                                emptyMessage = "No active orders",
-                                emptySubMessage = "Tap + to create your first order",
+                                emptyMessage = stringResource(Res.string.no_active_orders),
+                                emptySubMessage =
+                                        stringResource(Res.string.tap_plus_to_create_first_order),
                                 showSwipeToComplete = true
                         )
                     }
@@ -126,8 +154,9 @@ fun OrdersScreen(
                                 onOrderClick = { orderId -> onNavigateToOrderDetails(orderId) },
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
-                                emptyMessage = "No completed orders",
-                                emptySubMessage = "Complete some orders to see them here",
+                                emptyMessage = stringResource(Res.string.no_completed_orders),
+                                emptySubMessage =
+                                        stringResource(Res.string.complete_orders_to_see_them_here),
                                 showSwipeToComplete = false,
                                 showSwipeToUncomplete = true
                         )
@@ -160,7 +189,7 @@ fun SwipeHint() {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                    text = "Swipe right to complete an order",
+                    text = stringResource(Res.string.swipe_right_to_complete_order),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     textAlign = TextAlign.Center
@@ -204,7 +233,7 @@ fun OrdersList(
         ) {
             items(orders, key = { it.id }) { order ->
                 Box {
-                   when {
+                    when {
                         showSwipeToComplete && !order.isCompleted -> {
                             SwipeToCompleteOrderCard(
                                     order = order,
@@ -275,13 +304,13 @@ fun SwipeToCompleteOrderCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                                 Icons.Default.CheckCircle,
-                                contentDescription = "Complete",
+                                contentDescription = stringResource(Res.string.complete),
                                 tint = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                                text = "Complete Order",
+                                text = stringResource(Res.string.complete_order),
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
@@ -339,13 +368,13 @@ fun SwipeToUncompleteOrderCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                                 Icons.AutoMirrored.Filled.Undo,
-                                contentDescription = "Uncomplete",
+                                contentDescription = stringResource(Res.string.uncomplete),
                                 tint = MaterialTheme.colorScheme.onTertiary,
                                 modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                                text = "Mark as Active",
+                                text = stringResource(Res.string.mark_as_active),
                                 color = MaterialTheme.colorScheme.onTertiary,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
@@ -392,7 +421,7 @@ fun OrderCard(
                     verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                        text = "Table ${order.tableNumber}",
+                        text = stringResource(Res.string.table_format, order.tableNumber),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                 )
@@ -405,12 +434,12 @@ fun OrderCard(
                                                 containerColor = MaterialTheme.colorScheme.primary
                                         ),
                                 modifier = Modifier.padding(end = 8.dp)
-                        ) { Text("Complete") }
+                        ) { Text(stringResource(Res.string.complete)) }
                     }
                     IconButton(onClick = onDeleteOrder) {
                         Icon(
                                 Icons.Default.Delete,
-                                contentDescription = "Delete order",
+                                contentDescription = stringResource(Res.string.delete_order),
                                 tint = MaterialTheme.colorScheme.error
                         )
                     }
@@ -425,7 +454,7 @@ fun OrderCard(
                     horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                        text = "Items: ${order.items.size}",
+                        text = stringResource(Res.string.items_format, order.items.size),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -441,7 +470,12 @@ fun OrderCard(
             // Items preview
             order.items.take(3).forEach { item ->
                 Text(
-                        text = "• ${item.quantity}x ${item.product.name}",
+                        text =
+                                stringResource(
+                                        Res.string.quantity_product_format,
+                                        item.quantity,
+                                        item.product.name
+                                ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 8.dp)
@@ -450,7 +484,11 @@ fun OrderCard(
 
             if (order.items.size > 3) {
                 Text(
-                        text = "• ... and ${order.items.size - 3} more items",
+                        text =
+                                stringResource(
+                                        Res.string.and_more_items_format,
+                                        order.items.size - 3
+                                ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
@@ -467,7 +505,11 @@ fun OrderCard(
                         shape = MaterialTheme.shapes.small
                 ) {
                     Text(
-                            text = "Total: ${order.total.formatAsPrice()}",
+                            text =
+                                    stringResource(
+                                            Res.string.total_format,
+                                            order.total.formatAsPrice()
+                                    ),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary,
