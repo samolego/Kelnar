@@ -86,6 +86,10 @@ android {
     namespace = "io.github.samolego.kelnar"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    lint {
+        disable.add( "NullSafeMutableLiveData")
+    }
+
     defaultConfig {
         applicationId = "io.github.samolego.kelnar"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -112,7 +116,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                    //"proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
         }
