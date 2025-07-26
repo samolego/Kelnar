@@ -6,11 +6,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Undo
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -201,31 +201,33 @@ fun OrdersList(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(orders) { order ->
-                when {
-                    showSwipeToComplete && !order.isCompleted -> {
-                        SwipeToCompleteOrderCard(
-                                order = order,
-                                onClick = { onOrderClick(order.id) },
-                                onDeleteOrder = { onDeleteOrder(order.id) },
-                                onMarkCompleted = { onMarkCompleted(order.id) }
-                        )
-                    }
-                    showSwipeToUncomplete && order.isCompleted -> {
-                        SwipeToUncompleteOrderCard(
-                                order = order,
-                                onClick = { onOrderClick(order.id) },
-                                onDeleteOrder = { onDeleteOrder(order.id) },
-                                onMarkCompleted = { onMarkCompleted(order.id) }
-                        )
-                    }
-                    else -> {
-                        OrderCard(
-                                order = order,
-                                onClick = { onOrderClick(order.id) },
-                                onDeleteOrder = { onDeleteOrder(order.id) },
-                                onMarkCompleted = { onMarkCompleted(order.id) }
-                        )
+            items(orders, key = { it.id }) { order ->
+                Box(modifier = Modifier.animateItemPlacement()) {
+                    when {
+                        showSwipeToComplete && !order.isCompleted -> {
+                            SwipeToCompleteOrderCard(
+                                    order = order,
+                                    onClick = { onOrderClick(order.id) },
+                                    onDeleteOrder = { onDeleteOrder(order.id) },
+                                    onMarkCompleted = { onMarkCompleted(order.id) }
+                            )
+                        }
+                        showSwipeToUncomplete && order.isCompleted -> {
+                            SwipeToUncompleteOrderCard(
+                                    order = order,
+                                    onClick = { onOrderClick(order.id) },
+                                    onDeleteOrder = { onDeleteOrder(order.id) },
+                                    onMarkCompleted = { onMarkCompleted(order.id) }
+                            )
+                        }
+                        else -> {
+                            OrderCard(
+                                    order = order,
+                                    onClick = { onOrderClick(order.id) },
+                                    onDeleteOrder = { onDeleteOrder(order.id) },
+                                    onMarkCompleted = { onMarkCompleted(order.id) }
+                            )
+                        }
                     }
                 }
             }
@@ -244,13 +246,12 @@ fun SwipeToCompleteOrderCard(
     val swipeableState =
             rememberSwipeToDismissBoxState(
                     confirmValueChange = { dismissDirection ->
-                        if (dismissDirection == SwipeToDismissBoxValue.EndToStart) {
-                            false // We don't want end-to-start swipe
-                        } else if (dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
-                            onMarkCompleted()
-                            true
-                        } else {
-                            false
+                        when (dismissDirection) {
+                            SwipeToDismissBoxValue.StartToEnd -> {
+                                onMarkCompleted()
+                                false // Don't dismiss the card, let the state change handle it
+                            }
+                            else -> false
                         }
                     }
             )
@@ -309,13 +310,12 @@ fun SwipeToUncompleteOrderCard(
     val swipeableState =
             rememberSwipeToDismissBoxState(
                     confirmValueChange = { dismissDirection ->
-                        if (dismissDirection == SwipeToDismissBoxValue.EndToStart) {
-                            false // We don't want end-to-start swipe
-                        } else if (dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
-                            onMarkCompleted() // This will toggle completion status
-                            true
-                        } else {
-                            false
+                        when (dismissDirection) {
+                            SwipeToDismissBoxValue.StartToEnd -> {
+                                onMarkCompleted() // This will toggle completion status
+                                false // Don't dismiss the card, let the state change handle it
+                            }
+                            else -> false
                         }
                     }
             )
@@ -335,7 +335,7 @@ fun SwipeToUncompleteOrderCard(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                                Icons.Default.Undo,
+                                Icons.AutoMirrored.Filled.Undo,
                                 contentDescription = "Uncomplete",
                                 tint = MaterialTheme.colorScheme.onTertiary,
                                 modifier = Modifier.size(24.dp)
