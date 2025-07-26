@@ -30,13 +30,13 @@ import androidx.navigation.toRoute
 import io.github.samolego.kelnar.repository.DataRepository
 import io.github.samolego.kelnar.repository.LocalStorage
 import io.github.samolego.kelnar.ui.navigation.EditOrder
+import io.github.samolego.kelnar.ui.navigation.Menu
 import io.github.samolego.kelnar.ui.navigation.NewOrder
 import io.github.samolego.kelnar.ui.navigation.OrderDetails
 import io.github.samolego.kelnar.ui.navigation.OrderTab
 import io.github.samolego.kelnar.ui.navigation.Orders
 import io.github.samolego.kelnar.ui.navigation.OrdersActive
 import io.github.samolego.kelnar.ui.navigation.OrdersCompleted
-import io.github.samolego.kelnar.ui.navigation.Menu
 import io.github.samolego.kelnar.ui.navigation.ProductsImport
 import io.github.samolego.kelnar.ui.navigation.ProductsShare
 import io.github.samolego.kelnar.ui.screens.EditOrderScreen
@@ -51,8 +51,8 @@ import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.AppConfig
 import kelnar.composeapp.generated.resources.Res
-import kelnar.composeapp.generated.resources.orders
 import kelnar.composeapp.generated.resources.menu
+import kelnar.composeapp.generated.resources.orders
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -101,12 +101,12 @@ fun App(
                                     onClick = {
                                         scope.launch {
                                             drawerState.close()
-                                            navController.navigate(Menu) {
-                                                popUpTo(OrdersActive)
-                                            }
+                                            navController.navigate(Menu) { popUpTo(OrdersActive) }
                                         }
                                     }
                             )
+
+                            // WebDrawGooglePlayBadge()
                         }
                     }
             ) {
@@ -294,8 +294,7 @@ fun AppNavigation(
         }
 
         composable<ProductsShare>(
-                deepLinks =
-                        listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/menu/share" }),
+                deepLinks = listOf(navDeepLink { uriPattern = "${AppConfig.BASE_URL}/menu/share" }),
                 enterTransition = { fadeIn(animationSpec = tween(150)) },
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) {

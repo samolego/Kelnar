@@ -105,7 +105,7 @@
     <string
         name="share_link_description"
     >Deli to povezavo, da lahko drugi uvozijo ta meni z %1$d izdelki.</string>
-    <string name="menu_to_share_format">Meni za deljenje (%1$d)</string>
+    <string name="menu_to_share_format">Deljeni meni (%1$d)</string>
     <string name="no_menu_to_share">Ni menija za deljenje</string>
 
     <!-- Actions -->

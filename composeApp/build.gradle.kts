@@ -1,3 +1,4 @@
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
@@ -75,6 +76,7 @@ kotlin {
         }
     }
 }
+
 val keystoreProperties = Properties()
 val keystorePropertiesFile: File = rootProject.file("key.properties")
 
@@ -103,9 +105,9 @@ android {
             keyAlias = keystoreProperties["keyAlias"].toString()
             keyPassword = keystoreProperties["keyPassword"].toString()
             storeFile =
-                if (keystoreProperties["storeFile"] != null)
-                    keystoreProperties["storeFile"]?.let { file(it) }
-                else null
+                    if (keystoreProperties["storeFile"] != null)
+                            keystoreProperties["storeFile"]?.let { file(it) }
+                    else null
             storePassword = keystoreProperties["storePassword"].toString()
         }
     }
@@ -115,6 +117,15 @@ android {
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            
+            // Additional R8 disabling
+            proguardFiles.clear()
+
+            // Build config for debugging
+            buildConfigField("boolean", "DEBUG_MODE", "true")
         }
 
         release {
