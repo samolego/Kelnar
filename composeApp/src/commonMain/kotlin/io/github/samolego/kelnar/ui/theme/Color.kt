@@ -1,8 +1,6 @@
 package io.github.samolego.kelnar.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.runtime.Composable
-
 
 val primaryLight = Color(0xFF904A45)
 val onPrimaryLight = Color(0xFFFFFFFF)

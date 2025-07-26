@@ -5,13 +5,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -44,8 +42,8 @@ import io.github.samolego.kelnar.ui.screens.OrderDetailsScreen
 import io.github.samolego.kelnar.ui.screens.OrdersScreen
 import io.github.samolego.kelnar.ui.screens.ProductsScreen
 import io.github.samolego.kelnar.ui.screens.ProductsShareScreen
-import io.github.samolego.kelnar.ui.theme.KelnarTheme
 import io.github.samolego.kelnar.ui.theme.ApplyStatusBarColor
+import io.github.samolego.kelnar.ui.theme.KelnarTheme
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.AppConfig
@@ -57,7 +55,6 @@ fun App(
         onNavHostReady: suspend (NavController) -> Unit = {},
 ) {
     KelnarTheme {
-
         ApplyStatusBarColor()
 
         Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -104,19 +101,14 @@ fun App(
                         }
                     }
             ) {
-                Scaffold(
+                AppNavigation(
                         modifier = Modifier.fillMaxSize(),
-                        containerColor = MaterialTheme.colorScheme.background
-                ) { paddingValues ->
-                    AppNavigation(
-                            modifier = Modifier.padding(paddingValues).fillMaxSize(),
-                            navController = navController,
-                            ordersViewModel = ordersViewModel,
-                            productsViewModel = productsViewModel,
-                            onOpenDrawer = { scope.launch { drawerState.open() } },
-                            onNavHostReady = onNavHostReady
-                    )
-                }
+                        navController = navController,
+                        ordersViewModel = ordersViewModel,
+                        productsViewModel = productsViewModel,
+                        onOpenDrawer = { scope.launch { drawerState.open() } },
+                        onNavHostReady = onNavHostReady
+                )
             }
         }
     }

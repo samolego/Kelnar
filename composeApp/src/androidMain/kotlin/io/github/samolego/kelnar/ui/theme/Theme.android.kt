@@ -1,5 +1,6 @@
 package io.github.samolego.kelnar.ui.theme
 
+import android.graphics.Color
 import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.ColorScheme
@@ -25,7 +26,7 @@ actual fun DynamicColorScheme(darkTheme: Boolean): ColorScheme? {
 @Composable
 actual fun ApplyStatusBarColor() {
     val view = LocalView.current
-    val primaryColor = MaterialTheme.colorScheme.primary
+    val primaryColor = MaterialTheme.colorScheme.primaryContainer
 
     SideEffect {
         val window = (view.context as ComponentActivity).window
