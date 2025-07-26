@@ -29,6 +29,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import io.github.samolego.kelnar.repository.DataRepository
 import io.github.samolego.kelnar.repository.LocalStorage
+import io.github.samolego.kelnar.ui.components.WebDrawGooglePlayBadge
 import io.github.samolego.kelnar.ui.navigation.EditOrder
 import io.github.samolego.kelnar.ui.navigation.Menu
 import io.github.samolego.kelnar.ui.navigation.NewOrder
@@ -55,6 +56,8 @@ import kelnar.composeapp.generated.resources.menu
 import kelnar.composeapp.generated.resources.orders
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 
 @Composable
 fun App(
@@ -106,7 +109,9 @@ fun App(
                                     }
                             )
 
-                            // WebDrawGooglePlayBadge()
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            WebDrawGooglePlayBadge()
                         }
                     }
             ) {
