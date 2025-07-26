@@ -16,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -33,6 +32,9 @@ fun NewOrderScreen(
         onNavigateBack: () -> Unit,
         onOrderSaved: () -> Unit
 ) {
+    // Clear any existing order state when starting a new order
+    LaunchedEffect(Unit) { viewModel.clearNewOrder() }
+
     OrderFormScreen(
             viewModel = viewModel,
             onNavigateBack = onNavigateBack,
@@ -147,39 +149,24 @@ fun OrderFormScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Total
-                Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors =
-                                CardDefaults.cardColors(
-                                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                                )
-                ) {
-                    Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                    ) {
+                // Total Section
+                TotalCard(total = total, modifier = Modifier.fillMaxWidth())
+            } else {
+                // Empty State
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                                text = "Total:",
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
+                                text = "No items added yet",
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                                text = total.formatAsPrice(),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                text = "Tap 'Add Product' to get started",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                }
-            } else {
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    Text(
-                            text = "No items added yet",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             }
         }
@@ -225,7 +212,10 @@ fun OrderItemCard(
         onCustomize: () -> Unit,
         onRemove: () -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -254,7 +244,7 @@ fun OrderItemCard(
             }
 
             if (item.customizations.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                         text = "Customizations: ${item.customizations.joinToString(", ")}",
                         style = MaterialTheme.typography.bodySmall,
@@ -262,7 +252,7 @@ fun OrderItemCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -302,6 +292,39 @@ fun OrderItemCard(
                             color = MaterialTheme.colorScheme.primary
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun TotalCard(total: Double, modifier: Modifier = Modifier) {
+    Card(
+            modifier = modifier,
+            colors =
+                    CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                    text = "Total:",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+            )
+            Surface(color = MaterialTheme.colorScheme.primary, shape = MaterialTheme.shapes.small) {
+                Text(
+                        text = total.formatAsPrice(),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
             }
         }
     }
