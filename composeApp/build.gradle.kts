@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -73,6 +75,12 @@ kotlin {
         }
     }
 }
+val keystoreProperties = Properties()
+val keystorePropertiesFile: File = rootProject.file("key.properties")
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
 
 android {
     namespace = "io.github.samolego.kelnar"
@@ -82,9 +90,21 @@ android {
         applicationId = "io.github.samolego.kelnar"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = project.property("version_code")?.toString()?.toInt() ?: 1
+        versionName = project.property("version_name")?.toString() ?: "1.0.0"
     }
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"].toString()
+            keyPassword = keystoreProperties["keyPassword"].toString()
+            storeFile =
+                if (keystoreProperties["storeFile"] != null)
+                    keystoreProperties["storeFile"]?.let { file(it) }
+                else null
+            storePassword = keystoreProperties["storePassword"].toString()
+        }
+    }
+
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
     buildTypes {
         release {
@@ -112,7 +132,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "io.github.samolego.kelnar"
-            packageVersion = "1.0.0"
+            packageVersion = project.property("version_name")?.toString() ?: "1.0.0"
         }
     }
 }
