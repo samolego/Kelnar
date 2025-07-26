@@ -8,6 +8,14 @@ A cross-platform restaurant order management app built with Kotlin Multiplatform
 
 Kelnar helps restaurant staff manage orders and menu items across Android, Desktop, and Web platforms. All data is stored locally - no internet connection required.
 
+## Screenshots 📱
+
+| <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_orders.png"> | <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_new-order.png"> | <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_order-detail.png"> |
+|:---:|:---:|:---:|
+| Orders | New Order | Order Details |
+| <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_products.png"> | <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_share.png"> | <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_complete-order.png"> |
+| Products | Share | Complete Order |
+
 ## Platforms 📱
 
 - **Android** (API 24+) 🤖

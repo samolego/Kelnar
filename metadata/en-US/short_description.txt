@@ -1,0 +1,1 @@
+Local app for keeping track of orders for waiters in e.g. restaurants, cafes, or bars.

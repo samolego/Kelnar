@@ -1,0 +1,27 @@
+<h1>Kelnar 🍽️</h1>
+<p>Kelnar is a cross-platform (restaurant) order management app that helps staff manage orders and menu items. It's built to work entirely offline, with all data stored locally on your device.</p>
+<p>This app is perfect for small cafes, food stalls, or any restaurant looking for a simple, digital way to manage orders without relying on an internet connection or paying for cloud services.</p>
+
+<h2>Key Features</h2>
+<ul>
+  <li><b>Order Management:</b> Create and manage orders, assigning them to specific table numbers.</li>
+  <li><b>Searchable Menu:</b> Quickly add products to an order from a searchable menu.</li>
+  <li><b>Order Tracking:</b> Keep track of both active and completed orders.</li>
+  <li><b>Menu Management:</b> Easily add, edit, or remove menu items and their prices.</li>
+  <li><b>Easy Sharing:</b> Share your restaurant's menu with others via QR codes and shareable links.</li>
+  <li><b>Import/Export:</b> Seamlessly import or export your product list between different devices.</li>
+  <li><b>Offline First:</b> No internet connection is required. All data is stored locally, ensuring privacy and availability.</li>
+</ul>
+
+<h2>How It Works</h2>
+<p>Using Kelnar is straightforward:</p>
+<ol>
+  <li><b>Orders Tab:</b> Get an overview of all active and completed orders.</li>
+  <li><b>Create Order:</b> Start a new order by specifying a table number and selecting items from your menu.</li>
+  <li><b>Products Tab:</b> Manage all your menu items in one place.</li>
+  <li><b>Share Menu:</b> Generate a QR code or a link to let others view your menu.</li>
+  <li><b>Import Products:</b> Quickly populate your menu by scanning a QR code or using an import link from another Kelnar user.</li>
+</ol>
+
+<h2>Data Storage and Privacy</h2>
+<p>Kelnar is designed with privacy in mind. It does not connect to the internet or any external servers. All your data is stored exclusively on your device.</p>

@@ -1,0 +1,1 @@
+Lokalna aplikacija za spremljanje naročil za natakarje na dogodkih, veselicah, restavracijah, kavarnah ali barih.

@@ -1,0 +1,27 @@
+<h1>Kelnar 🍽️</h1>
+<p>Kelnar je večplatformna aplikacija za upravljanje naročil, ki osebju pomaga pri vodenju naročil in menijev. Zasnovana je za delovanje popolnoma brez povezave, pri čemer so vsi podatki shranjeni lokalno na vaši napravi.</p>
+<p>Aplikacija je idealna za manjše kavarne, stojnice s hrano, restavracije ali celo za dogodke, kot so gasilske veselice, kjer je potreben preprost in digitalen način za upravljanje naročil brez odvisnosti od internetne povezave ali dragih storitev v oblaku.</p>
+
+<h2>Ključne Funkcionalnosti</h2>
+<ul>
+  <li><b>Upravljanje naročil:</b> Ustvarjajte in upravljajte naročila z dodeljevanjem številk miz.</li>
+  <li><b>Iskalni meni:</b> Hitro dodajajte izdelke k naročilu iz menija, po katerem lahko iščete.</li>
+  <li><b>Sledenje naročilom:</b> Spremljajte tako aktivna kot zaključena naročila.</li>
+  <li><b>Upravljanje menija:</b> Enostavno dodajajte, urejajte ali odstranjujte jedi in njihove cene.</li>
+  <li><b>Enostavna delitev:</b> Delite meni vaše restavracije z drugimi prek QR kod in deljivih povezav.</li>
+  <li><b>Uvoz/Izvoz:</b> Brezhibno uvažajte ali izvažajte seznam izdelkov med različnimi napravami.</li>
+  <li><b>Delovanje brez povezave:</b> Internetna povezava ni potrebna. Vsi podatki so shranjeni lokalno, kar zagotavlja zasebnost in dostopnost.</li>
+</ul>
+
+<h2>Kako Deluje</h2>
+<p>Uporaba aplikacije Kelnar je preprosta:</p>
+<ol>
+  <li><b>Zavihek Naročila:</b> Pridobite pregled nad vsemi aktivnimi in zaključenimi naročili.</li>
+  <li><b>Ustvari naročilo:</b> Začnite novo naročilo z določitvijo številke mize in izbiro jedi iz menija.</li>
+  <li><b>Zavihek Izdelki:</b> Upravljajte vse jedi na vašem meniju na enem mestu.</li>
+  <li><b>Deli meni:</b> Ustvarite QR kodo ali povezavo, da si lahko drugi ogledajo vaš meni.</li>
+  <li><b>Uvozi izdelke:</b> Hitro napolnite svoj meni s skeniranjem QR kode ali z uporabo povezave za uvoz od drugega uporabnika aplikacije Kelnar.</li>
+</ol>
+
+<h2>Shranjevanje Podatkov in Zasebnost</h2>
+<p>Kelnar je zasnovan z mislijo na zasebnost. Ne povezuje se z internetom ali zunanjimi strežniki. Vsi vaši podatki so shranjeni izključno na vaši napravi.</p>
