@@ -35,8 +35,7 @@ class DataRepository(private val localStorage: LocalStorage) {
             try {
                 val productsList = json.decodeFromString<List<Product>>(productsJson)
                 _products.value = productsList
-            } catch (e: Exception) {
-            }
+            } catch (e: Exception) {}
         }
     }
 
@@ -115,40 +114,5 @@ class DataRepository(private val localStorage: LocalStorage) {
     private suspend fun saveOrders() {
         val ordersJson = json.encodeToString(_orders.value)
         localStorage.putString(ORDERS_KEY, ordersJson)
-    }
-
-    private fun getDefaultProducts(): List<Product> {
-        return listOf(
-                Product(
-                        id = "1",
-                        name = "Burger",
-                        price = 12.99,
-                        description = "Classic beef burger with lettuce, tomato, and onion"
-                ),
-                Product(
-                        id = "2",
-                        name = "Hot Dog",
-                        price = 8.50,
-                        description = "Grilled hot dog with ketchup and mustard"
-                ),
-                Product(
-                        id = "3",
-                        name = "French Fries",
-                        price = 4.99,
-                        description = "Crispy golden french fries"
-                ),
-                Product(
-                        id = "4",
-                        name = "Coca Cola",
-                        price = 2.50,
-                        description = "Cold refreshing cola drink"
-                ),
-                Product(
-                        id = "5",
-                        name = "Pizza Margherita",
-                        price = 15.99,
-                        description = "Classic pizza with tomato sauce, mozzarella, and basil"
-                )
-        )
     }
 }

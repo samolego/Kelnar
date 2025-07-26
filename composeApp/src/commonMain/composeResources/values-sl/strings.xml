@@ -36,13 +36,13 @@
     <string name="delete_order">Izbriši naročilo</string>
 
     <!-- Order details with format placeholders -->
-    <string name="table_format">Miza %s</string>
-    <string name="created_format">Ustvarjeno: %s</string>
-    <string name="items_format">Postavke: %d</string>
+    <string name="table_format">Miza %1$s</string>
+    <string name="created_format">Ustvarjeno: %1$s</string>
+    <string name="items_format">Postavke: %1$d</string>
     <string name="customizations">Prilagoditve:</string>
-    <string name="customizations_format">Prilagoditve: %s</string>
-    <string name="price_each_format">%s za kos</string>
-    <string name="quantity_product_format">%dx %s</string>
+    <string name="customizations_format">Prilagoditve: %1$s</string>
+    <string name="price_each_format">%1$s za kos</string>
+    <string name="quantity_product_format">%1$dx %2$s</string>
 
     <!-- Order list -->
     <string name="no_active_orders">Ni aktivnih naročil</string>
@@ -57,8 +57,8 @@
         name="swipe_right_to_complete_order"
     >Povleci desno za zaključek naročila</string>
     <string name="mark_as_active">Označi kot aktivno</string>
-    <string name="and_more_items_format">• ... in še %d postavk</string>
-    <string name="total_format">Skupaj: %s</string>
+    <string name="and_more_items_format">• ... in še %1$d postavk</string>
+    <string name="total_format">Skupaj: %1$s</string>
 
     <!-- Product screen -->
     <string name="no_products_yet">Še ni izdelkov</string>
@@ -79,13 +79,13 @@
     <string name="import_products">Uvozi meni</string>
     <string
         name="found_products_to_import_format"
-    >Najdenih %d izdelkov za uvoz:</string>
+    >Najdenih %1$d izdelkov za uvoz:</string>
 
     <!-- Product dialog -->
     <string name="select_product">Izberi izdelek</string>
     <string name="search_products">Išči izdelke...</string>
     <string name="clear_search">Počisti iskanje</string>
-    <string name="customize_product_format">Prilagodi %s</string>
+    <string name="customize_product_format">Prilagodi %1$s</string>
     <string
         name="add_special_instructions"
     >Dodaj posebna navodila ali spremembe:</string>
@@ -94,6 +94,19 @@
     <string name="current_customizations">Trenutne prilagoditve:</string>
     <string name="remove_customization">Odstrani prilagoditev</string>
     <string name="customize">Prilagodi</string>
+
+    <!-- Products share screen -->
+    <string name="share_menu">Deli meni</string>
+    <string
+        name="link_copied_to_clipboard"
+    >Povezava kopirana v odložišče!</string>
+    <string name="shareable_link">Povezava za deljenje</string>
+    <string name="copy_to_clipboard">Kopiraj v odložišče</string>
+    <string
+        name="share_link_description"
+    >Deli to povezavo, da lahko drugi uvozijo ta meni z %1$d izdelki.</string>
+    <string name="menu_to_share_format">Meni za deljenje (%1$d)</string>
+    <string name="no_menu_to_share">Ni menija za deljenje</string>
 
     <!-- Actions -->
     <string name="remove_item">Odstrani postavko</string>

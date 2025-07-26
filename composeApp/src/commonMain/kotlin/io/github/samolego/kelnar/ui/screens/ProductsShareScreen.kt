@@ -20,6 +20,16 @@ import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.QRCodeImage
 import io.github.samolego.kelnar.utils.copyToClipboard
 import io.github.samolego.kelnar.utils.formatAsPrice
+import kelnar.composeapp.generated.resources.Res
+import kelnar.composeapp.generated.resources.back
+import kelnar.composeapp.generated.resources.copy_to_clipboard
+import kelnar.composeapp.generated.resources.link_copied_to_clipboard
+import kelnar.composeapp.generated.resources.menu_to_share_format
+import kelnar.composeapp.generated.resources.no_menu_to_share
+import kelnar.composeapp.generated.resources.share_link_description
+import kelnar.composeapp.generated.resources.share_menu
+import kelnar.composeapp.generated.resources.shareable_link
+import org.jetbrains.compose.resources.stringResource
 
 // Platform-specific URL encoding - expect/actual pattern
 expect fun encodeURIComponent(str: String): String
@@ -39,11 +49,12 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
     val baseUrl: String = remember { getCurrentBaseUrl() + "#menu/import?data=" }
     val shareUrl: String = remember(shareData) { baseUrl + encodeURIComponent(shareData) }
     var textFieldValue by remember(shareUrl) { mutableStateOf(TextFieldValue(shareUrl)) }
+    val copied = stringResource(Res.string.link_copied_to_clipboard)
 
     LaunchedEffect(showCopiedSnackbar) {
         if (showCopiedSnackbar) {
             snackbarHostState.showSnackbar(
-                    message = "Link copied to clipboard!",
+                    message = copied,
                     duration = SnackbarDuration.Short
             )
             showCopiedSnackbar = false
@@ -54,12 +65,12 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 KelnarAppBar(
-                        title = { Text("Share Menu") },
+                        title = { Text(stringResource(Res.string.share_menu)) },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
                                         Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Back",
+                                        contentDescription = stringResource(Res.string.back),
                                 )
                             }
                         },
@@ -88,7 +99,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                             verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                                text = "Shareable Link",
+                                text = stringResource(Res.string.shareable_link),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -138,15 +149,15 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                         ) {
                             Icon(
                                     Icons.Default.ContentCopy,
-                                    contentDescription = "Copy to clipboard",
+                                    contentDescription =
+                                            stringResource(Res.string.copy_to_clipboard),
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     }
 
                     Text(
-                            text =
-                                    "Share this link to let others import this menu with ${menu.size} products.",
+                            text = stringResource(Res.string.share_link_description, menu.size),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -168,7 +179,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                            text = "Menu to Share (${menu.size})",
+                            text = stringResource(Res.string.menu_to_share_format, menu.size),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
@@ -180,7 +191,7 @@ fun ProductsShareScreen(viewModel: ProductsViewModel, onNavigateBack: () -> Unit
                                 contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                    text = "No menu to share",
+                                    text = stringResource(Res.string.no_menu_to_share),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

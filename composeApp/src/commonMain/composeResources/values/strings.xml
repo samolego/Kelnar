@@ -22,27 +22,27 @@
 
     <!-- Order screen -->
     <string name="new_order">New Order</string>
-    <string name="edit_order">@string/edit Order</string>
+    <string name="edit_order">Edit Order</string>
     <string name="order_details">Order Details</string>
     <string name="table_number">Table Number</string>
-    <string name="add_product">@string/add Product</string>
+    <string name="add_product">Add Product</string>
     <string name="order_items">Order Items</string>
     <string name="no_items_added_yet">No items added yet</string>
     <string
         name="tap_add_product_to_get_started"
-    >Tap \'@string/add_product\' to get started</string>
+    >Tap 'Add Product' to get started</string>
     <string name="total">Total:</string>
-    <string name="complete_order">@string/complete Order</string>
-    <string name="delete_order">@string/delete order</string>
+    <string name="complete_order">Complete Order</string>
+    <string name="delete_order">Delete order</string>
 
     <!-- Order details with format placeholders -->
-    <string name="table_format">Table %s</string>
-    <string name="created_format">Created: %s</string>
-    <string name="items_format">Items: %d</string>
+    <string name="table_format">Table %1$s</string>
+    <string name="created_format">Created: %1$s</string>
+    <string name="items_format">Items: %1$d</string>
     <string name="customizations">Customizations:</string>
-    <string name="customizations_format">@string/customizations %s</string>
-    <string name="price_each_format">%s each</string>
-    <string name="quantity_product_format">%dx %s</string>
+    <string name="customizations_format">Customizations: %1$s</string>
+    <string name="price_each_format">%1$s each</string>
+    <string name="quantity_product_format">%1$dx %2$s</string>
 
     <!-- Order list -->
     <string name="no_active_orders">No active orders</string>
@@ -52,13 +52,13 @@
     <string name="no_completed_orders">No completed orders</string>
     <string
         name="complete_orders_to_see_them_here"
-    >@string/complete some orders to see them here</string>
+    >Complete some orders to see them here</string>
     <string
         name="swipe_right_to_complete_order"
     >Swipe right to complete an order</string>
-    <string name="mark_as_active">Mark as @string/active</string>
-    <string name="and_more_items_format">• ... and %d more items</string>
-    <string name="total_format">@string/total %s</string>
+    <string name="mark_as_active">Mark as Active</string>
+    <string name="and_more_items_format">• ... and %1$d more items</string>
+    <string name="total_format">Total: %1$s</string>
 
     <!-- Product screen -->
     <string name="no_products_yet">No products yet</string>
@@ -66,36 +66,45 @@
         name="tap_plus_to_add_first_product"
     >Tap + to add your first product</string>
     <string name="more_options">More options</string>
-    <string name="share_products">Share @string/products</string>
-    <string name="delete_all">@string/delete All</string>
-    <string
-        name="delete_all_products"
-    >@string/delete_all @string/products</string>
+    <string name="share_products">Share Products</string>
+    <string name="delete_all">Delete All</string>
+    <string name="delete_all_products">Delete All Products</string>
     <string
         name="delete_all_products_confirmation"
     >Are you sure you want to delete all products? This action cannot be undone.</string>
-    <string name="edit_product">@string/edit product</string>
-    <string name="delete_product">@string/delete product</string>
+    <string name="edit_product">Edit product</string>
+    <string name="delete_product">Delete product</string>
 
     <!-- Product import -->
-    <string name="import_products">Import @string/products</string>
+    <string name="import_products">Import Products</string>
     <string
         name="found_products_to_import_format"
-    >Found %d products to import:</string>
+    >Found %1$d products to import:</string>
 
     <!-- Product dialog -->
     <string name="select_product">Select Product</string>
     <string name="search_products">Search products...</string>
     <string name="clear_search">Clear search</string>
-    <string name="customize_product_format">Customize %s</string>
+    <string name="customize_product_format">Customize %1$s</string>
     <string
         name="add_special_instructions"
-    >@string/add special instructions or modifications:</string>
+    >Add special instructions or modifications:</string>
     <string name="customization_example">e.g., no ketchup</string>
-    <string name="add_customization">@string/add customization</string>
+    <string name="add_customization">Add customization</string>
     <string name="current_customizations">Current customizations:</string>
     <string name="remove_customization">Remove customization</string>
     <string name="customize">Customize</string>
+
+    <!-- Products share screen -->
+    <string name="share_menu">Share Menu</string>
+    <string name="link_copied_to_clipboard">Link copied to clipboard!</string>
+    <string name="shareable_link">Shareable Link</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string
+        name="share_link_description"
+    >Share this link to let others import this menu with %1$d products.</string>
+    <string name="menu_to_share_format">Menu to Share (%1$d)</string>
+    <string name="no_menu_to_share">No menu to share</string>
 
     <!-- Actions -->
     <string name="remove_item">Remove item</string>
@@ -104,7 +113,7 @@
     <string name="uncomplete">Uncomplete</string>
 
     <!-- Content descriptions -->
-    <string name="completed_badge">@string/completed</string>
+    <string name="completed_badge">Completed</string>
 
     <!-- Default product data -->
     <string name="default_product_burger">Burger</string>
