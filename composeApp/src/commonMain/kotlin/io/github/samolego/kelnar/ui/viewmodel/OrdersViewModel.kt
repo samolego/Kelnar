@@ -172,7 +172,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
             val order = repository.getOrderById(orderId)
             if (order != null) {
-                val updatedOrder = order.copy(isCompleted = true)
+                val updatedOrder = order.copy(isCompleted = !order.isCompleted)
                 repository.saveOrder(updatedOrder)
             }
         }

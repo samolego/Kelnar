@@ -1,17 +1,22 @@
 package io.github.samolego.kelnar.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Undo
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Order
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
@@ -97,15 +102,23 @@ fun OrdersScreen(
 
             // Content based on selected tab
             when (selectedTab) {
-                OrderTab.ACTIVE ->
+                OrderTab.ACTIVE -> {
+                    Column {
+                        // Show swipe hint if there are active orders but no completed orders
+                        if (activeOrders.isNotEmpty() && completedOrders.isEmpty()) {
+                            SwipeHint()
+                        }
                         OrdersList(
                                 orders = activeOrders,
                                 onOrderClick = { orderId -> onNavigateToOrderDetails(orderId) },
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
                                 emptyMessage = "No active orders",
-                                emptySubMessage = "Tap + to create your first order"
+                                emptySubMessage = "Tap + to create your first order",
+                                showSwipeToComplete = true
                         )
+                    }
+                }
                 OrderTab.COMPLETED ->
                         OrdersList(
                                 orders = completedOrders,
@@ -113,9 +126,44 @@ fun OrdersScreen(
                                 onDeleteOrder = { viewModel.deleteOrder(it) },
                                 onMarkCompleted = { viewModel.markOrderCompleted(it) },
                                 emptyMessage = "No completed orders",
-                                emptySubMessage = "Complete some orders to see them here"
+                                emptySubMessage = "Complete some orders to see them here",
+                                showSwipeToComplete = false,
+                                showSwipeToUncomplete = true
                         )
             }
+        }
+    }
+}
+
+@Composable
+fun SwipeHint() {
+    Card(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            colors =
+                    CardDefaults.cardColors(
+                            containerColor =
+                                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f)
+                    ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+                modifier = Modifier.fillMaxWidth().padding(12.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                    Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                    text = "Swipe right to complete an order",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -127,7 +175,9 @@ fun OrdersList(
         onDeleteOrder: (String) -> Unit,
         onMarkCompleted: (String) -> Unit,
         emptyMessage: String,
-        emptySubMessage: String
+        emptySubMessage: String,
+        showSwipeToComplete: Boolean = false,
+        showSwipeToUncomplete: Boolean = false
 ) {
     if (orders.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -152,14 +202,164 @@ fun OrdersList(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(orders) { order ->
-                OrderCard(
-                        order = order,
-                        onClick = { onOrderClick(order.id) },
-                        onDeleteOrder = { onDeleteOrder(order.id) },
-                        onMarkCompleted = { onMarkCompleted(order.id) }
-                )
+                when {
+                    showSwipeToComplete && !order.isCompleted -> {
+                        SwipeToCompleteOrderCard(
+                                order = order,
+                                onClick = { onOrderClick(order.id) },
+                                onDeleteOrder = { onDeleteOrder(order.id) },
+                                onMarkCompleted = { onMarkCompleted(order.id) }
+                        )
+                    }
+                    showSwipeToUncomplete && order.isCompleted -> {
+                        SwipeToUncompleteOrderCard(
+                                order = order,
+                                onClick = { onOrderClick(order.id) },
+                                onDeleteOrder = { onDeleteOrder(order.id) },
+                                onMarkCompleted = { onMarkCompleted(order.id) }
+                        )
+                    }
+                    else -> {
+                        OrderCard(
+                                order = order,
+                                onClick = { onOrderClick(order.id) },
+                                onDeleteOrder = { onDeleteOrder(order.id) },
+                                onMarkCompleted = { onMarkCompleted(order.id) }
+                        )
+                    }
+                }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SwipeToCompleteOrderCard(
+        order: Order,
+        onClick: () -> Unit,
+        onDeleteOrder: () -> Unit,
+        onMarkCompleted: () -> Unit
+) {
+    val swipeableState =
+            rememberSwipeToDismissBoxState(
+                    confirmValueChange = { dismissDirection ->
+                        if (dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                            false // We don't want end-to-start swipe
+                        } else if (dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
+                            onMarkCompleted()
+                            true
+                        } else {
+                            false
+                        }
+                    }
+            )
+
+    SwipeToDismissBox(
+            state = swipeableState,
+            backgroundContent = {
+                Box(
+                        modifier =
+                                Modifier.fillMaxSize()
+                                        .background(
+                                                MaterialTheme.colorScheme.primary,
+                                                RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(16.dp),
+                        contentAlignment = Alignment.CenterStart
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                                Icons.Default.CheckCircle,
+                                contentDescription = "Complete",
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                                text = "Complete Order",
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            },
+            enableDismissFromStartToEnd = true,
+            enableDismissFromEndToStart = false
+    ) {
+        OrderCard(
+                order = order,
+                onClick = onClick,
+                onDeleteOrder = onDeleteOrder,
+                onMarkCompleted = onMarkCompleted,
+                hideCompleteButton = true
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SwipeToUncompleteOrderCard(
+        order: Order,
+        onClick: () -> Unit,
+        onDeleteOrder: () -> Unit,
+        onMarkCompleted: () -> Unit
+) {
+    val swipeableState =
+            rememberSwipeToDismissBoxState(
+                    confirmValueChange = { dismissDirection ->
+                        if (dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                            false // We don't want end-to-start swipe
+                        } else if (dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
+                            onMarkCompleted() // This will toggle completion status
+                            true
+                        } else {
+                            false
+                        }
+                    }
+            )
+
+    SwipeToDismissBox(
+            state = swipeableState,
+            backgroundContent = {
+                Box(
+                        modifier =
+                                Modifier.fillMaxSize()
+                                        .background(
+                                                MaterialTheme.colorScheme.tertiary,
+                                                RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(16.dp),
+                        contentAlignment = Alignment.CenterStart
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                                Icons.Default.Undo,
+                                contentDescription = "Uncomplete",
+                                tint = MaterialTheme.colorScheme.onTertiary,
+                                modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                                text = "Mark as Active",
+                                color = MaterialTheme.colorScheme.onTertiary,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            },
+            enableDismissFromStartToEnd = true,
+            enableDismissFromEndToStart = false
+    ) {
+        OrderCard(
+                order = order,
+                onClick = onClick,
+                onDeleteOrder = onDeleteOrder,
+                onMarkCompleted = onMarkCompleted,
+                hideCompleteButton = true
+        )
     }
 }
 
@@ -168,7 +368,8 @@ fun OrderCard(
         order: Order,
         onClick: () -> Unit,
         onDeleteOrder: () -> Unit,
-        onMarkCompleted: () -> Unit
+        onMarkCompleted: () -> Unit,
+        hideCompleteButton: Boolean = false
 ) {
     Card(
             onClick = onClick,
@@ -193,7 +394,7 @@ fun OrderCard(
                         fontWeight = FontWeight.Bold
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (!order.isCompleted) {
+                    if (!order.isCompleted && !hideCompleteButton) {
                         Button(
                                 onClick = onMarkCompleted,
                                 colors =
