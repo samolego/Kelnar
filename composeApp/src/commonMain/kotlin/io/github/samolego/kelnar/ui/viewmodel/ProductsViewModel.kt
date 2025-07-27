@@ -163,11 +163,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
         if (validProducts.isNotEmpty()) {
             _importState.value =
-                    ImportState(
-                            menu = validProducts,
-                            isVisible = true,
-                            skippedItems = skippedItems
-                    )
+                    ImportState(menu = validProducts, isVisible = true, skippedItems = skippedItems)
         }
     }
 
@@ -185,37 +181,32 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
                     // Do nothing, just close dialog
                 }
                 ImportAction.OVERWRITE_ALL -> {
-                    // Clear all existing menu and add imported ones
-                    repository.clearAllProducts()
-                    currentImportState.menu.forEach { importProduct ->
-                        val product =
+                    // Clear all existing menu and replace with imported ones
+                    val importedProducts =
+                            currentImportState.menu.map { importProduct ->
                                 Product(
                                         id = generateId(),
                                         name = importProduct.name,
                                         price = importProduct.price,
                                         description = importProduct.description
                                 )
-                        repository.saveProduct(product)
-                    }
+                            }
+                    // Replace all products at once
+                    repository.saveAllProducts(importedProducts)
                 }
                 ImportAction.ADD_TO_CURRENT -> {
-                    // Add imported menu, overwriting duplicates by name
-                    currentImportState.menu.forEach { importProduct ->
-                        // Check if product with same name exists
-                        val existingProduct =
-                                repository.menu.value.find {
-                                    it.name.equals(importProduct.name, ignoreCase = true)
-                                }
-
-                        val product =
+                    // Add imported menu items to current menu without overwriting existing ones
+                    val importedProducts =
+                            currentImportState.menu.map { importProduct ->
                                 Product(
-                                        id = existingProduct?.id ?: generateId(),
+                                        id = generateId(),
                                         name = importProduct.name,
                                         price = importProduct.price,
                                         description = importProduct.description
                                 )
-                        repository.saveProduct(product)
-                    }
+                            }
+                    // Add all products at once
+                    repository.addProducts(importedProducts)
                 }
             }
             hideImportDialog()
@@ -226,16 +217,15 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         val currentProducts = repository.menu.value
         if (currentProducts.isEmpty()) return "[]"
 
-        val data = currentProducts.joinToString("|") { product ->
-            "${product.name};${product.price}" +
-            if (product.description.isNotBlank()) ";${product.description}" else ""
-        }
+        val data =
+                currentProducts.joinToString("|") { product ->
+                    "${product.name};${product.price}" +
+                            if (product.description.isNotBlank()) ";${product.description}" else ""
+                }
         return "[$data]"
     }
 
     fun deleteAllProducts() {
-        viewModelScope.launch {
-            repository.clearAllProducts()
-        }
+        viewModelScope.launch { repository.clearAllProducts() }
     }
 }
