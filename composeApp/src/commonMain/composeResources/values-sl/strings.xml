@@ -80,8 +80,17 @@
     <string
         name="found_products_to_import_format"
     >Najdenih %1$d izdelkov za uvoz:</string>
+    <string
+        name="skipped_invalid_items_format"
+    >Preskočenih %1$d neveljavnih izdelkov:</string>
+    <string name="and_more_items_skipped_format">• ... in še %1$d več</string>
+    <string name="add_to_current">Dodaj k trenutnemu</string>
+    <string name="overwrite_all">Prepiši vse</string>
 
     <!-- Product dialog -->
+    <string name="product_name">Ime izdelka</string>
+    <string name="price">Cena</string>
+    <string name="description_optional">Opis (neobvezno)</string>
     <string name="select_product">Izberi izdelek</string>
     <string name="search_products">Išči izdelke...</string>
     <string name="clear_search">Počisti iskanje</string>

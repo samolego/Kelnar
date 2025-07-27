@@ -80,8 +80,17 @@
     <string
         name="found_products_to_import_format"
     >Found %1$d products to import:</string>
+    <string
+        name="skipped_invalid_items_format"
+    >Skipped %1$d invalid items:</string>
+    <string name="and_more_items_skipped_format">• ... and %1$d more</string>
+    <string name="add_to_current">Add to Current</string>
+    <string name="overwrite_all">Overwrite All</string>
 
     <!-- Product dialog -->
+    <string name="product_name">Product Name</string>
+    <string name="price">Price</string>
+    <string name="description_optional">Description (optional)</string>
     <string name="select_product">Select Product</string>
     <string name="search_products">Search products...</string>
     <string name="clear_search">Clear search</string>

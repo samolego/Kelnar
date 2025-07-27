@@ -25,19 +25,27 @@ import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
 import kelnar.composeapp.generated.resources.Res
 import kelnar.composeapp.generated.resources.add_product
+import kelnar.composeapp.generated.resources.add_to_current
+import kelnar.composeapp.generated.resources.and_more_items_skipped_format
 import kelnar.composeapp.generated.resources.cancel
 import kelnar.composeapp.generated.resources.delete
 import kelnar.composeapp.generated.resources.delete_all
 import kelnar.composeapp.generated.resources.delete_all_products
 import kelnar.composeapp.generated.resources.delete_all_products_confirmation
 import kelnar.composeapp.generated.resources.delete_product
+import kelnar.composeapp.generated.resources.description_optional
 import kelnar.composeapp.generated.resources.edit_product
 import kelnar.composeapp.generated.resources.found_products_to_import_format
 import kelnar.composeapp.generated.resources.import_products
 import kelnar.composeapp.generated.resources.menu
 import kelnar.composeapp.generated.resources.more_options
 import kelnar.composeapp.generated.resources.no_products_yet
+import kelnar.composeapp.generated.resources.overwrite_all
+import kelnar.composeapp.generated.resources.price
+import kelnar.composeapp.generated.resources.product_name
+import kelnar.composeapp.generated.resources.save
 import kelnar.composeapp.generated.resources.share_products
+import kelnar.composeapp.generated.resources.skipped_invalid_items_format
 import kelnar.composeapp.generated.resources.tap_plus_to_add_first_product
 import org.jetbrains.compose.resources.stringResource
 
@@ -330,7 +338,11 @@ fun ImportProductsDialog(
                     if (importState.skippedItems.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                                text = "Skipped ${importState.skippedItems.size} invalid items:",
+                                text =
+                                        stringResource(
+                                                Res.string.skipped_invalid_items_format,
+                                                importState.skippedItems.size
+                                        ),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.error
                         )
@@ -344,7 +356,11 @@ fun ImportProductsDialog(
                         }
                         if (importState.skippedItems.size > 3) {
                             Text(
-                                    text = "• ... and ${importState.skippedItems.size - 3} more",
+                                    text =
+                                            stringResource(
+                                                    Res.string.and_more_items_skipped_format,
+                                                    importState.skippedItems.size - 3
+                                            ),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(start = 8.dp)
@@ -356,15 +372,17 @@ fun ImportProductsDialog(
             confirmButton = {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     TextButton(onClick = { onAction(ImportAction.ADD_TO_CURRENT) }) {
-                        Text("Add to Current")
+                        Text(stringResource(Res.string.add_to_current))
                     }
                     Button(onClick = { onAction(ImportAction.OVERWRITE_ALL) }) {
-                        Text("Overwrite All")
+                        Text(stringResource(Res.string.overwrite_all))
                     }
                 }
             },
             dismissButton = {
-                TextButton(onClick = { onAction(ImportAction.CANCEL) }) { Text("Cancel") }
+                TextButton(onClick = { onAction(ImportAction.CANCEL) }) {
+                    Text(stringResource(Res.string.cancel))
+                }
             }
     )
 }
@@ -400,7 +418,7 @@ fun ProductDialog(
                     OutlinedTextField(
                             value = productName,
                             onValueChange = { viewModel.setProductName(it) },
-                            label = { Text("Product Name") },
+                            label = { Text(stringResource(Res.string.product_name)) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
                     )
@@ -408,7 +426,7 @@ fun ProductDialog(
                     OutlinedTextField(
                             value = productPrice,
                             onValueChange = { viewModel.setProductPrice(it) },
-                            label = { Text("Price") },
+                            label = { Text(stringResource(Res.string.price)) },
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             singleLine = true,
@@ -418,15 +436,19 @@ fun ProductDialog(
                     OutlinedTextField(
                             value = productDescription,
                             onValueChange = { viewModel.setProductDescription(it) },
-                            label = { Text("Description (optional)") },
+                            label = { Text(stringResource(Res.string.description_optional)) },
                             modifier = Modifier.fillMaxWidth(),
                             maxLines = 3
                     )
                 }
             },
             confirmButton = {
-                TextButton(onClick = onSave, enabled = isFormValid) { Text("Save") }
+                TextButton(onClick = onSave, enabled = isFormValid) {
+                    Text(stringResource(Res.string.save))
+                }
             },
-            dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+            dismissButton = {
+                TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
+            }
     )
 }
