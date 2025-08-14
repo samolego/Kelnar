@@ -54,6 +54,7 @@ jobs:
         run: |
           mkdir -p dist
           cp -r composeApp/build/dist/wasmJs/productionExecutable/* dist/
+          sed -i 's|<base href="/" />|<base href="/Kelnar/" />|g' dist/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

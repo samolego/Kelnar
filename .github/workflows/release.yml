@@ -89,6 +89,9 @@ jobs:
       - name: 🌐📦 Create Web release
         run: |
           ./gradlew :composeApp:wasmJsBrowserDistribution
+      - name: 🔧 Update base href for GitHub Pages
+        run: |
+          sed -i 's|<base href="/" />|<base href="/Kelnar/" />|g' composeApp/build/dist/wasmJs/productionExecutable/index.html
       - name: 📦 Archive Web release
         run: |
           zip -r web.zip composeApp/build/dist/wasmJs/productionExecutable
