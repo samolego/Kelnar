@@ -5,9 +5,9 @@ import kotlinx.datetime.LocalDateTime
 
 object FormatUtils {
     fun formatCurrency(amount: Double): String {
-        val rounded = round(amount * 100) / 100
-        val wholePart = rounded.toLong()
-        val fractionalPart = ((rounded - wholePart) * 100).toLong()
+        val roundedCents = round(amount * 100).toLong()
+        val wholePart = roundedCents / 100
+        val fractionalPart = roundedCents % 100
         return "$wholePart.${fractionalPart.toString().padStart(2, '0')}"
     }
 
