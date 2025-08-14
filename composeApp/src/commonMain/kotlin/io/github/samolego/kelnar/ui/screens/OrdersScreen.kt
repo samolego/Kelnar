@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.samolego.kelnar.data.Order
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
+import io.github.samolego.kelnar.ui.components.SwipeableOrderCard
 import io.github.samolego.kelnar.ui.navigation.OrderTab
 import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
@@ -275,60 +276,16 @@ fun SwipeToCompleteOrderCard(
         onDeleteOrder: () -> Unit,
         onMarkCompleted: () -> Unit
 ) {
-    val swipeableState =
-            rememberSwipeToDismissBoxState(
-                    confirmValueChange = { dismissDirection ->
-                        when (dismissDirection) {
-                            SwipeToDismissBoxValue.StartToEnd -> {
-                                onMarkCompleted()
-                                false // Don't dismiss the card, let the state change handle it
-                            }
-                            else -> false
-                        }
-                    }
-            )
-
-    SwipeToDismissBox(
-            state = swipeableState,
-            backgroundContent = {
-                Box(
-                        modifier =
-                                Modifier.fillMaxSize()
-                                        .background(
-                                                MaterialTheme.colorScheme.primary,
-                                                RoundedCornerShape(12.dp)
-                                        )
-                                        .padding(16.dp),
-                        contentAlignment = Alignment.CenterStart
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                                Icons.Default.CheckCircle,
-                                contentDescription = stringResource(Res.string.complete),
-                                tint = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                                text = stringResource(Res.string.complete_order),
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            },
-            enableDismissFromStartToEnd = true,
-            enableDismissFromEndToStart = false
-    ) {
-        OrderCard(
-                order = order,
-                onClick = onClick,
-                onDeleteOrder = onDeleteOrder,
-                onMarkCompleted = onMarkCompleted,
-                hideCompleteButton = true
-        )
-    }
+    SwipeableOrderCard(
+            order = order,
+            onClick = onClick,
+            onDeleteOrder = onDeleteOrder,
+            onSwipeAction = onMarkCompleted,
+            swipeActionIcon = Icons.Default.CheckCircle,
+            swipeActionText = stringResource(Res.string.complete_order),
+            swipeActionColor = MaterialTheme.colorScheme.primary,
+            onSwipeActionColor = MaterialTheme.colorScheme.onPrimary
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -339,60 +296,16 @@ fun SwipeToUncompleteOrderCard(
         onDeleteOrder: () -> Unit,
         onMarkCompleted: () -> Unit
 ) {
-    val swipeableState =
-            rememberSwipeToDismissBoxState(
-                    confirmValueChange = { dismissDirection ->
-                        when (dismissDirection) {
-                            SwipeToDismissBoxValue.StartToEnd -> {
-                                onMarkCompleted() // This will toggle completion status
-                                false // Don't dismiss the card, let the state change handle it
-                            }
-                            else -> false
-                        }
-                    }
-            )
-
-    SwipeToDismissBox(
-            state = swipeableState,
-            backgroundContent = {
-                Box(
-                        modifier =
-                                Modifier.fillMaxSize()
-                                        .background(
-                                                MaterialTheme.colorScheme.tertiary,
-                                                RoundedCornerShape(12.dp)
-                                        )
-                                        .padding(16.dp),
-                        contentAlignment = Alignment.CenterStart
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                                Icons.AutoMirrored.Filled.Undo,
-                                contentDescription = stringResource(Res.string.uncomplete),
-                                tint = MaterialTheme.colorScheme.onTertiary,
-                                modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                                text = stringResource(Res.string.mark_as_active),
-                                color = MaterialTheme.colorScheme.onTertiary,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            },
-            enableDismissFromStartToEnd = true,
-            enableDismissFromEndToStart = false
-    ) {
-        OrderCard(
-                order = order,
-                onClick = onClick,
-                onDeleteOrder = onDeleteOrder,
-                onMarkCompleted = onMarkCompleted,
-                hideCompleteButton = true
-        )
-    }
+    SwipeableOrderCard(
+            order = order,
+            onClick = onClick,
+            onDeleteOrder = onDeleteOrder,
+            onSwipeAction = onMarkCompleted,
+            swipeActionIcon = Icons.AutoMirrored.Filled.Undo,
+            swipeActionText = stringResource(Res.string.mark_as_active),
+            swipeActionColor = MaterialTheme.colorScheme.tertiary,
+            onSwipeActionColor = MaterialTheme.colorScheme.onTertiary
+    )
 }
 
 @Composable
