@@ -1,7 +1,7 @@
 package io.github.samolego.kelnar.ui.theme
 
-import android.graphics.Color
 import android.os.Build
+import android.view.WindowInsets
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -13,10 +13,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import android.view.WindowInsets
 
 @Composable
-actual fun DynamicColorScheme(darkTheme: Boolean): ColorScheme? {
+actual fun dynamicColorScheme(darkTheme: Boolean): ColorScheme? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
           val context = LocalContext.current
           if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -32,7 +31,7 @@ actual fun ApplyStatusBarColor() {
         val window = (view.context as ComponentActivity).window
         val color = primaryColor.toArgb()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // Android SDK 30
             window.decorView.setOnApplyWindowInsetsListener { view, insets ->
                 val statusBarInsets = insets.getInsets(WindowInsets.Type.statusBars())
                 view.setBackgroundColor(color)
@@ -42,7 +41,7 @@ actual fun ApplyStatusBarColor() {
                 insets
             }
         } else {
-            // For Android 14 and below
+            // For below versions
             window.statusBarColor = color
         }
         WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false

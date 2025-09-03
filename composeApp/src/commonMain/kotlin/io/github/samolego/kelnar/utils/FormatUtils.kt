@@ -1,13 +1,14 @@
 package io.github.samolego.kelnar.utils
 
-import kotlin.math.round
 import kotlinx.datetime.LocalDateTime
+import kotlin.math.abs
+import kotlin.math.round
 
 object FormatUtils {
     fun formatCurrency(amount: Double): String {
         val roundedCents = round(amount * 100).toLong()
         val wholePart = roundedCents / 100
-        val fractionalPart = roundedCents % 100
+        val fractionalPart = abs(roundedCents % 100)
         return "$wholePart.${fractionalPart.toString().padStart(2, '0')}"
     }
 

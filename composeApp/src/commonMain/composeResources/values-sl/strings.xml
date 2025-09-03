@@ -30,10 +30,13 @@
     <string name="no_items_added_yet">Še ni dodanih postavk</string>
     <string
         name="tap_add_product_to_get_started"
-    >Tapni \'Dodaj izdelek\' za začetek</string>
+    >Tapni 'Dodaj izdelek' za začetek</string>
     <string name="total">Skupaj:</string>
     <string name="complete_order">Zaključi naročilo</string>
     <string name="delete_order">Izbriši naročilo</string>
+    <string name="customer_paid">Stranka je plačala</string>
+    <string name="return_and_complete_format">Vrni %1$s in zaključi</string>
+    <string name="not_enough_money">Stranka mora plačati še %1$s</string>
 
     <!-- Order details with format placeholders -->
     <string name="table_format">Miza %1$s</string>

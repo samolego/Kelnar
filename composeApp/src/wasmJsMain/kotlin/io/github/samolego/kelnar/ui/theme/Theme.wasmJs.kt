@@ -4,7 +4,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 
 @Composable
-actual fun DynamicColorScheme(darkTheme: Boolean): ColorScheme? {
+actual fun dynamicColorScheme(darkTheme: Boolean): ColorScheme? {
     return null
 }
 

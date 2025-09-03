@@ -34,6 +34,9 @@
     <string name="total">Total:</string>
     <string name="complete_order">Complete Order</string>
     <string name="delete_order">Delete order</string>
+    <string name="customer_paid">Customer paid</string>
+    <string name="return_and_complete_format">Return %1$s and complete</string>
+    <string name="not_enough_money">Customer needs to pay %1$s more</string>
 
     <!-- Order details with format placeholders -->
     <string name="table_format">Table %1$s</string>

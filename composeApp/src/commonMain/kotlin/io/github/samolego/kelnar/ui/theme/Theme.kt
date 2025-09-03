@@ -256,7 +256,7 @@ val unspecified_scheme =
 
 @Composable
 fun KelnarTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
-    val dynamicColor = DynamicColorScheme(darkTheme)
+    val dynamicColor = dynamicColorScheme(darkTheme)
     val colorScheme =
             when {
                 dynamicColor != null -> dynamicColor
@@ -267,6 +267,6 @@ fun KelnarTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
     MaterialTheme(colorScheme = colorScheme, content = content)
 }
 
-@Composable expect fun DynamicColorScheme(darkTheme: Boolean): ColorScheme?
+@Composable expect fun dynamicColorScheme(darkTheme: Boolean): ColorScheme?
 
 @Composable expect fun ApplyStatusBarColor()
