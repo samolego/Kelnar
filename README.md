@@ -26,7 +26,7 @@ The application allows you to add products (e.g., food that you sell) and then c
 | <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_products.png"> | <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_share.png"> | <img width="256" src="metadata/en-US/images/phoneScreenshots/screenshot_kelnar_complete-order.png"> |
 | Products | Share | Complete Order |
 
-## Platforms 📱
+## Platforms
 
 - **Android** (API 24+) 🤖
 - **Desktop** (JVM) 💻
