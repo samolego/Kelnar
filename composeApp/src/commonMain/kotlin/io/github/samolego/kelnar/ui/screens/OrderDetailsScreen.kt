@@ -33,6 +33,7 @@ import kelnar.composeapp.generated.resources.customizations
 import kelnar.composeapp.generated.resources.edit_order
 import kelnar.composeapp.generated.resources.items_format
 import kelnar.composeapp.generated.resources.not_enough_money
+import kelnar.composeapp.generated.resources.order_details
 import kelnar.composeapp.generated.resources.order_items
 import kelnar.composeapp.generated.resources.price_each_format
 import kelnar.composeapp.generated.resources.quantity_product_format
@@ -70,7 +71,7 @@ fun OrderDetailsScreen(
         Scaffold(
                 topBar = {
                     KelnarAppBar(
-                            title = { Text("Order Details") },
+                            title = { Text(stringResource(Res.string.order_details)) },
                             navigationIcon = {
                                 IconButton(onClick = onNavigateBack) {
                                     Icon(
@@ -100,7 +101,7 @@ fun OrderDetailsScreen(
                         ) {
                             Icon(
                                     Icons.Default.CheckCircle,
-                                    contentDescription = "Complete Order",
+                                    contentDescription = stringResource(Res.string.complete),
                                     modifier = Modifier.size(20.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
