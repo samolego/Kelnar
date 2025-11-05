@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
+import kotlin.time.Clock.System.now
+import kotlin.time.ExperimentalTime
 
 @Serializable
 data class ImportProduct(val name: String, val price: Double, val description: String = "")
@@ -127,8 +128,9 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         _productDescription.value = ""
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun generateId(): String {
-        return Clock.System.now().toEpochMilliseconds().toString()
+        return now().toEpochMilliseconds().toString()
     }
 
     fun parseImportUrl(importParam: String) {

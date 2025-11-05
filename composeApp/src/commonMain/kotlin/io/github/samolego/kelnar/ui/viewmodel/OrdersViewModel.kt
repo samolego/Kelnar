@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock.System.now
+import kotlin.time.ExperimentalTime
 
 class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
 
@@ -135,6 +136,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         return _newOrderItems.value.sumOf { it.subtotal }
     }
 
+    @OptIn(ExperimentalTime::class)
     fun saveOrder() {
         if (_tableNumber.value.isBlank() || _newOrderItems.value.isEmpty()) {
             return
@@ -147,8 +149,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
                             tableNumber = _tableNumber.value,
                             items = _newOrderItems.value,
                             createdAt =
-                                    Clock.System.now()
-                                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                                    now().toLocalDateTime(TimeZone.currentSystemDefault())
                     )
 
             repository.saveOrder(order)
@@ -209,7 +210,8 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun generateId(): String {
-        return Clock.System.now().toEpochMilliseconds().toString()
+        return now().toEpochMilliseconds().toString()
     }
 }
