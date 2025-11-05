@@ -46,6 +46,7 @@ fun SwipeableOrderCard(
         swipePercentage: Float = 0.6f
 ) {
     var isActionTriggered by remember { mutableStateOf(false) }
+
     val swipeableState =
             rememberSwipeToDismissBoxState(
                     confirmValueChange = { dismissDirection ->

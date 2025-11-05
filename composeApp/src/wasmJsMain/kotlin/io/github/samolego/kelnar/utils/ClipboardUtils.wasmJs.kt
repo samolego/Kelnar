@@ -2,6 +2,7 @@ package io.github.samolego.kelnar.utils
 
 import kotlinx.browser.window
 
+@OptIn(ExperimentalWasmJsInterop::class)
 actual fun copyToClipboard(text: String) {
     try {
         // Use the modern clipboard API if available
