@@ -38,6 +38,9 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
     private val _filteredProducts = MutableStateFlow<List<Product>>(emptyList())
     val filteredProducts: StateFlow<List<Product>> = _filteredProducts.asStateFlow()
 
+    // Counter to ensure unique IDs when generating multiple IDs in quick succession
+    private var idCounter = 0
+
     init {
         viewModelScope.launch {
             menu.collect { productsList ->
@@ -212,6 +215,9 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
 
     @OptIn(ExperimentalTime::class)
     private fun generateId(): String {
-        return now().toEpochMilliseconds().toString()
+        val timestamp = now().toEpochMilliseconds()
+        val id = "${timestamp}-${idCounter}"
+        idCounter++
+        return id
     }
 }

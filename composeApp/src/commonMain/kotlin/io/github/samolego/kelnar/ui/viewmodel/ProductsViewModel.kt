@@ -52,6 +52,9 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
     private val _showEditProductDialog = MutableStateFlow(false)
     val showEditProductDialog: StateFlow<Boolean> = _showEditProductDialog.asStateFlow()
 
+    // Counter to ensure unique IDs when generating multiple IDs in quick succession
+    private var idCounter = 0
+
     fun setProductName(name: String) {
         _productName.value = name
     }
@@ -130,7 +133,10 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
     @OptIn(ExperimentalTime::class)
     private fun generateId(): String {
-        return now().toEpochMilliseconds().toString()
+        val timestamp = now().toEpochMilliseconds()
+        val id = "${timestamp}-${idCounter}"
+        idCounter++
+        return id
     }
 
     fun parseImportUrl(importParam: String) {
