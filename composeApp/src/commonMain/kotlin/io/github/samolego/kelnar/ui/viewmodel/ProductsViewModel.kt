@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.repository.DataRepository
+import io.github.samolego.kelnar.utils.generateId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlin.time.Clock.System.now
-import kotlin.time.ExperimentalTime
 
 @Serializable
 data class ImportProduct(val name: String, val price: Double, val description: String = "")
@@ -51,9 +50,6 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
 
     private val _showEditProductDialog = MutableStateFlow(false)
     val showEditProductDialog: StateFlow<Boolean> = _showEditProductDialog.asStateFlow()
-
-    // Counter to ensure unique IDs when generating multiple IDs in quick succession
-    private var idCounter = 0
 
     fun setProductName(name: String) {
         _productName.value = name
@@ -105,7 +101,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
             val product =
                     Product(
-                            id = _currentProduct.value?.id ?: generateId(),
+                            id = _currentProduct.value?.id ?: generateId(repository.menu.value.size),
                             name = name,
                             price = price,
                             description = description
@@ -129,14 +125,6 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         _productName.value = ""
         _productPrice.value = ""
         _productDescription.value = ""
-    }
-
-    @OptIn(ExperimentalTime::class)
-    private fun generateId(): String {
-        val timestamp = now().toEpochMilliseconds()
-        val id = "${timestamp}-${idCounter}"
-        idCounter++
-        return id
     }
 
     fun parseImportUrl(importParam: String) {
@@ -191,9 +179,9 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
                 ImportAction.OVERWRITE_ALL -> {
                     // Clear all existing menu and replace with imported ones
                     val importedProducts =
-                            currentImportState.menu.map { importProduct ->
+                            currentImportState.menu.mapIndexed { index, importProduct ->
                                 Product(
-                                        id = generateId(),
+                                        id = generateId(index),
                                         name = importProduct.name,
                                         price = importProduct.price,
                                         description = importProduct.description
@@ -204,10 +192,11 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
                 }
                 ImportAction.ADD_TO_CURRENT -> {
                     // Add imported menu items to current menu without overwriting existing ones
+                    val currentSize = repository.menu.value.size
                     val importedProducts =
-                            currentImportState.menu.map { importProduct ->
+                            currentImportState.menu.mapIndexed { index, importProduct ->
                                 Product(
-                                        id = generateId(),
+                                        id = generateId(currentSize + index),
                                         name = importProduct.name,
                                         price = importProduct.price,
                                         description = importProduct.description

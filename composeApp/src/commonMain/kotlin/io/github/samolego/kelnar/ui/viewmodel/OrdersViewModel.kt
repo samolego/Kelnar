@@ -6,6 +6,7 @@ import io.github.samolego.kelnar.data.Order
 import io.github.samolego.kelnar.data.OrderItem
 import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.repository.DataRepository
+import io.github.samolego.kelnar.utils.generateId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,6 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock.System.now
-import kotlin.time.ExperimentalTime
 
 class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
 
@@ -37,9 +37,6 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
 
     private val _filteredProducts = MutableStateFlow<List<Product>>(emptyList())
     val filteredProducts: StateFlow<List<Product>> = _filteredProducts.asStateFlow()
-
-    // Counter to ensure unique IDs when generating multiple IDs in quick succession
-    private var idCounter = 0
 
     init {
         viewModelScope.launch {
@@ -91,7 +88,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         } else {
             currentItems.add(
                     OrderItem(
-                            id = generateId(),
+                            id = generateId(currentItems.size),
                             product = product,
                             quantity = quantity,
                             customizations = customizations
@@ -139,7 +136,6 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         return _newOrderItems.value.sumOf { it.subtotal }
     }
 
-    @OptIn(ExperimentalTime::class)
     fun saveOrder() {
         if (_tableNumber.value.isBlank() || _newOrderItems.value.isEmpty()) {
             return
@@ -148,7 +144,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
             val order =
                     Order(
-                            id = generateId(),
+                            id = generateId(repository.orders.value.size),
                             tableNumber = _tableNumber.value,
                             items = _newOrderItems.value,
                             createdAt =
@@ -211,13 +207,5 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
                 clearNewOrder()
             }
         }
-    }
-
-    @OptIn(ExperimentalTime::class)
-    private fun generateId(): String {
-        val timestamp = now().toEpochMilliseconds()
-        val id = "${timestamp}-${idCounter}"
-        idCounter++
-        return id
     }
 }
