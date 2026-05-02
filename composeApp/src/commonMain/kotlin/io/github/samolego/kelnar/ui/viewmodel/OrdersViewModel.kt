@@ -136,6 +136,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         return _newOrderItems.value.sumOf { it.subtotal }
     }
 
+    @OptIn(ExperimentalTime::class)
     fun saveOrder() {
         if (_tableNumber.value.isBlank() || _newOrderItems.value.isEmpty()) {
             return
