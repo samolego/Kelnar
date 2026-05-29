@@ -442,7 +442,7 @@ fun ProductDialog(
                 if (name.isBlank() || priceText.isBlank()) {
                     false
                 } else {
-                    val price = priceText.toDoubleOrNull()
+                    val price = priceText.replace(',', '.').toDoubleOrNull()
                     price != null && price >= 0
                 }
             }

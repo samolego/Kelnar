@@ -55,7 +55,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
     }
 
     fun setProductPrice(price: String) {
-        _productPrice.value = price
+        _productPrice.value = price.replace(',', '.')
     }
 
     fun setProductDescription(description: String) {
