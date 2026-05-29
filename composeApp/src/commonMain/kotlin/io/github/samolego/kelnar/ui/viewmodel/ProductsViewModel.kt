@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.repository.DataRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -101,7 +100,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
             val product =
                     Product(
-                            id = _currentProduct.value?.id ?: menu.value.size,
+                            id = _currentProduct.value?.id ?: generateId(),
                             name = name,
                             price = price,
                             description = description
@@ -227,7 +226,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
                     val importedProducts =
                             currentImportState.menu.mapIndexed { index, importProduct ->
                                 Product(
-                                        id = menu.value.size + index,
+                                        id = generateId() + index,
                                         name = importProduct.name,
                                         price = importProduct.price,
                                         description = importProduct.description
@@ -238,6 +237,11 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
             }
             hideImportDialog()
         }
+    }
+
+    private fun generateId(): Int {
+        if (menu.value.isEmpty()) return 0
+        return menu.value.last().id + 1
     }
 
     fun generateShareData(): String {
