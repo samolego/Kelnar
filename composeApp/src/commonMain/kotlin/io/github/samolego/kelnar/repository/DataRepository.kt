@@ -65,7 +65,7 @@ class DataRepository(private val localStorage: LocalStorage) {
         saveProducts()
     }
 
-    suspend fun removeProduct(productId: String) {
+    suspend fun removeProduct(productId: Int) {
         val currentProducts = _products.value.toMutableList()
         currentProducts.removeAll { it.id == productId }
         _products.value = currentProducts
@@ -77,7 +77,7 @@ class DataRepository(private val localStorage: LocalStorage) {
         saveProducts()
     }
 
-    suspend fun saveAllProducts(products: List<Product>) {
+    suspend fun replaceProducts(products: List<Product>) {
         _products.value = products
         saveProducts()
     }
@@ -103,18 +103,18 @@ class DataRepository(private val localStorage: LocalStorage) {
         saveOrders()
     }
 
-    suspend fun removeOrder(orderId: String) {
+    suspend fun removeOrder(orderId: Int) {
         val currentOrders = _orders.value.toMutableList()
         currentOrders.removeAll { it.id == orderId }
         _orders.value = currentOrders
         saveOrders()
     }
 
-    fun getProductById(id: String): Product? {
+    fun getProductById(id: Int): Product? {
         return _products.value.find { it.id == id }
     }
 
-    fun getOrderById(id: String): Order? {
+    fun getOrderById(id: Int): Order? {
         return _orders.value.find { it.id == id }
     }
 

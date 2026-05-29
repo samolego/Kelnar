@@ -46,7 +46,7 @@ import kotlin.math.ceil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderDetailsScreen(
-        orderId: String,
+        orderId: Int,
         viewModel: OrdersViewModel,
         onNavigateBack: () -> Unit,
         onNavigateToEdit: () -> Unit

@@ -54,7 +54,7 @@ fun OrdersScreen(
         viewModel: OrdersViewModel,
         initialTab: OrderTab = OrderTab.ACTIVE,
         onNavigateToNewOrder: () -> Unit,
-        onNavigateToOrderDetails: (String) -> Unit,
+        onNavigateToOrderDetails: (Int) -> Unit,
         onTabChanged: (OrderTab) -> Unit,
         onOpenDrawer: () -> Unit
 ) {
@@ -202,9 +202,9 @@ fun SwipeHint() {
 @Composable
 fun OrdersList(
         orders: List<Order>,
-        onOrderClick: (String) -> Unit,
-        onDeleteOrder: (String) -> Unit,
-        onMarkCompleted: (String) -> Unit,
+        onOrderClick: (Int) -> Unit,
+        onDeleteOrder: (Int) -> Unit,
+        onMarkCompleted: (Int) -> Unit,
         emptyMessage: String,
         emptySubMessage: String,
         showSwipeToComplete: Boolean = false,

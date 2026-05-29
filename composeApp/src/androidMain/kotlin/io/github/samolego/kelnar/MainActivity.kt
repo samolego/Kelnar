@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.net.toUri
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
             if (uriString.contains("/#")) {
                 // Replace "/#/" with a standard path separator "/".
                 val newUriString = uriString.replace("/#", "/")
-                val newUri = Uri.parse(newUriString)
+                val newUri = newUriString.toUri()
 
                 // Create a new Intent with the same action but the new URI.
                 val newIntent =
@@ -35,9 +36,9 @@ class MainActivity : ComponentActivity() {
                             addCategory(Intent.CATEGORY_BROWSABLE)
                         }
 
-                Log.d("MainActivity", "replaced link: $newUri")
+                Log.i("MainActivity", "Import link: $newUri")
 
-                // CRITICAL STEP: Replace the Activity's intent with our new one.
+                // Replace the Activity's intent with our new one.
                 // The NavController will now use this new intent for deep linking.
                 intent = newIntent
             }

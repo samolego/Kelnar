@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.collections.emptyList
 import kotlin.time.Clock.System.now
 import kotlin.time.ExperimentalTime
 
@@ -99,13 +100,13 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         _newOrderItems.value = currentItems
     }
 
-    fun removeItemFromOrder(itemId: String) {
+    fun removeItemFromOrder(itemId: Int) {
         val currentItems = _newOrderItems.value.toMutableList()
         currentItems.removeAll { it.id == itemId }
         _newOrderItems.value = currentItems
     }
 
-    fun updateItemQuantity(itemId: String, newQuantity: Int) {
+    fun updateItemQuantity(itemId: Int, newQuantity: Int) {
         if (newQuantity <= 0) {
             removeItemFromOrder(itemId)
             return
@@ -121,7 +122,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         }
     }
 
-    fun updateItemCustomizations(itemId: String, customizations: List<String>) {
+    fun updateItemCustomizations(itemId: Int, customizations: List<String>) {
         val currentItems = _newOrderItems.value.toMutableList()
         val itemIndex = currentItems.indexOfFirst { it.id == itemId }
 
@@ -132,9 +133,6 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         }
     }
 
-    fun calculateTotal(): Double {
-        return _newOrderItems.value.sumOf { it.subtotal }
-    }
 
     @OptIn(ExperimentalTime::class)
     fun saveOrder() {
@@ -165,11 +163,11 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         _isEditingOrder.value = false
     }
 
-    fun deleteOrder(orderId: String) {
+    fun deleteOrder(orderId: Int) {
         viewModelScope.launch { repository.removeOrder(orderId) }
     }
 
-    fun markOrderCompleted(orderId: String) {
+    fun markOrderCompleted(orderId: Int) {
         viewModelScope.launch {
             val order = repository.getOrderById(orderId)
             if (order != null) {
@@ -179,7 +177,7 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         }
     }
 
-    fun loadOrderForEditing(orderId: String) {
+    fun loadOrderForEditing(orderId: Int) {
         viewModelScope.launch {
             val order = repository.getOrderById(orderId)
             if (order != null) {
@@ -210,8 +208,5 @@ class OrdersViewModel(private val repository: DataRepository) : ViewModel() {
         }
     }
 
-    @OptIn(ExperimentalTime::class)
-    private fun generateId(): String {
-        return now().toEpochMilliseconds().toString()
-    }
+    private fun generateId(): Int = repository.orders.value.size
 }

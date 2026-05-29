@@ -9,7 +9,9 @@ object FormatUtils {
         val roundedCents = round(amount * 100).toLong()
         val wholePart = roundedCents / 100
         val fractionalPart = abs(roundedCents % 100)
-        return "$wholePart.${fractionalPart.toString().padStart(2, '0')}"
+
+        val separatorChar = ","
+        return "$wholePart$separatorChar${fractionalPart.toString().padStart(2, '0')}"
     }
 
     fun formatPrice(price: Double): String = "${formatCurrency(price)} €"

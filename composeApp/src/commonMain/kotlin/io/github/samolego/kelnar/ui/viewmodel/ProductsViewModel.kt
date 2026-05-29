@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.repository.DataRepository
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlin.time.Clock.System.now
-import kotlin.time.ExperimentalTime
 
 @Serializable
 data class ImportProduct(val name: String, val price: Double, val description: String = "")
@@ -102,7 +101,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         viewModelScope.launch {
             val product =
                     Product(
-                            id = _currentProduct.value?.id ?: generateId(),
+                            id = _currentProduct.value?.id ?: menu.value.size,
                             name = name,
                             price = price,
                             description = description
@@ -118,7 +117,7 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         }
     }
 
-    fun deleteProduct(productId: String) {
+    fun deleteProduct(productId: Int) {
         viewModelScope.launch { repository.removeProduct(productId) }
     }
 
@@ -128,15 +127,43 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
         _productDescription.value = ""
     }
 
-    @OptIn(ExperimentalTime::class)
-    private fun generateId(): String {
-        return now().toEpochMilliseconds().toString()
+    fun urlDecode(encoded: String): String {
+        return buildString {
+            var i = 0
+
+            while (i < encoded.length) {
+                when (val c = encoded[i]) {
+                    '%' -> {
+                        if (i + 2 < encoded.length) {
+                            val hex = encoded.substring(i + 1, i + 3)
+                            append(hex.toInt(16).toChar())
+                            i += 3
+                        } else {
+                            append(c)
+                            i++
+                        }
+                    }
+
+                    '+' -> {
+                        append(' ')
+                        i++
+                    }
+
+                    else -> {
+                        append(c)
+                        i++
+                    }
+                }
+            }
+        }
     }
 
     fun parseImportUrl(importParam: String) {
         if (importParam.isBlank()) return
 
-        val cleanParam = importParam.trim().removeSurrounding("[", "]")
+        val data = if (importParam.contains('%')) urlDecode(importParam) else importParam
+
+        val cleanParam = data.trim().removeSurrounding("[", "]")
         val productStrings = cleanParam.split("|")
         val validProducts = mutableListOf<ImportProduct>()
         val skippedItems = mutableListOf<String>()
@@ -185,29 +212,27 @@ class ProductsViewModel(private val repository: DataRepository) : ViewModel() {
                 ImportAction.OVERWRITE_ALL -> {
                     // Clear all existing menu and replace with imported ones
                     val importedProducts =
-                            currentImportState.menu.map { importProduct ->
+                            currentImportState.menu.mapIndexed { index, importProduct ->
                                 Product(
-                                        id = generateId(),
+                                        id = index,
                                         name = importProduct.name,
                                         price = importProduct.price,
                                         description = importProduct.description
                                 )
                             }
-                    // Replace all products at once
-                    repository.saveAllProducts(importedProducts)
+                    repository.replaceProducts(importedProducts)
                 }
                 ImportAction.ADD_TO_CURRENT -> {
                     // Add imported menu items to current menu without overwriting existing ones
                     val importedProducts =
-                            currentImportState.menu.map { importProduct ->
+                            currentImportState.menu.mapIndexed { index, importProduct ->
                                 Product(
-                                        id = generateId(),
+                                        id = menu.value.size + index,
                                         name = importProduct.name,
                                         price = importProduct.price,
                                         description = importProduct.description
                                 )
                             }
-                    // Add all products at once
                     repository.addProducts(importedProducts)
                 }
             }

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OrderItem(
-        val id: String,
+        val id: Int,
         val product: Product,
         val quantity: Int = 1,
         val customizations: List<String> = emptyList()

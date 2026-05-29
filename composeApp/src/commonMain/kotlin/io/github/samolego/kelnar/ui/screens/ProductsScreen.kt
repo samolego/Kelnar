@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -15,11 +16,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.platform.UriHandler
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavUri
+import androidx.navigation.toRoute
 import io.github.samolego.kelnar.data.Product
 import io.github.samolego.kelnar.ui.components.KelnarAppBar
+import io.github.samolego.kelnar.ui.navigation.ProductsImport
 import io.github.samolego.kelnar.ui.viewmodel.ImportAction
 import io.github.samolego.kelnar.ui.viewmodel.ProductsViewModel
 import io.github.samolego.kelnar.utils.formatAsPrice
@@ -47,6 +55,7 @@ import kelnar.composeapp.generated.resources.save
 import kelnar.composeapp.generated.resources.share_products
 import kelnar.composeapp.generated.resources.skipped_invalid_items_format
 import kelnar.composeapp.generated.resources.tap_plus_to_add_first_product
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +64,6 @@ fun ProductsScreen(
         viewModel: ProductsViewModel,
         onOpenDrawer: () -> Unit,
         onNavigateToShare: (String) -> Unit = {},
-        importParam: String = ""
 ) {
     val menu by viewModel.menu.collectAsState()
     val showAddProductDialog by viewModel.showAddProductDialog.collectAsState()
@@ -64,13 +72,7 @@ fun ProductsScreen(
 
     var showOptionsMenu by remember { mutableStateOf(false) }
     var showDeleteAllDialog by remember { mutableStateOf(false) }
-
-    // Handle import parameter
-    LaunchedEffect(importParam) {
-        if (importParam.isNotBlank()) {
-            viewModel.parseImportUrl(importParam)
-        }
-    }
+    var showImportMenuUrl by remember { mutableStateOf(false) }
 
     Scaffold(
             topBar = {
@@ -109,6 +111,19 @@ fun ProductsScreen(
                                             leadingIcon = {
                                                 Icon(Icons.Default.Share, contentDescription = null)
                                             }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(Res.string.import_products)) },
+                                        onClick = {
+                                            showOptionsMenu = false
+                                            showImportMenuUrl = true
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                Icons.Default.Download,
+                                                contentDescription = null
+                                            )
+                                        }
                                     )
                                     DropdownMenuItem(
                                             text = { Text(stringResource(Res.string.delete_all)) },
@@ -224,6 +239,28 @@ fun ProductsScreen(
                     }
                 }
         )
+    } else if (showImportMenuUrl) {
+        var url by remember { mutableStateOf("") }
+        AlertDialog(
+            onDismissRequest = { showImportMenuUrl = false },
+            title = { Text(stringResource(Res.string.import_products)) },
+            text = { TextField(value = url, onValueChange = { url = it }) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showImportMenuUrl = false
+                        val data = url.split("?data=")[1]
+                        viewModel.parseImportUrl(data)
+                    }
+                ) { Text(stringResource(Res.string.import_products)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showImportMenuUrl = false }) {
+                    Text(stringResource(Res.string.cancel))
+                }
+            }
+        )
+
     }
 }
 

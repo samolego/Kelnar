@@ -22,6 +22,6 @@ enum class OrderTab {
 
 @Serializable @SerialName("orders/new") data object NewOrder
 
-@Serializable @SerialName("orders/details") data class OrderDetails(val orderId: String)
+@Serializable @SerialName("orders/details") data class OrderDetails(val orderId: Int)
 
-@Serializable @SerialName("orders/edit") data class EditOrder(val orderId: String)
+@Serializable @SerialName("orders/edit") data class EditOrder(val orderId: Int)

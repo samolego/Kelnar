@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Order(
-        val id: String,
+        val id: Int,
         val tableNumber: String,
         val items: List<OrderItem> = emptyList(),
         val createdAt: LocalDateTime,

@@ -6,7 +6,7 @@ import io.github.samolego.kelnar.ui.viewmodel.OrdersViewModel
 
 @Composable
 fun EditOrderScreen(
-        orderId: String,
+        orderId: Int,
         viewModel: OrdersViewModel,
         onNavigateBack: () -> Unit,
         onOrderSaved: () -> Unit

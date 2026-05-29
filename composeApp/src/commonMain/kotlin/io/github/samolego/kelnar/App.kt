@@ -58,6 +58,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun App(
@@ -290,11 +291,11 @@ fun AppNavigation(
                 exitTransition = { fadeOut(animationSpec = tween(150)) }
         ) { backStackEntry ->
             val productsImport = backStackEntry.toRoute<ProductsImport>()
+            productsViewModel.parseImportUrl(productsImport.data)
             ProductsScreen(
                     viewModel = productsViewModel,
                     onOpenDrawer = onOpenDrawer,
                     onNavigateToShare = { _ -> navController.navigate(ProductsShare) },
-                    importParam = productsImport.data
             )
         }
 
